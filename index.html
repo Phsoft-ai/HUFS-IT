@@ -183,6 +183,13 @@
           <span class="hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold">틀 제공</span>
         </button>
 
+        <div id="mypage-nav-wrapper">
+        <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+          <i data-lucide="notebook-pen" class="w-5 h-5 shrink-0 text-slate-400"></i>
+          <span class="hidden md:inline">마이페이지 · 내 오답</span>
+        </button>
+        </div>
+
         <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
           <i data-lucide="award" class="w-5 h-5 shrink-0 text-slate-400"></i>
           <span class="hidden md:inline">비교과·장학 Ai추천</span>
@@ -193,11 +200,13 @@
           교수-학생 상호작용
         </div>
 
-        <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+        <div id="analytics-nav-wrapper" class="hidden">
+        <button onclick="switchTab('analytics')" id="nav-analytics" aria-label="교수자 문항 분석" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
           <i data-lucide="line-chart" class="w-5 h-5 shrink-0 text-indigo-500"></i>
           <span class="hidden md:inline">오답률 & 수업 인사이트</span>
           <span class="hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded-md font-bold">교수 피드백</span>
         </button>
+        </div>
 
         <button onclick="switchTab('design-system')" id="nav-ds" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
           <i data-lucide="boxes" class="w-5 h-5 shrink-0 text-amber-500"></i>
@@ -251,6 +260,14 @@
           <!-- Decorative Background element -->
           <div class="absolute -right-10 -bottom-10 w-96 h-96 rounded-full bg-gradient-to-tl from-[#0096B4]/30 to-transparent blur-2xl pointer-events-none"></div>
         </div>
+
+        <section id="exam-review-links" aria-labelledby="exam-review-title" class="rounded-2xl border border-slate-200 bg-white p-5 space-y-3">
+          <div>
+            <h2 id="exam-review-title" class="font-bold text-slate-900">다가오는 시험</h2>
+            <p class="mt-1 text-xs text-slate-500">시연용 일정 · 한국 시간(KST)</p>
+          </div>
+          <div id="upcoming-exam-list" class="grid gap-3 lg:grid-cols-2"></div>
+        </section>
 
         <!-- Quick Stats Metric Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -414,6 +431,36 @@
         </div>
       </section>
 
+      <section id="tab-mypage" class="hidden space-y-4 spring-pop">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 space-y-4">
+          <div>
+            <p class="text-xs font-semibold text-blue-700">마이페이지</p>
+            <h2 class="mt-1 text-xl font-bold text-slate-900">내 오답</h2>
+            <p class="mt-1 text-sm text-slate-500">한 번이라도 틀린 문제를 모아 보고, 다시 맞히면 복습 완료로 표시해요.</p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <label class="space-y-1 text-xs font-semibold text-slate-700">
+              <span class="block">과목</span>
+              <select id="wrong-course" onchange="renderWrongAnswers()" class="rounded-lg border border-slate-300 bg-white p-2">
+                <option value="all">전체 과목</option>
+                <option value="cog">언어인지과학개론</option>
+                <option value="biz">글로벌비즈니스영어</option>
+                <option value="ai">인공지능과자연어처리</option>
+              </select>
+            </label>
+            <label class="space-y-1 text-xs font-semibold text-slate-700">
+              <span class="block">정렬</span>
+              <select id="wrong-sort" onchange="renderWrongAnswers()" class="rounded-lg border border-slate-300 bg-white p-2">
+                <option value="recent">최근에 틀린 순</option>
+                <option value="most">많이 틀린 순</option>
+              </select>
+            </label>
+          </div>
+          <p id="wrong-summary" class="text-xs font-semibold text-slate-600" aria-live="polite"></p>
+        </div>
+        <div id="wrong-list" class="grid grid-cols-1 gap-3 lg:grid-cols-2"></div>
+      </section>
+
       <!-- ========================================================
            TAB 3: 문제 제작 스튜디오 (틀 제공 + 다국어 + 저작권 안심)
            ======================================================== -->
@@ -427,6 +474,17 @@
             <p class="text-slate-500 text-xs md:text-sm mt-1">
               교수님의 강의자료 원본을 불법 공유하지 않고, 공인된 핵심 키워드와 문제 제작 틀(Template)을 활용해 새로운 양질의 문제를 생성합니다.
             </p>
+          </div>
+
+          <div id="variant-context" class="hidden rounded-2xl border border-indigo-200 bg-indigo-50 p-4 space-y-2">
+            <p class="text-sm font-bold text-indigo-900">내 오답에서 변형 문제 만들기</p>
+            <p class="text-xs text-indigo-800">원본의 과목과 주차에 등록돼요. 같은 개념을 다른 사례나 관점에서 묻는 문제를 작성해 보세요.</p>
+            <label for="form-concept" class="block text-xs font-semibold text-indigo-900">핵심 개념</label>
+            <input id="form-concept" type="text" maxlength="150" class="w-full rounded-lg border border-indigo-200 bg-white p-2 text-sm">
+            <details class="text-sm text-slate-700">
+              <summary class="cursor-pointer font-semibold">원본 문제 참고</summary>
+              <p id="variant-source-question" class="mt-2 whitespace-pre-wrap break-words"></p>
+            </details>
           </div>
 
           <!-- Step 1: 템플릿 선택 -->
@@ -537,7 +595,7 @@
 
           <!-- Submit Button -->
           <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-            <button onclick="switchTab('courses')" class="px-5 py-2.5 rounded-xl text-slate-600 text-xs font-semibold hover:bg-slate-100">취소</button>
+            <button onclick="cancelProblemForm()" class="px-5 py-2.5 rounded-xl text-slate-600 text-xs font-semibold hover:bg-slate-100">취소</button>
             <button onclick="submitNewProblem()" class="spring-interactive px-6 py-2.5 rounded-xl bg-[#002C6C] text-white text-xs font-bold shadow-md hover:bg-[#0C3E85] flex items-center gap-2">
               <i data-lucide="check" class="w-4 h-4"></i>
               <span>문제 등록 및 동료 검수 요청</span>
@@ -576,110 +634,61 @@
       <!-- ========================================================
            TAB 5: 교수자 전용 학습 분석실 (오답률 & 수업 개선 피드백)
            ======================================================== -->
-      <section id="tab-analytics" class="hidden space-y-6 spring-pop">
-        <div class="bg-gradient-to-r from-indigo-900 via-[#1E1B4B] to-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-md">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-indigo-200 text-xs font-semibold mb-3 border border-white/20">
-            <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-indigo-300"></i>
-            <span>교수자 교육 개선 인사이트 허브</span>
-          </div>
-          <h2 class="text-2xl font-bold">학생들의 문제 풀이 오답률 & 수업 피드백 분석</h2>
-          <p class="text-xs md:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-            학생들이 생성한 문제와 풀이 데이터를 기반으로, 어떤 개념에서 오답률이 높은지 파악하고 다음 강의 자료를 맞춤형으로 보완할 수 있습니다.
-          </p>
+      <section id="tab-analytics" class="hidden space-y-5 spring-pop">
+        <div class="rounded-3xl bg-indigo-900 p-6 text-white md:p-8">
+          <h2 class="text-2xl font-bold">교수자 문항 분석</h2>
+          <p class="mt-2 text-sm text-indigo-100">학생별 첫 제출을 기준으로 응답 수·오답률·보기별 선택을 집계합니다. 재풀이는 학생의 복습 기록에 반영됩니다.</p>
         </div>
-
-        <!-- Error Rate Analytics Table / Visuals -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Left: High Error Rate Topics -->
-          <div class="md:col-span-2 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-2xs space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i>
-                <span>주요 고난이도 취약 개념 (오답률 상위)</span>
-              </h3>
-              <span class="text-xs font-medium text-slate-500">언어인지과학개론 1분반</span>
-            </div>
-
-            <div class="space-y-4 pt-2">
-              <!-- Item 1 -->
-              <div>
-                <div class="flex items-center justify-between text-xs font-bold text-slate-800 mb-1.5">
-                  <span class="flex items-center gap-1.5">
-                    <span class="w-5 h-5 rounded-md bg-rose-100 text-rose-700 flex items-center justify-center text-[10px]">1</span>
-                    브로카 실어증 vs 베르니케 실어증 감별 진단
-                  </span>
-                  <span class="text-rose-600 font-extrabold">오답률 74.2%</span>
-                </div>
-                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                  <div class="bg-rose-500 h-full rounded-full transition-all duration-500" style="width: 74.2%"></div>
-                </div>
-                <div class="flex items-center justify-between text-[11px] text-slate-500 mt-1">
-                  <span>학생 제작 문제 14건 출제됨</span>
-                  <span class="text-indigo-600 font-semibold cursor-pointer hover:underline" onclick="showToast('교수님 강의 보강 메모에 추가되었습니다.')">+ 다음 주 강의 보강 주제로 추가</span>
-                </div>
-              </div>
-
-              <!-- Item 2 -->
-              <div>
-                <div class="flex items-center justify-between text-xs font-bold text-slate-800 mb-1.5">
-                  <span class="flex items-center gap-1.5">
-                    <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center text-[10px]">2</span>
-                    심층 통사론에서의 이동 규칙(Movement Rules)
-                  </span>
-                  <span class="text-amber-600 font-extrabold">오답률 61.8%</span>
-                </div>
-                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                  <div class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 61.8%"></div>
-                </div>
-                <div class="flex items-center justify-between text-[11px] text-slate-500 mt-1">
-                  <span>학생 제작 문제 9건 출제됨</span>
-                  <span class="text-indigo-600 font-semibold cursor-pointer hover:underline" onclick="showToast('교수님 강의 보강 메모에 추가되었습니다.')">+ 다음 주 강의 보강 주제로 추가</span>
-                </div>
-              </div>
-
-              <!-- Item 3 -->
-              <div>
-                <div class="flex items-center justify-between text-xs font-bold text-slate-800 mb-1.5">
-                  <span class="flex items-center gap-1.5">
-                    <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-700 flex items-center justify-center text-[10px]">3</span>
-                    보편문법(Universal Grammar)과 제2언어 습득 임계기
-                  </span>
-                  <span class="text-blue-600 font-extrabold">오답률 48.5%</span>
-                </div>
-                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                  <div class="bg-blue-500 h-full rounded-full transition-all duration-500" style="width: 48.5%"></div>
-                </div>
-                <div class="flex items-center justify-between text-[11px] text-slate-500 mt-1">
-                  <span>학생 제작 문제 18건 출제됨</span>
-                  <span class="text-indigo-600 font-semibold cursor-pointer hover:underline" onclick="showToast('교수님 강의 보강 메모에 추가되었습니다.')">+ 다음 주 강의 보강 주제로 추가</span>
-                </div>
-              </div>
-            </div>
+        <label class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+          과목
+          <select id="analytics-course" onchange="renderAnalytics()" class="rounded-lg border border-slate-300 bg-white p-2">
+            <option value="all">전체 과목</option>
+            <option value="cog">언어인지과학개론</option>
+            <option value="biz">글로벌비즈니스영어</option>
+            <option value="ai">인공지능과자연어처리</option>
+          </select>
+        </label>
+        <form id="supplement-form" class="hidden rounded-2xl border border-indigo-200 bg-white p-5 space-y-4">
+          <div>
+            <h3 class="text-lg font-bold text-indigo-900">공식 보충 문제 만들기</h3>
+            <p id="supplement-target" class="mt-1 text-sm text-slate-600"></p>
           </div>
-
-          <!-- Right: Professor Action Memo -->
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-2xs space-y-4 flex flex-col justify-between">
-            <div>
-              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 mb-2">
-                <i data-lucide="message-square-plus" class="w-4 h-4 text-[#002C6C]"></i>
-                <span>수업 개선 처방전 발행</span>
-              </h3>
-              <p class="text-xs text-slate-500 mb-3">학생들의 오답률과 토론 피드백을 보고 다음 수업에 배포할 공식 보충 연습문제를 바로 발송합니다.</p>
-
-              <div class="space-y-2">
-                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
-                  <span class="font-bold text-slate-800">김교수 메모:</span>
-                  <p class="text-slate-600 mt-0.5">"학생들이 브로카 영역과 활자각회(angular gyrus)를 혼동하고 있음. 다음 주 10분 복습 퀴즈 배포 예정."</p>
-                </div>
-              </div>
-            </div>
-
-            <button onclick="showToast('교수님 공식 보충 문제가 학생들에게 발송되었습니다!')" class="spring-interactive w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-md hover:bg-indigo-700 flex items-center justify-center gap-2">
-              <i data-lucide="send" class="w-3.5 h-3.5"></i>
-              <span>공식 보충 문제 학생들에게 발송</span>
-            </button>
+          <label class="block space-y-1 text-sm font-semibold">문제 본문
+            <textarea id="supplement-question" required maxlength="500" rows="2" class="block w-full rounded-lg border border-slate-300 p-2"></textarea>
+          </label>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <label class="block space-y-1 text-sm font-semibold">보기 1
+              <input id="supplement-option-1" required maxlength="240" class="block w-full rounded-lg border border-slate-300 p-2">
+            </label>
+            <label class="block space-y-1 text-sm font-semibold">보기 2
+              <input id="supplement-option-2" required maxlength="240" class="block w-full rounded-lg border border-slate-300 p-2">
+            </label>
+            <label class="block space-y-1 text-sm font-semibold">보기 3
+              <input id="supplement-option-3" required maxlength="240" class="block w-full rounded-lg border border-slate-300 p-2">
+            </label>
+            <label class="block space-y-1 text-sm font-semibold">보기 4
+              <input id="supplement-option-4" required maxlength="240" class="block w-full rounded-lg border border-slate-300 p-2">
+            </label>
           </div>
-        </div>
+          <label class="block space-y-1 text-sm font-semibold">정답
+            <select id="supplement-answer" required class="block rounded-lg border border-slate-300 p-2">
+              <option value="">선택하세요</option>
+              <option value="0">1번</option>
+              <option value="1">2번</option>
+              <option value="2">3번</option>
+              <option value="3">4번</option>
+            </select>
+          </label>
+          <label class="block space-y-1 text-sm font-semibold">해설
+            <textarea id="supplement-explanation" required maxlength="500" rows="2" class="block w-full rounded-lg border border-slate-300 p-2"></textarea>
+          </label>
+          <div class="flex flex-wrap gap-2">
+            <button type="submit" class="spring-interactive cursor-pointer rounded-lg bg-indigo-700 px-4 py-2 text-sm font-bold text-white">공식 보충 문제 게시</button>
+            <button type="button" onclick="closeSupplementForm()" class="cursor-pointer rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold">취소</button>
+          </div>
+        </form>
+        <p id="analytics-status" class="text-sm font-semibold text-indigo-700" role="status"></p>
+        <div id="analytics-list" class="grid gap-4 lg:grid-cols-2"></div>
       </section>
 
       <!-- ========================================================
@@ -903,6 +912,10 @@
     };
     const courseWeeks = ['w1', 'w2', 'w3'];
     const demoStudent = { id: 'demo-student', name: '이영찬' };
+    const demoExams = [
+      { course: 'biz', startsAt: '2026-11-20T14:00:00+09:00', range: '1~3주차' },
+      { course: 'cog', startsAt: '2026-11-18T10:00:00+09:00', range: '1~3주차' }
+    ];
 
     // State Management
     const state = {
@@ -924,6 +937,9 @@
       answerSubmitted: false,
       attempts: [],
       problemComments: [],
+      variantSource: null,
+      supplementSource: null,
+      standardProblemDraft: null,
 
       // Initial Data (Realistic HUFS Mock Data)
       problems: [
@@ -935,6 +951,7 @@
           weekName: '2주차: 인지신경망과 언어 이해',
           type: 'mcq',
           title: "브로카 영역(Broca's area) 손상의 주된 특징",
+          concept: "브로카 영역과 발화 유창성",
           questionKo: "언어 습득 및 처리 과정에서 좌반구 전두엽의 브로카 영역이 손상되었을 때 나타나는 가장 전형적인 실어증 증상은 무엇인가?",
           questionEn: "What is the primary characteristic of speech impairment resulting from damage to Broca's area in the left frontal lobe during language processing?",
           options: [
@@ -959,6 +976,7 @@
           weekName: '2주차: 인지신경망과 언어 이해',
           type: 'mcq',
           title: "베르니케 실어증 환자의 발화 특성",
+          concept: "베르니케 실어증과 발화 특성",
           questionKo: "베르니케 영역 손상 환자가 보이는 말하기 특성 중 옳은 설명은?",
           questionEn: "Which description accurately characterizes the speech output of a patient with Wernicke's aphasia?",
           options: [
@@ -983,6 +1001,7 @@
           weekName: '1주차: 글로벌 무역 서한 및 협상',
           type: 'mcq',
           title: "인코텀즈(Incoterms 2020) FOB 조건의 비용 분기점",
+          concept: "FOB의 위험 및 비용 이전",
           questionKo: "Incoterms 2020의 FOB(Free On Board) 조건에서 매도인(수출자)의 위험 및 비용 부담이 종료되는 시점은 언제인가?",
           questionEn: "Under the FOB (Free On Board) rule of Incoterms 2020, at what exact point does the seller's risk and cost transfer to the buyer?",
           options: [
@@ -1007,6 +1026,7 @@
           weekName: '3주차: 트랜스포머와 어텐션 메커니즘',
           type: 'mcq',
           title: "Self-Attention 메커니즘에서 Query, Key, Value의 내적 연산 목적",
+          concept: "Self-Attention의 Query·Key 내적",
           questionKo: "트랜스포머의 Scaled Dot-Product Attention에서 Query와 Key의 내적(Dot-product) 연산이 수행하는 본질적인 역할은 무엇인가?",
           questionEn: "What is the fundamental role performed by the dot-product of Query and Key in the Scaled Dot-Product Attention of Transformers?",
           options: [
@@ -1079,6 +1099,8 @@
       lucide.createIcons();
       document.getElementById('activity-form').addEventListener('submit', publishWeekActivity);
       document.getElementById('modal-comment-form').addEventListener('submit', postProblemComment);
+      document.getElementById('supplement-form').addEventListener('submit', publishSupplement);
+      renderUpcomingExams();
       updateCourseWeeks();
       updateProblemFormWeeks('w2');
       renderHomeProblems();
@@ -1114,6 +1136,12 @@
         heroBadge.textContent = "교수자 수업 인사이트 & 피드백 모드";
         showToast("👨‍🏫 교수자 모드로 전환되었습니다. 학생 오답률 통계와 강의 피드백을 확인하세요!");
       }
+      const isProfessor = role === 'professor';
+      document.getElementById('mypage-nav-wrapper').classList.toggle('hidden', isProfessor);
+      document.getElementById('exam-review-links').classList.toggle('hidden', isProfessor);
+      document.getElementById('analytics-nav-wrapper').classList.toggle('hidden', !isProfessor);
+      if (!isProfessor && state.currentTab === 'analytics') switchTab('dashboard');
+      if (isProfessor && (state.currentTab === 'mypage' || state.variantSource)) switchTab('dashboard');
       renderWeekActivity();
       lucide.createIcons();
     }
@@ -1152,8 +1180,12 @@
 
     // Tab Navigation
     function switchTab(tabId) {
+      if (tabId === 'mypage' && state.currentRole !== 'student') return;
+      if (tabId === 'analytics' && state.currentRole !== 'professor') return;
+      if (tabId !== 'analytics' && state.supplementSource) closeSupplementForm();
+      if (tabId !== 'create' && state.variantSource) resetVariantForm();
       state.currentTab = tabId;
-      const tabs = ['dashboard', 'courses', 'create', 'scholarships', 'analytics', 'design-system'];
+      const tabs = ['dashboard', 'courses', 'create', 'mypage', 'scholarships', 'analytics', 'design-system'];
 
       tabs.forEach(t => {
         const sec = document.getElementById(`tab-${t}`);
@@ -1182,8 +1214,248 @@
         dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
       }
 
+      if (tabId === 'mypage') renderWrongAnswers();
+      if (tabId === 'analytics') renderAnalytics();
+      if (tabId === 'dashboard') renderUpcomingExams();
       window.scrollTo({ top: 0, behavior: 'smooth' });
       lucide.createIcons();
+    }
+
+    function escapeProblemText(value) {
+      return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function renderUpcomingExams(now = new Date()) {
+      const seoulDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: 'numeric', day: 'numeric' });
+      const dayNumber = date => {
+        const parts = seoulDay.formatToParts(date);
+        const value = type => Number(parts.find(part => part.type === type).value);
+        return Date.UTC(value('year'), value('month') - 1, value('day')) / 86400000;
+      };
+      const displayDate = new Intl.DateTimeFormat('ko-KR', {
+        timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+      });
+      const upcoming = demoExams.map(exam => ({ ...exam, date: new Date(exam.startsAt) }))
+        .filter(exam => exam.date >= now)
+        .sort((a, b) => a.date - b.date);
+      const today = dayNumber(now);
+      document.getElementById('upcoming-exam-list').innerHTML = upcoming.length ? upcoming.map(exam => {
+        const days = dayNumber(exam.date) - today;
+        return `
+          <article class="rounded-xl border border-slate-200 p-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-sm font-bold text-slate-900">${courseNames[exam.course]} · 중간고사</h3>
+              <span class="rounded-full bg-indigo-50 px-2 py-1 text-xs font-bold text-indigo-800">${days === 0 ? 'D-day' : `D-${days}`}</span>
+            </div>
+            <p class="mt-2 text-sm text-slate-700"><time datetime="${exam.startsAt}">${displayDate.format(exam.date)}</time></p>
+            <p class="mt-1 text-xs text-slate-500">시험 범위 · ${exam.range}</p>
+            <button onclick="openWrongAnswers('${exam.course}')" class="spring-interactive mt-3 cursor-pointer text-xs font-bold text-blue-700 underline">오답 복습하기</button>
+          </article>`;
+      }).join('') : '<p class="text-sm text-slate-500">예정된 시험이 없어요.</p>';
+    }
+
+    function renderAnalytics() {
+      if (state.currentRole !== 'professor') return;
+      const course = document.getElementById('analytics-course').value;
+      const problems = state.problems.filter(problem => course === 'all' || problem.course === course);
+      const list = document.getElementById('analytics-list');
+      list.innerHTML = problems.map(problem => {
+        const firstAttempts = new Map();
+        for (const attempt of state.attempts) {
+          if (attempt.problemId === problem.id && !firstAttempts.has(attempt.studentId)) {
+            firstAttempts.set(attempt.studentId, attempt);
+          }
+        }
+        const responses = [...firstAttempts.values()];
+        const total = responses.length;
+        const wrong = responses.filter(attempt => !attempt.isCorrect).length;
+        const comments = state.problemComments.filter(comment => comment.problemId === problem.id);
+        return `
+          <article class="rounded-2xl border border-slate-200 bg-white p-5 space-y-3">
+            <p class="text-xs font-semibold text-indigo-700">${escapeProblemText(problem.courseName)} · ${escapeProblemText(problem.weekName)} · ${problem.isOfficial ? '교수 공식' : '학우 출제'}</p>
+            <h3 class="break-words font-bold text-slate-900">${escapeProblemText(problem.title)}</h3>
+            <p class="text-sm font-semibold text-slate-700">응답 ${total}명 · ${total ? `오답률 ${Math.round(100 * wrong / total)}% (${wrong}/${total}명)` : '오답률 — 아직 응답이 없어요'}</p>
+            <div class="space-y-1">
+              <p class="text-xs font-bold text-slate-700">보기별 선택 분포</p>
+              <ul class="space-y-1">
+                ${problem.options.map((option, index) => {
+                  const count = responses.filter(attempt => attempt.selectedAnswerIdx === index).length;
+                  return `<li class="flex items-start justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2 text-xs">
+                    <span class="min-w-0 break-words">${index + 1}번 · ${escapeProblemText(option)}${index === problem.answerIdx ? ' <span class="font-bold text-emerald-700">(정답)</span>' : ''}</span>
+                    <span class="shrink-0 font-bold text-slate-700">${count}명${total ? ` · ${Math.round(100 * count / total)}%` : ''}</span>
+                  </li>`;
+                }).join('')}
+              </ul>
+            </div>
+            <div class="space-y-1 border-t border-slate-100 pt-3">
+              <h4 class="text-xs font-bold text-slate-700">학생 댓글 ${comments.length}개</h4>
+              ${comments.length ? `<ul class="space-y-2">${comments.map(comment => `
+                <li class="rounded-lg bg-slate-50 px-3 py-2">
+                  <p class="text-xs font-semibold">${escapeProblemText(comment.author)}</p>
+                  <p class="mt-1 whitespace-pre-wrap break-words text-sm">${escapeProblemText(comment.body)}</p>
+                </li>`).join('')}</ul>` : '<p class="text-xs text-slate-500">등록된 댓글이 없어요.</p>'}
+            </div>
+            <button onclick="openSupplementForm(${problem.id})" class="spring-interactive cursor-pointer rounded-lg bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-800">이 주차에 보충 문제 만들기</button>
+          </article>`;
+      }).join('') || '<p class="text-sm text-slate-500">이 과목에는 분석할 문항이 없어요.</p>';
+    }
+
+    function openSupplementForm(problemId) {
+      if (state.currentRole !== 'professor') return;
+      const problem = state.problems.find(item => item.id === problemId);
+      if (!problem) return;
+      if (state.supplementSource?.id !== problemId) closeSupplementForm();
+      state.supplementSource = problem;
+      document.getElementById('supplement-target').textContent = `${problem.courseName} · ${problem.weekName} · 기준 문항: ${problem.title}`;
+      document.getElementById('analytics-status').textContent = '';
+      document.getElementById('supplement-form').classList.remove('hidden');
+      document.getElementById('supplement-question').focus();
+    }
+
+    function closeSupplementForm() {
+      state.supplementSource = null;
+      const form = document.getElementById('supplement-form');
+      form.reset();
+      form.classList.add('hidden');
+    }
+
+    function publishSupplement(event) {
+      event.preventDefault();
+      const source = state.supplementSource;
+      if (!source || state.currentRole !== 'professor') return;
+      const question = document.getElementById('supplement-question').value.trim();
+      const options = [1, 2, 3, 4].map(number => document.getElementById(`supplement-option-${number}`).value.trim());
+      const answer = document.getElementById('supplement-answer').value;
+      const explanation = document.getElementById('supplement-explanation').value.trim();
+      if (!question || !explanation || options.some(option => !option) || !['0', '1', '2', '3'].includes(answer)) {
+        document.getElementById('analytics-status').textContent = '문제 본문, 보기 4개, 정답, 해설을 입력해 주세요.';
+        return;
+      }
+      state.problems.unshift({
+        id: state.problems.length + 1,
+        course: source.course,
+        courseName: source.courseName,
+        week: source.week,
+        weekName: source.weekName,
+        type: 'mcq',
+        title: question.length > 26 ? `${question.slice(0, 26)}…` : question,
+        questionKo: question,
+        questionEn: question,
+        options,
+        answerIdx: Number(answer),
+        concept: source.concept,
+        explanation,
+        author: '김인철 교수',
+        isOfficial: true,
+        solvedCount: 0,
+        errorRate: 0,
+        likes: 0
+      });
+      closeSupplementForm();
+      renderHomeProblems();
+      filterCourse(source.course);
+      document.getElementById('week-selector').value = source.week;
+      filterWeek();
+      renderAnalytics();
+      document.getElementById('analytics-status').textContent = '공식 보충 문제를 게시했어요. 학생 문제함의 같은 과목·주차에서 확인할 수 있어요.';
+    }
+
+    function openWrongAnswers(course) {
+      if (state.currentRole !== 'student') return;
+      if (courseNames[course]) {
+        document.getElementById('wrong-course').value = course;
+        document.getElementById('wrong-sort').value = 'most';
+      }
+      switchTab('mypage');
+    }
+
+    function renderWrongAnswers() {
+      if (state.currentRole !== 'student') return;
+      const course = document.getElementById('wrong-course').value;
+      const sort = document.getElementById('wrong-sort').value;
+      const rows = [];
+      for (const problem of state.problems) {
+        if (course !== 'all' && problem.course !== course) continue;
+        const attempts = getStudentAttempts(problem.id);
+        const wrong = attempts.filter(attempt => !attempt.isCorrect);
+        if (wrong.length === 0) continue;
+        rows.push({
+          problem,
+          total: attempts.length,
+          count: wrong.length,
+          latestWrong: wrong.at(-1).submittedAt,
+          reviewed: attempts.at(-1).isCorrect
+        });
+      }
+      rows.sort((a, b) => (sort === 'most' ? b.count - a.count : 0) || b.latestWrong - a.latestWrong);
+      document.getElementById('wrong-summary').textContent = `오답 문항 ${rows.length}개`;
+      document.getElementById('wrong-list').innerHTML = rows.length ? rows.map(({ problem, total, count, reviewed }) => `
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-semibold text-slate-500">${escapeProblemText(problem.courseName)} · ${escapeProblemText(problem.weekName.split(':')[0])}</span>
+            <span class="rounded-full px-2 py-1 text-xs font-semibold ${reviewed ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-800'}">${reviewed ? '복습 완료' : '복습 필요'}</span>
+          </div>
+          <h3 class="break-words text-sm font-bold text-slate-900">${escapeProblemText(problem.title)}</h3>
+          <p class="text-xs font-semibold text-slate-600"><span class="text-rose-700">${count}번 틀림</span> · 총 ${total}회 풀이</p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="openSolveModal(${problem.id})" class="spring-interactive cursor-pointer rounded-lg bg-[#002C6C] px-3 py-2 text-xs font-semibold text-white">다시 풀기</button>
+            <button onclick="openVariantForm(${problem.id})" class="spring-interactive cursor-pointer rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-800">변형 문제 만들기</button>
+          </div>
+        </article>
+      `).join('') : '<p class="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600">선택한 과목에 아직 오답 기록이 없어요. 문제함에서 문제를 풀어 보세요.</p>';
+    }
+
+    function openVariantForm(problemId) {
+      const source = state.problems.find(problem => problem.id === problemId);
+      if (!source || state.variantSource || state.currentRole !== 'student' || !getStudentAttempts(problemId).some(attempt => !attempt.isCorrect)) return;
+      const fields = ['form-course', 'form-week', 'form-question', 'form-explanation', 'opt-1', 'opt-2', 'opt-3', 'opt-4'];
+      state.standardProblemDraft = {
+        values: fields.map(id => [id, document.getElementById(id).value]),
+        template: state.selectedTemplate,
+        answer: document.querySelector('input[name="correct-opt"]:checked')?.value,
+        preview: document.getElementById('preview-en-text').textContent
+      };
+      state.variantSource = source;
+      selectTemplate('mcq', false);
+      const courseInput = document.getElementById('form-course');
+      courseInput.value = source.course;
+      updateProblemFormWeeks(source.week);
+      courseInput.disabled = true;
+      document.getElementById('form-week').disabled = true;
+      document.getElementById('form-concept').value = (source.concept || state.weekActivities[`${source.course}:${source.week}`]?.keywords || source.title).slice(0, 150);
+      document.getElementById('variant-source-question').textContent = source.questionKo;
+      document.getElementById('variant-context').classList.remove('hidden');
+      clearVariantInputs();
+      switchTab('create');
+    }
+
+    function clearVariantInputs() {
+      for (const id of ['form-question', 'form-explanation', 'opt-1', 'opt-2', 'opt-3', 'opt-4']) {
+        document.getElementById(id).value = '';
+      }
+      document.querySelectorAll('input[name="correct-opt"]').forEach(radio => { radio.checked = false; });
+      document.getElementById('preview-en-text').textContent = '';
+    }
+
+    function resetVariantForm() {
+      state.variantSource = null;
+      document.getElementById('form-course').disabled = false;
+      document.getElementById('form-week').disabled = false;
+      document.getElementById('variant-context').classList.add('hidden');
+      const draft = state.standardProblemDraft;
+      state.standardProblemDraft = null;
+      for (const [id, value] of draft.values) {
+        if (id === 'form-week') updateProblemFormWeeks(value);
+        else document.getElementById(id).value = value;
+      }
+      selectTemplate(draft.template, false);
+      document.querySelectorAll('input[name="correct-opt"]').forEach(radio => { radio.checked = radio.value === draft.answer; });
+      document.getElementById('preview-en-text').textContent = draft.preview;
+    }
+
+    function cancelProblemForm() {
+      switchTab(state.variantSource ? 'mypage' : 'courses');
     }
 
     // Render Home Problem Cards
@@ -1245,8 +1517,9 @@
               </div>
             </div>
 
-            <h3 class="font-bold text-sm text-slate-900 group-hover:text-blue-700 transition-colors line-clamp-1">${p.title}</h3>
-            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">${questionText}</p>
+            <h3 class="font-bold text-sm text-slate-900 group-hover:text-blue-700 transition-colors line-clamp-1">${escapeProblemText(p.title)}</h3>
+            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">${escapeProblemText(questionText)}</p>
+            ${p.sourceProblemId ? '<span class="inline-block rounded-full bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-700">변형 문제</span>' : ''}
           </div>
 
           <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between">
@@ -1364,7 +1637,11 @@
     }
 
     // Template Selection
-    function selectTemplate(tpl) {
+    function selectTemplate(tpl, notify = true) {
+      if (state.variantSource && tpl !== 'mcq') {
+        showToast('변형 문제는 4지선다형으로 만들 수 있어요.');
+        return;
+      }
       state.selectedTemplate = tpl;
       const tpls = ['mcq', 'ox', 'blank', 'essay'];
       tpls.forEach(t => {
@@ -1382,7 +1659,7 @@
       } else {
         mcqContainer.classList.add('hidden');
       }
-      showToast(`'${tpl.toUpperCase()}' 템플릿 틀이 적용되었습니다.`);
+      if (notify) showToast(`'${tpl.toUpperCase()}' 템플릿 틀이 적용되었습니다.`);
     }
 
     // Auto Translate Question
@@ -1399,13 +1676,23 @@
 
     // Submit Problem
     function submitNewProblem() {
-      const question = document.getElementById('form-question').value;
-      const course = document.getElementById('form-course').value;
-      const week = document.getElementById('form-week').value;
-      const explanation = document.getElementById('form-explanation').value;
+      const source = state.variantSource;
+      const question = document.getElementById('form-question').value.trim();
+      const course = source?.course ?? document.getElementById('form-course').value;
+      const week = source?.week ?? document.getElementById('form-week').value;
+      const explanation = document.getElementById('form-explanation').value.trim();
+      const options = [1, 2, 3, 4].map(number => document.getElementById(`opt-${number}`).value.trim());
+      const selected = document.querySelector('input[name="correct-opt"]:checked');
+      const answerIdx = selected ? Number(selected.value) - 1 : 0;
+      const concept = source ? document.getElementById('form-concept').value.trim() : '';
 
       if (!question.trim()) {
         showToast("⚠️ 문제 본문을 입력해 주세요!");
+        return;
+      }
+
+      if (source && (!concept || !explanation || !selected || options.some(option => !option))) {
+        showToast('핵심 개념, 보기 4개, 정답, 해설을 모두 입력해 주세요.');
         return;
       }
 
@@ -1419,20 +1706,16 @@
         type: state.selectedTemplate,
         title: question.slice(0, 26) + "...",
         questionKo: question,
-        questionEn: document.getElementById('preview-en-text').textContent.replace(/"/g, ''),
-        options: [
-          document.getElementById('opt-1') ? document.getElementById('opt-1').value : "선택지 1",
-          document.getElementById('opt-2') ? document.getElementById('opt-2').value : "선택지 2",
-          document.getElementById('opt-3') ? document.getElementById('opt-3').value : "선택지 3",
-          document.getElementById('opt-4') ? document.getElementById('opt-4').value : "선택지 4"
-        ],
-        answerIdx: 0,
+        questionEn: document.getElementById('preview-en-text').textContent.replace(/"/g, '') || question,
+        options,
+        answerIdx,
+        ...(source ? { concept, sourceProblemId: source.id } : {}),
         explanation: explanation || "출제자가 제공한 정답 해설입니다.",
-        author: "이영찬 (학우 출제)",
+        author: `${demoStudent.name} (학우 출제)`,
         isOfficial: false,
-        solvedCount: 1,
+        solvedCount: source ? 0 : 1,
         errorRate: 0,
-        likes: 1
+        likes: source ? 0 : 1
       };
 
       state.problems.unshift(newProblem);
@@ -1610,6 +1893,7 @@
       }
       resBox.querySelector('[data-explanation]').textContent = p.explanation;
       document.getElementById('btn-submit-answer').classList.add('hidden');
+      if (state.currentTab === 'mypage') renderWrongAnswers();
       renderProblemDiscussion();
       lucide.createIcons();
     }
