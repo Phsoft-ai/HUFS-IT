@@ -109,26 +109,8 @@
       </div>
     </div>
 
-    <!-- Center Mode Switch (Service Prototype vs Design System Viewer) -->
-    <div class="hidden lg:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
-      <button onclick="setViewMode('app')" id="mode-btn-app" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs">
-        <i data-lucide="layout" class="w-3.5 h-3.5 text-blue-600"></i>
-        <span>서비스 프로토타입</span>
-      </button>
-      <button onclick="setViewMode('design-system')" id="mode-btn-ds" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">
-        <i data-lucide="component" class="w-3.5 h-3.5 text-slate-500"></i>
-        <span>🎨 디자인 시스템 & 컴포넌트 뷰</span>
-      </button>
-    </div>
-
-    <!-- Right Controls: Role Switcher & Multi-language & Profile -->
+    <!-- Right Controls: Role Switcher & Profile -->
     <div class="flex items-center gap-2.5">
-      <!-- Multilingual Toggle -->
-      <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-200 text-xs">
-        <button onclick="setLang('ko')" id="lang-btn-ko" class="px-2.5 py-1 rounded-lg font-bold bg-white text-slate-900 shadow-2xs">KO</button>
-        <button onclick="setLang('en')" id="lang-btn-en" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-slate-900">EN</button>
-        <button onclick="setLang('de')" id="lang-btn-de" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-slate-900">DE</button>
-      </div>
 
       <!-- Role Switcher (교수자 ↔ 학생) -->
       <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
@@ -212,17 +194,6 @@
           <i data-lucide="boxes" class="w-5 h-5 shrink-0 text-amber-500"></i>
           <span class="hidden md:inline">디자인 시스템 가이드</span>
         </button>
-      </div>
-
-      <!-- Bottom Card in Sidebar -->
-      <div class="p-3 hidden md:block">
-        <div class="p-3.5 rounded-2xl bg-gradient-to-br from-slate-900 to-[#002C6C] text-white space-y-2 shadow-sm">
-          <div class="flex items-center justify-between text-xs font-semibold text-blue-200">
-            <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> 공식 자료 연동</span>
-            <span class="text-[10px] bg-white/20 px-1.5 py-0.5 rounded">안심 저작권</span>
-          </div>
-          <p class="text-xs text-slate-200 leading-snug">교수님이 공인한 연습문제 및 강의 노트를 바탕으로 학생 문제가 제작됩니다.</p>
-        </div>
       </div>
     </aside>
 
@@ -1152,12 +1123,12 @@
       const dsBtn = document.getElementById('mode-btn-ds');
 
       if (mode === 'app') {
-        appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
-        dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+        if (appBtn) appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
+        if (dsBtn) dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
         switchTab('dashboard');
       } else {
-        dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
-        appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+        if (dsBtn) dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
+        if (appBtn) appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
         switchTab('design-system');
       }
     }
@@ -1167,10 +1138,12 @@
       state.currentLang = lang;
       ['ko', 'en', 'de'].forEach(l => {
         const btn = document.getElementById(`lang-btn-${l}`);
-        if (l === lang) {
-          btn.className = "px-2.5 py-1 rounded-lg font-bold bg-white text-slate-900 shadow-2xs";
-        } else {
-          btn.className = "px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-slate-900";
+        if (btn) {
+          if (l === lang) {
+            btn.className = "px-2.5 py-1 rounded-lg font-bold bg-white text-slate-900 shadow-2xs";
+          } else {
+            btn.className = "px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-slate-900";
+          }
         }
       });
       renderHomeProblems();
@@ -1203,15 +1176,17 @@
         }
       });
 
-      // Synchronize top view toggle state
+      // Synchronize top view toggle state if present
       const appBtn = document.getElementById('mode-btn-app');
       const dsBtn = document.getElementById('mode-btn-ds');
-      if (tabId === 'design-system') {
-        dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
-        appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
-      } else {
-        appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
-        dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+      if (appBtn && dsBtn) {
+        if (tabId === 'design-system') {
+          dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
+          appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+        } else {
+          appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
+          dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+        }
       }
 
       if (tabId === 'mypage') renderWrongAnswers();
