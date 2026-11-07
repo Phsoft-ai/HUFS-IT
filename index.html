@@ -680,7 +680,7 @@
 
               <button onclick="selectTemplate('ox')" id="tpl-ox" class="tpl-btn p-4 rounded-2xl border border-slate-200 bg-white text-left hover:border-slate-300 transition-all">
                 <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center mb-2">
-                  <i data-lucide="check-x" class="w-4 h-4"></i>
+                  <i data-lucide="check" class="w-4 h-4"></i>
                 </div>
                 <div class="font-bold text-sm text-slate-800">진위형 (O/X)</div>
                 <div class="text-[11px] text-slate-500 mt-0.5">핵심 명제 판별</div>
@@ -1287,13 +1287,6 @@
           }
         }
       });
-
-      if (tabId === 'mypage') renderWrongAnswers();
-      if (tabId === 'analytics') renderAnalytics();
-      if (tabId === 'dashboard') renderUpcomingExams();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      lucide.createIcons();
-    }
 
       if (tabId === 'mypage') renderWrongAnswers();
       if (tabId === 'analytics') renderAnalytics();
