@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>외대잇다 (HUFS ITDA) - 교수와 학생을 잇는 지식 성장 플랫폼 & 디자인 시스템</title>
+  <title>외대잇다 (HUFS ITDA) - 교수와 학생을 잇는 지식 성장 플랫폼</title>
 
   <!-- Pretendard Font -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -109,29 +109,70 @@
       </div>
     </div>
 
-    <!-- Right Controls: Role Switcher & Profile -->
-    <div class="flex items-center gap-2.5">
-
-      <!-- Role Switcher (교수자 ↔ 학생) -->
-      <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
-        <button onclick="setRole('student')" id="role-btn-student" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-emerald-500 text-white shadow-xs">
-          <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
-          <span>학생 모드</span>
-        </button>
-        <button onclick="setRole('professor')" id="role-btn-prof" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-all">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i>
-          <span>교수자 모드</span>
-        </button>
-      </div>
-
-      <!-- User Profile Badge -->
-      <div id="user-profile-badge" class="hidden sm:flex items-center gap-2 pl-2 border-l border-slate-200">
-        <div class="w-9 h-9 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm border border-slate-300 overflow-hidden">
+    <!-- Right Controls: Modern Account Dropdown -->
+    <div class="relative" id="account-dropdown-wrapper">
+      <button onclick="toggleAccountDropdown()" id="account-dropdown-btn" class="flex items-center gap-2.5 px-3 py-2 rounded-2xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all bg-white shadow-2xs cursor-pointer group">
+        <div id="user-avatar-circle" class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors">
           <span id="user-avatar-text">찬</span>
         </div>
-        <div class="text-left text-xs">
-          <div class="font-bold text-slate-900" id="user-name-text">이영찬</div>
-          <div class="text-[11px] text-slate-500" id="user-sub-text">언어인지과학과</div>
+        <div class="text-left text-xs hidden sm:block leading-tight">
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-slate-900" id="user-name-text">이영찬 학우</span>
+            <span id="user-role-badge" class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">학생</span>
+          </div>
+          <div class="text-[11px] text-slate-500" id="user-sub-text">언어인지과학과 · 21학번</div>
+        </div>
+        <i data-lucide="chevron-down" id="account-chevron" class="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-transform duration-200"></i>
+      </button>
+
+      <!-- Account Switch Dropdown Menu -->
+      <div id="account-dropdown-menu" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-200 py-2.5 z-50 spring-pop">
+        <div class="px-4 py-2 border-b border-slate-100">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">계정 전환</p>
+          <p class="text-[11px] text-slate-500 mt-0.5">권한별 전용 화면으로 즉시 전환됩니다.</p>
+        </div>
+
+        <div class="p-1.5 space-y-1">
+          <!-- Student Account Option -->
+          <button onclick="selectAccount('student')" id="account-opt-student" class="w-full px-3 py-2.5 rounded-xl text-left hover:bg-emerald-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-emerald-50/50">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                찬
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-slate-900">이영찬</span>
+                  <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded">학생 계정</span>
+                </div>
+                <p class="text-[11px] text-slate-500">언어인지과학과 · 학부생</p>
+              </div>
+            </div>
+            <i id="check-student" data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+          </button>
+
+          <!-- Professor Account Option -->
+          <button onclick="selectAccount('professor')" id="account-opt-prof" class="w-full px-3 py-2.5 rounded-xl text-left hover:bg-indigo-50/60 flex items-center justify-between transition-colors cursor-pointer group">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                김
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-slate-900">김인철 교수</span>
+                  <span class="text-[9px] font-bold bg-indigo-100 text-indigo-800 px-1.5 py-0.2 rounded">교수 계정</span>
+                </div>
+                <p class="text-[11px] text-slate-500">언어인지과학과 · 학과장</p>
+              </div>
+            </div>
+            <i id="check-prof" data-lucide="check" class="w-4 h-4 text-indigo-600 hidden"></i>
+          </button>
+        </div>
+
+        <div class="my-1 border-t border-slate-100"></div>
+
+        <div class="px-4 py-1.5 flex items-center justify-between text-[11px] text-slate-500">
+          <span>한국외대 통합인증</span>
+          <span class="inline-flex items-center gap-1 text-emerald-600 font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>인증됨</span>
         </div>
       </div>
     </div>
@@ -144,13 +185,13 @@
     <!-- Left Navigation Sidebar -->
     <aside class="w-20 md:w-64 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 transition-all duration-200 z-30">
       <div class="p-3 md:p-4 space-y-1.5">
-        <div class="hidden md:block px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+        <div id="sidebar-menu-title" class="hidden md:block px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
           학습 메뉴
         </div>
 
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs">
           <i data-lucide="home" class="w-5 h-5 shrink-0 text-[#0C3E85]"></i>
-          <span class="hidden md:inline">홈 대시보드</span>
+          <span class="hidden md:inline" id="nav-dashboard-text">홈 대시보드</span>
         </button>
 
         <button onclick="switchTab('courses')" id="nav-courses" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
@@ -159,41 +200,35 @@
           <span class="hidden md:inline-block ml-auto text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold text-slate-600">4과목</span>
         </button>
 
-        <button onclick="switchTab('create')" id="nav-create" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
-          <i data-lucide="pen-tool" class="w-5 h-5 shrink-0 text-slate-400"></i>
-          <span class="hidden md:inline">문제 제작 스튜디오</span>
-          <span class="hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold">틀 제공</span>
-        </button>
-
-        <div id="mypage-nav-wrapper">
-        <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
-          <i data-lucide="notebook-pen" class="w-5 h-5 shrink-0 text-slate-400"></i>
-          <span class="hidden md:inline">마이페이지 · 내 오답</span>
-        </button>
+        <div id="create-nav-wrapper">
+          <button onclick="switchTab('create')" id="nav-create" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+            <i data-lucide="pen-tool" class="w-5 h-5 shrink-0 text-slate-400"></i>
+            <span class="hidden md:inline" id="nav-create-text">문제 제작 스튜디오</span>
+            <span id="nav-create-badge" class="hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold">틀 제공</span>
+          </button>
         </div>
 
-        <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
-          <i data-lucide="award" class="w-5 h-5 shrink-0 text-slate-400"></i>
-          <span class="hidden md:inline">비교과·장학 Ai추천</span>
-          <span class="hidden md:inline-block ml-auto text-[10px] bg-blue-100 text-[#002C6C] px-1.5 py-0.5 rounded-md font-bold">AiTEMS</span>
-        </button>
+        <div id="mypage-nav-wrapper">
+          <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+            <i data-lucide="notebook-pen" class="w-5 h-5 shrink-0 text-slate-400"></i>
+            <span class="hidden md:inline">마이페이지 · 내 오답</span>
+          </button>
+        </div>
 
-        <div class="hidden md:block pt-4 px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          교수-학생 상호작용
+        <div id="scholarships-nav-wrapper">
+          <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+            <i data-lucide="award" class="w-5 h-5 shrink-0 text-slate-400"></i>
+            <span class="hidden md:inline">교내 장학·비교과</span>
+          </button>
         </div>
 
         <div id="analytics-nav-wrapper" class="hidden">
-        <button onclick="switchTab('analytics')" id="nav-analytics" aria-label="교수자 문항 분석" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
-          <i data-lucide="line-chart" class="w-5 h-5 shrink-0 text-indigo-500"></i>
-          <span class="hidden md:inline">오답률 & 수업 인사이트</span>
-          <span class="hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded-md font-bold">교수 피드백</span>
-        </button>
+          <button onclick="switchTab('analytics')" id="nav-analytics" aria-label="교수자 문항 분석" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+            <i data-lucide="line-chart" class="w-5 h-5 shrink-0 text-indigo-500"></i>
+            <span class="hidden md:inline">오답률 & 수업 인사이트</span>
+            <span class="hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded-md font-bold">교수 피드백</span>
+          </button>
         </div>
-
-        <button onclick="switchTab('design-system')" id="nav-ds" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
-          <i data-lucide="boxes" class="w-5 h-5 shrink-0 text-amber-500"></i>
-          <span class="hidden md:inline">디자인 시스템 가이드</span>
-        </button>
       </div>
     </aside>
 
@@ -201,137 +236,310 @@
     <main class="flex-1 overflow-y-auto p-4 md:p-8 max-w-7xl mx-auto w-full">
 
       <!-- ========================================================
-           TAB 1: 홈 대시보드
+           TAB 1: 홈 대시보드 (학생 모드 / 교수자 모드 분리)
            ======================================================== -->
       <section id="tab-dashboard" class="space-y-8 spring-pop">
-        <!-- Hero Banner with Role Dynamics -->
-        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#002C6C] via-[#0C3E85] to-[#1453A3] text-white p-6 md:p-10 shadow-lg shadow-blue-950/10">
-          <div class="relative z-10 max-w-2xl space-y-3">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-medium text-blue-100">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
-              <span id="hero-badge-text">한국외대 교육 혁신 지식 플랫폼</span>
-            </div>
-            <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight leading-tight" id="hero-title-text">
-              시험을 넘어, <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-sky-200 to-white">교수와 학생이 함께 잇는</span> 배움의 성장
-            </h1>
-            <p class="text-slate-200 text-sm md:text-base leading-relaxed" id="hero-desc-text">
-              교수님의 검증된 강의자료를 바탕으로 학생이 문제를 출제하고 토론합니다. 저작권 걱정 없이 자기주도적 학습 습관을 완성하세요.
-            </p>
-            <div class="pt-2 flex flex-wrap gap-3">
-              <button onclick="switchTab('create')" class="spring-interactive px-5 py-2.5 rounded-xl bg-white text-[#002C6C] font-bold text-sm shadow-md flex items-center gap-2 hover:bg-blue-50">
-                <i data-lucide="plus-circle" class="w-4 h-4 text-[#002C6C]"></i>
-                <span>새 문제 출제하기</span>
-              </button>
-              <button onclick="switchTab('courses')" class="spring-interactive px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white font-semibold text-sm border border-white/20 flex items-center gap-2">
-                <i data-lucide="play" class="w-4 h-4"></i>
-                <span>이번 주 연습문제 풀기</span>
-              </button>
-            </div>
-          </div>
-          <!-- Decorative Background element -->
-          <div class="absolute -right-10 -bottom-10 w-96 h-96 rounded-full bg-gradient-to-tl from-[#0096B4]/30 to-transparent blur-2xl pointer-events-none"></div>
-        </div>
 
-        <section id="exam-review-links" aria-labelledby="exam-review-title" class="rounded-2xl border border-slate-200 bg-white p-5 space-y-3">
-          <div>
-            <h2 id="exam-review-title" class="font-bold text-slate-900">다가오는 시험</h2>
-            <p class="mt-1 text-xs text-slate-500">시연용 일정 · 한국 시간(KST)</p>
-          </div>
-          <div id="upcoming-exam-list" class="grid gap-3 lg:grid-cols-2"></div>
-        </section>
-
-        <!-- Quick Stats Metric Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all">
-            <div class="flex items-center justify-between text-slate-400 mb-2">
-              <span class="text-xs font-semibold text-slate-500">내가 제작한 문제</span>
-              <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <i data-lucide="pencil" class="w-4 h-4"></i>
+        <!-- ==================== 1. 학생 대시보드 뷰 ==================== -->
+        <div id="student-dashboard-view" class="space-y-8">
+          <!-- Student Hero Banner -->
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#002C6C] via-[#0C3E85] to-[#1453A3] text-white p-6 md:p-10 shadow-lg shadow-blue-950/10">
+            <div class="relative z-10 max-w-2xl space-y-3">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-medium text-blue-100">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
+                <span id="hero-badge-text">한국외대 자기주도형 지식 생태계</span>
+              </div>
+              <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight leading-tight" id="hero-title-text">
+                배움을 나누고, <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-sky-200 to-white">동료와 함께 성장하는</span> 외대잇다
+              </h1>
+              <p class="text-slate-200 text-sm md:text-base leading-relaxed" id="hero-desc-text">
+                교수님의 검증된 강의 노트를 바탕으로 동료 학우들과 문제를 풀고, 오답 노트를 통해 시험을 완벽하게 대비하세요.
+              </p>
+              <div class="pt-2 flex flex-wrap gap-3">
+                <button onclick="switchTab('create')" class="spring-interactive px-5 py-2.5 rounded-xl bg-white text-[#002C6C] font-bold text-sm shadow-md flex items-center gap-2 hover:bg-blue-50">
+                  <i data-lucide="plus-circle" class="w-4 h-4 text-[#002C6C]"></i>
+                  <span>새 문제 출제하기</span>
+                </button>
+                <button onclick="switchTab('courses')" class="spring-interactive px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white font-semibold text-sm border border-white/20 flex items-center gap-2">
+                  <i data-lucide="play" class="w-4 h-4"></i>
+                  <span>이번 주 연습문제 풀기</span>
+                </button>
               </div>
             </div>
-            <div class="text-2xl font-extrabold text-slate-900" id="stat-created-count">7개</div>
-            <div class="text-[11px] text-emerald-600 font-medium flex items-center gap-1 mt-1">
-              <i data-lucide="thumbs-up" class="w-3 h-3"></i> 42명의 학우가 풀이함
-            </div>
+            <div class="absolute -right-10 -bottom-10 w-96 h-96 rounded-full bg-gradient-to-tl from-[#0096B4]/30 to-transparent blur-2xl pointer-events-none"></div>
           </div>
 
-          <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all">
-            <div class="flex items-center justify-between text-slate-400 mb-2">
-              <span class="text-xs font-semibold text-slate-500">풀이 정답률</span>
-              <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-              </div>
-            </div>
-            <div class="text-2xl font-extrabold text-slate-900">84.2%</div>
-            <div class="text-[11px] text-blue-600 font-medium flex items-center gap-1 mt-1">
-              <i data-lucide="trending-up" class="w-3 h-3"></i> 상위 12% 학습 습관
-            </div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all">
-            <div class="flex items-center justify-between text-slate-400 mb-2">
-              <span class="text-xs font-semibold text-slate-500">교수님 공인 문제</span>
-              <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <i data-lucide="verified" class="w-4 h-4"></i>
-              </div>
-            </div>
-            <div class="text-2xl font-extrabold text-slate-900">18문항</div>
-            <div class="text-[11px] text-indigo-600 font-medium flex items-center gap-1 mt-1">
-              <i data-lucide="sparkles" class="w-3 h-3"></i> 4개 주차 업로드 완료
-            </div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all">
-            <div class="flex items-center justify-between text-slate-400 mb-2">
-              <span class="text-xs font-semibold text-slate-500">비교과 추천 매칭</span>
-              <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                <i data-lucide="award" class="w-4 h-4"></i>
-              </div>
-            </div>
-            <div class="text-2xl font-extrabold text-slate-900">3건 발견</div>
-            <div class="text-[11px] text-amber-600 font-medium flex items-center gap-1 mt-1">
-              <i data-lucide="clock" class="w-3 h-3"></i> 마감 임박 (D-3)
-            </div>
-          </div>
-        </div>
-
-        <!-- Section: Hot Peer-Created Questions -->
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
+          <!-- Upcoming Exams -->
+          <section id="exam-review-links" aria-labelledby="exam-review-title" class="rounded-2xl border border-slate-200 bg-white p-5 space-y-3">
             <div>
-              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <span>🔥 실시간 인기 동료 제작 문제</span>
-                <span class="text-xs font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">다국어 지원</span>
-              </h2>
-              <p class="text-xs text-slate-500 mt-0.5">교수님의 강의자료 공식 범위를 준수하며 학우들이 직접 출제한 연습문제입니다.</p>
+              <h2 id="exam-review-title" class="font-bold text-slate-900">다가오는 시험</h2>
+              <p class="mt-1 text-xs text-slate-500">시연용 일정 · 한국 시간(KST)</p>
             </div>
-            <button onclick="switchTab('courses')" class="text-xs font-semibold text-[#0C3E85] hover:underline flex items-center gap-1">
-              전체 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-            </button>
+            <div id="upcoming-exam-list" class="grid gap-3 lg:grid-cols-2"></div>
+          </section>
+
+          <!-- Student Quick Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all">
+              <div class="flex items-center justify-between text-slate-400 mb-2">
+                <span class="text-xs font-semibold text-slate-500">내가 제작한 문제</span>
+                <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <i data-lucide="pencil" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-2xl font-extrabold text-slate-900" id="stat-created-count">7개</div>
+              <div class="text-[11px] text-emerald-600 font-medium flex items-center gap-1 mt-1">
+                <i data-lucide="thumbs-up" class="w-3 h-3"></i> 42명의 학우 풀이 완료
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all">
+              <div class="flex items-center justify-between text-slate-400 mb-2">
+                <span class="text-xs font-semibold text-slate-500">풀이 정답률</span>
+                <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-2xl font-extrabold text-slate-900">84.2%</div>
+              <div class="text-[11px] text-blue-600 font-medium flex items-center gap-1 mt-1">
+                <i data-lucide="trending-up" class="w-3 h-3"></i> 상위 12% 학습 습관
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all">
+              <div class="flex items-center justify-between text-slate-400 mb-2">
+                <span class="text-xs font-semibold text-slate-500">교수님 공인 문제</span>
+                <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <i data-lucide="verified" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-2xl font-extrabold text-slate-900">18문항</div>
+              <div class="text-[11px] text-indigo-600 font-medium flex items-center gap-1 mt-1">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 4개 주차 업로드
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-slate-300 transition-all">
+              <div class="flex items-center justify-between text-slate-400 mb-2">
+                <span class="text-xs font-semibold text-slate-500">내 오답 복습</span>
+                <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                  <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-2xl font-extrabold text-slate-900">3문제</div>
+              <div class="text-[11px] text-rose-600 font-medium flex items-center gap-1 mt-1">
+                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> 재풀이 권장
+              </div>
+            </div>
           </div>
 
-          <!-- Problem List Cards (Responsive Grid) -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="home-problem-cards">
-            <!-- Dynamic Rendered -->
+          <!-- Hot Peer Questions -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <span>🔥 실시간 인기 동료 제작 문제</span>
+                  <span class="text-xs font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">학우 추천</span>
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">교수님의 강의자료 공식 범위를 준수하며 학우들이 직접 출제한 연습문제입니다.</p>
+              </div>
+              <button onclick="switchTab('courses')" class="text-xs font-semibold text-[#0C3E85] hover:underline flex items-center gap-1">
+                전체 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="home-problem-cards"></div>
           </div>
         </div>
 
-        <!-- Section: AiTEMS Extracurricular Recommendation Teaser -->
-        <div class="p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-[#002C6C] to-[#0A2540] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
-          <div class="space-y-2">
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-200 border border-blue-400/30 text-xs font-semibold">
-              <i data-lucide="cpu" class="w-3.5 h-3.5"></i> AiTEMS 맞춤 알고리즘
+        <!-- ==================== 2. 교수자 대시보드 뷰 ==================== -->
+        <div id="professor-dashboard-view" class="space-y-8 hidden">
+          <!-- Professor Hero Banner -->
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1E1B4B] via-[#312E81] to-[#0F172A] text-white p-6 md:p-10 shadow-lg shadow-indigo-950/20">
+            <div class="relative z-10 max-w-2xl space-y-3">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-medium text-indigo-200">
+                <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-indigo-300"></i>
+                <span>교수자 전용 강의 통합 관리실 · 2026-2학기</span>
+              </div>
+              <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight leading-tight">
+                김인철 교수님, 환영합니다.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-sky-200 to-white">수강생 학습 성취도 & 취약점 분석</span>
+              </h1>
+              <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+                학생들이 생성하고 풀이한 문항 데이터를 바탕으로 주차별 오답률 급증 개념을 확인하고, 원클릭으로 공식 보충 문제와 피드백을 전달하세요.
+              </p>
+              <div class="pt-2 flex flex-wrap gap-3">
+                <button onclick="switchTab('analytics')" class="spring-interactive px-5 py-2.5 rounded-xl bg-white text-indigo-950 font-bold text-sm shadow-md flex items-center gap-2 hover:bg-indigo-50">
+                  <i data-lucide="line-chart" class="w-4 h-4 text-indigo-700"></i>
+                  <span>문항별 오답률 심층 분석</span>
+                </button>
+                <button onclick="switchTab('courses')" class="spring-interactive px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur text-white font-semibold text-sm border border-white/20 flex items-center gap-2">
+                  <i data-lucide="book-open" class="w-4 h-4"></i>
+                  <span>강의별 문제함 관리</span>
+                </button>
+              </div>
             </div>
-            <h3 class="text-xl font-bold">내 전공 및 학습 성향 맞춤 비교과·장학 추천</h3>
-            <p class="text-slate-300 text-xs leading-relaxed max-w-xl">
-              단순 나열이 아닌, 학생의 문제 풀이 패턴과 언어/IT 관심사를 분석해 선발 가능성이 가장 높은 교내 장학 프로그램을 추천순으로 정렬해 드립니다.
-            </p>
+            <div class="absolute -right-10 -bottom-10 w-96 h-96 rounded-full bg-gradient-to-tl from-indigo-500/20 to-transparent blur-2xl pointer-events-none"></div>
           </div>
-          <button onclick="switchTab('scholarships')" class="spring-interactive shrink-0 px-6 py-3 rounded-2xl bg-white text-[#002C6C] font-bold text-sm shadow-md flex items-center gap-2 hover:bg-blue-50">
-            <span>추천 프로그램 보러가기</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </button>
+
+          <!-- Professor Stats Metric Cards -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-indigo-300 transition-all">
+              <div class="flex items-center justify-between text-slate-400 mb-2">
+                <span class="text-xs font-semibold text-slate-500">담당 강좌</span>
+                <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <i data-lucide="book-marked" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-2xl font-extrabold text-slate-900">2개 과목</div>
+              <div class="text-[11px] text-indigo-600 font-medium flex items-center gap-1 mt-1">
+                <i data-lucide="users" class="w-3 h-3"></i> 총 수강생 142명
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-indigo-300 transition-all">
+              <div class="flex items-center justify-between text-slate-400 mb-2">
+                <span class="text-xs font-semibold text-slate-500">주간 학생 문제 풀이</span>
+                <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <i data-lucide="trending-up" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-2xl font-extrabold text-slate-900">489건</div>
+              <div class="text-[11px] text-emerald-600 font-medium flex items-center gap-1 mt-1">
+                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 전주 대비 +24% 증가
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-rose-300 transition-all">
+              <div class="flex items-center justify-between text-slate-400 mb-2">
+                <span class="text-xs font-semibold text-slate-500">집중 보충 권장</span>
+                <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                  <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-2xl font-extrabold text-rose-600">3문항</div>
+              <div class="text-[11px] text-rose-600 font-medium flex items-center gap-1 mt-1">
+                <i data-lucide="alert-circle" class="w-3 h-3"></i> 오답률 70% 초과
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-indigo-300 transition-all">
+              <div class="flex items-center justify-between text-slate-400 mb-2">
+                <span class="text-xs font-semibold text-slate-500">교수 공식 보충 완료</span>
+                <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <i data-lucide="check-check" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <div class="text-2xl font-extrabold text-slate-900">2문항</div>
+              <div class="text-[11px] text-blue-600 font-medium flex items-center gap-1 mt-1">
+                <i data-lucide="sparkles" class="w-3 h-3"></i> 학생 문제함 연동됨
+              </div>
+            </div>
+          </div>
+
+          <!-- Alert: High Error Rate Questions Requiring Attention -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <span>🚨 긴급 개념 보충 권장 문항</span>
+                  <span class="text-xs font-semibold bg-rose-50 text-rose-700 px-2.5 py-0.5 rounded-full border border-rose-200">오답률 70% 이상</span>
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">수강생 다수가 선지 선택에 혼동을 겪고 있는 개념입니다. 공식 보충 문제를 즉시 출제할 수 있습니다.</p>
+              </div>
+              <button onclick="switchTab('analytics')" class="text-xs font-semibold text-indigo-700 hover:underline flex items-center gap-1">
+                전체 분석 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <!-- Alert Card 1 -->
+              <div class="p-5 rounded-2xl bg-white border border-rose-200 shadow-2xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-md">언어인지과학개론 · 2주차</span>
+                  <span class="text-xs font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md">오답률 74% (72/98명)</span>
+                </div>
+                <h3 class="font-bold text-slate-900 leading-snug">베르니케 실어증(Wernicke's aphasia)의 핵심 특징으로 옳은 것은?</h3>
+                <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl leading-relaxed">
+                  💡 <span class="font-bold text-slate-700">학생 오답 패턴:</span> 58%의 수강생이 브로카 실어증(운동성 산출 장애)과 베르니케 실어증(이해 장애 및 유창한 말실수)을 혼동하여 오답을 선택했습니다.
+                </p>
+                <div class="pt-2 flex items-center justify-between border-t border-slate-100">
+                  <button onclick="switchTab('analytics')" class="text-xs font-semibold text-slate-600 hover:text-slate-900">선지별 분포 확인</button>
+                  <button onclick="switchTab('analytics')" class="spring-interactive px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-2xs flex items-center gap-1.5">
+                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                    <span>공식 보충 문제 출제</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Alert Card 2 -->
+              <div class="p-5 rounded-2xl bg-white border border-amber-200 shadow-2xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-md">인공지능과자연어처리 · 3주차</span>
+                  <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">오답률 68% (58/85명)</span>
+                </div>
+                <h3 class="font-bold text-slate-900 leading-snug">형태소 분석(Morphological Analysis)과 서브워드 토큰화(BPE)의 알고리즘적 차이점</h3>
+                <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl leading-relaxed">
+                  💡 <span class="font-bold text-slate-700">학생 오답 패턴:</span> 언어학적 형태소 규칙과 통계적 빈도 기반 바이트 페어 병합의 근본적인 차이에 대한 이해도가 분분합니다.
+                </p>
+                <div class="pt-2 flex items-center justify-between border-t border-slate-100">
+                  <button onclick="switchTab('analytics')" class="text-xs font-semibold text-slate-600 hover:text-slate-900">선지별 분포 확인</button>
+                  <button onclick="switchTab('analytics')" class="spring-interactive px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-2xs flex items-center gap-1.5">
+                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                    <span>공식 보충 문제 출제</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Recent Student Q&A -->
+          <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-2xs space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="message-square" class="w-5 h-5 text-indigo-600"></i>
+                  <span>수강생 최근 질문 & 건의사항</span>
+                  <span class="text-xs font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">미답변 2건</span>
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">문제 풀이 중 학생들이 남긴 질문과 피드백입니다.</p>
+              </div>
+              <button onclick="switchTab('courses')" class="text-xs font-semibold text-indigo-700 hover:underline">강의 문제함으로 이동</button>
+            </div>
+
+            <div class="divide-y divide-slate-100">
+              <div class="py-3.5 flex items-start justify-between gap-4">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-900">이영찬 학우</span>
+                    <span class="text-[11px] text-slate-400">언어인지과학개론 2주차 · 2시간 전</span>
+                  </div>
+                  <p class="text-xs text-slate-700 leading-relaxed">
+                    "교수님, 2주차 연습문제 4번 선지에서 베르니케 영역 손상 시 청각적 피드백 루프 이상도 정답 범주에 포함될 수 있는지 궁금합니다."
+                  </p>
+                </div>
+                <button onclick="showToast('교수 피드백 답변 창을 엽니다.')" class="spring-interactive shrink-0 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+                  답변 달기
+                </button>
+              </div>
+
+              <div class="py-3.5 flex items-start justify-between gap-4">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-900">박지원 학우</span>
+                    <span class="text-[11px] text-slate-400">인공지능과자연어처리 3주차 · 5시간 전</span>
+                  </div>
+                  <p class="text-xs text-slate-700 leading-relaxed">
+                    "BPE 알고리즘에서 vocabulary size 제한 설정 시 희귀 단어 처리 방식에 대해 추가 설명 부탁드립니다!"
+                  </p>
+                </div>
+                <button onclick="showToast('교수 피드백 답변 창을 엽니다.')" class="spring-interactive shrink-0 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold">
+                  답변 달기
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+
       </section>
 
       <!-- ========================================================
@@ -576,16 +784,16 @@
       </section>
 
       <!-- ========================================================
-           TAB 4: 비교과 & 장학 프로그램 추천 (AiTEMS 추천순 나열)
+           TAB 4: 비교과 & 장학 프로그램 추천
            ======================================================== -->
       <section id="tab-scholarships" class="hidden space-y-6 spring-pop">
         <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-blue-50 text-[#002C6C] text-xs font-bold border border-blue-200 mb-2">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AiTEMS 기반 스마트 큐레이션
+              <i data-lucide="award" class="w-3.5 h-3.5"></i> 한국외대 교내 장학·비교과 프로그램
             </div>
-            <h2 class="text-xl font-bold text-slate-900">외대 비교과·장학 추천 랭킹</h2>
-            <p class="text-xs text-slate-500 mt-1">학생의 전공, 문제 풀이 성취도, 다국어 역량 데이터를 분석해 가장 적합한 장학 프로그램을 추천순으로 나열합니다.</p>
+            <h2 class="text-xl font-bold text-slate-900">외대 비교과·장학 지원 안내</h2>
+            <p class="text-xs text-slate-500 mt-1">학생의 전공 분야 및 학습 활동에 부합하는 교내 장학 프로그램을 확인하고 지원하세요.</p>
           </div>
 
           <!-- Sort Filter Buttons -->
@@ -660,161 +868,6 @@
         </form>
         <p id="analytics-status" class="text-sm font-semibold text-indigo-700" role="status"></p>
         <div id="analytics-list" class="grid gap-4 lg:grid-cols-2"></div>
-      </section>
-
-      <!-- ========================================================
-           TAB 6: 🎨 디자인 시스템 & 컴포넌트 뷰 (사용자 직접 요청 사항)
-           ======================================================== -->
-      <section id="tab-design-system" class="hidden space-y-10 spring-pop">
-        <!-- DS Intro Header -->
-        <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-2xs">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#002C6C] text-xs font-bold border border-blue-200 mb-2">
-                <i data-lucide="palette" class="w-3.5 h-3.5"></i> HUFS-ITDA Design System v1.0
-              </div>
-              <h2 class="text-2xl font-bold text-slate-900">외대잇다 디자인 시스템 & 컴포넌트 가이드</h2>
-              <p class="text-xs md:text-sm text-slate-500 mt-1">
-                한국외대 시그니처 딥 네이비와 신뢰성 있는 블루 톤을 중심으로, 모바일 및 PC 캔버스에 최적화된 재사용 컴포넌트 규격입니다.
-              </p>
-            </div>
-            <button onclick="copyFigmaTokens()" class="spring-interactive px-4 py-2.5 rounded-xl bg-[#002C6C] text-white text-xs font-bold shadow-sm flex items-center gap-2">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-              <span>토큰 & 컴포넌트 복사</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 1. Color Palette Tokens -->
-        <div class="space-y-3">
-          <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#002C6C]"></span>
-            <span>1. Brand Color System (색상 팔레트)</span>
-          </h3>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-            <div class="p-3 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-2">
-              <div class="h-16 rounded-xl bg-[#002C6C] shadow-inner"></div>
-              <div class="text-xs">
-                <div class="font-bold text-slate-900">HUFS Navy</div>
-                <div class="text-[11px] text-slate-500">#002C6C</div>
-                <div class="text-[10px] text-blue-600 font-semibold">Primary Brand</div>
-              </div>
-            </div>
-
-            <div class="p-3 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-2">
-              <div class="h-16 rounded-xl bg-[#0C3E85] shadow-inner"></div>
-              <div class="text-xs">
-                <div class="font-bold text-slate-900">Minerva Blue</div>
-                <div class="text-[11px] text-slate-500">#0C3E85</div>
-                <div class="text-[10px] text-blue-600 font-semibold">Interaction</div>
-              </div>
-            </div>
-
-            <div class="p-3 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-2">
-              <div class="h-16 rounded-xl bg-[#0096B4] shadow-inner"></div>
-              <div class="text-xs">
-                <div class="font-bold text-slate-900">Cyan Accent</div>
-                <div class="text-[11px] text-slate-500">#0096B4</div>
-                <div class="text-[10px] text-teal-600 font-semibold">Accent / High</div>
-              </div>
-            </div>
-
-            <div class="p-3 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-2">
-              <div class="h-16 rounded-xl bg-[#10B981] shadow-inner"></div>
-              <div class="text-xs">
-                <div class="font-bold text-slate-900">Student Mint</div>
-                <div class="text-[11px] text-slate-500">#10B981</div>
-                <div class="text-[10px] text-emerald-600 font-semibold">Role: Student</div>
-              </div>
-            </div>
-
-            <div class="p-3 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-2">
-              <div class="h-16 rounded-xl bg-[#6366F1] shadow-inner"></div>
-              <div class="text-xs">
-                <div class="font-bold text-slate-900">Prof Indigo</div>
-                <div class="text-[11px] text-slate-500">#6366F1</div>
-                <div class="text-[10px] text-indigo-600 font-semibold">Role: Professor</div>
-              </div>
-            </div>
-
-            <div class="p-3 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-2">
-              <div class="h-16 rounded-xl bg-[#EF4444] shadow-inner"></div>
-              <div class="text-xs">
-                <div class="font-bold text-slate-900">Error Red</div>
-                <div class="text-[11px] text-slate-500">#EF4444</div>
-                <div class="text-[10px] text-rose-600 font-semibold">오답률 지표</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Typography Hierarchy -->
-        <div class="space-y-3">
-          <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#0C3E85]"></span>
-            <span>2. Typography Scale (Pretendard)</span>
-          </h3>
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-2xs space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-slate-100 pb-3 gap-2">
-              <span class="text-2xl font-extrabold text-slate-900">Display 24px - 외대잇다 지식 플랫폼</span>
-              <span class="text-xs text-slate-400 font-mono">Pretendard ExtraBold / 24px</span>
-            </div>
-            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-slate-100 pb-3 gap-2">
-              <span class="text-lg font-bold text-slate-900">Heading 18px - 강의별 문제 은행 및 토론</span>
-              <span class="text-xs text-slate-400 font-mono">Pretendard Bold / 18px</span>
-            </div>
-            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-slate-100 pb-3 gap-2">
-              <span class="text-sm font-semibold text-slate-800">Body 14px - 교수님의 검증된 강의자료를 바탕으로 출제합니다.</span>
-              <span class="text-xs text-slate-400 font-mono">Pretendard SemiBold / 14px</span>
-            </div>
-            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-              <span class="text-xs text-slate-500">Caption 12px - 42명의 학우 풀이 완료 · AiTEMS 98% 매칭</span>
-              <span class="text-xs text-slate-400 font-mono">Pretendard Regular / 12px</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. Component Showcase: Buttons & Chips -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Buttons -->
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-2xs space-y-4">
-            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Button Variations</h4>
-            <div class="flex flex-wrap gap-2.5 items-center">
-              <button class="spring-interactive px-4 py-2 rounded-xl bg-[#002C6C] text-white text-xs font-bold shadow-sm">Primary</button>
-              <button class="spring-interactive px-4 py-2 rounded-xl bg-[#0C3E85] text-white text-xs font-bold shadow-sm">Secondary</button>
-              <button class="spring-interactive px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200">Ghost / Neutral</button>
-              <button class="spring-interactive px-4 py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold shadow-sm">Role Student</button>
-              <button class="spring-interactive px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold shadow-sm">Role Professor</button>
-            </div>
-          </div>
-
-          <!-- Badges & Chips -->
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-2xs space-y-4">
-            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Badges & Chips</h4>
-            <div class="flex flex-wrap gap-2 items-center">
-              <span class="px-2.5 py-1 rounded-full bg-blue-50 text-[#002C6C] border border-blue-200/60 text-xs font-bold">HUFS ITDA</span>
-              <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">교수자 공인</span>
-              <span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold">D-3 마감</span>
-              <span class="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold">오답률 74%</span>
-              <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-semibold">4지선다형</span>
-              <span class="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 text-[11px] font-semibold">언어인지과학</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Figma Copyable SVG Assets -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-2xs space-y-3">
-          <div class="flex items-center justify-between">
-            <div>
-              <h4 class="text-sm font-bold text-slate-900">피그마(Figma) 캔버스 복사용 로고 & 카드 에셋</h4>
-              <p class="text-xs text-slate-500">아래 버튼을 누르면 Figma에 바로 붙여넣을 수 있는 벡터 코드가 클립보드에 복사됩니다.</p>
-            </div>
-            <button onclick="copyFigmaLogoSVG()" class="spring-interactive px-3.5 py-2 rounded-xl bg-blue-50 text-[#002C6C] text-xs font-bold border border-blue-200 hover:bg-blue-100 flex items-center gap-1.5">
-              <i data-lucide="clipboard" class="w-3.5 h-3.5"></i>
-              <span>피그마 로고 SVG 복사</span>
-            </button>
-          </div>
-        </div>
       </section>
 
     </main>
@@ -1026,7 +1079,7 @@
           deadlineDays: 4,
           reward: "학습장려금 1,500,000원",
           tags: ["언어인지과학", "다국어 프로젝트", "우수 활동자"],
-          reason: "현재 학우님의 언어인지과학 및 다국어 Q&A 활동 이력과 98% 일치합니다.",
+          reason: "언어인지과학 및 다국어 프로젝트 우수 활동 학우를 위한 교내 지원 프로그램입니다.",
           isBookmarked: false
         },
         {
@@ -1079,115 +1132,168 @@
       renderScholarships();
     });
 
-    // Role Switcher Handler
+    // Account Dropdown Functions
+    function toggleAccountDropdown() {
+      const menu = document.getElementById('account-dropdown-menu');
+      const chevron = document.getElementById('account-chevron');
+      if (!menu) return;
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+      } else {
+        menu.classList.add('hidden');
+        if (chevron) chevron.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function selectAccount(role) {
+      setRole(role);
+      const menu = document.getElementById('account-dropdown-menu');
+      const chevron = document.getElementById('account-chevron');
+      if (menu) menu.classList.add('hidden');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const wrapper = document.getElementById('account-dropdown-wrapper');
+      const menu = document.getElementById('account-dropdown-menu');
+      const chevron = document.getElementById('account-chevron');
+      if (wrapper && !wrapper.contains(e.target) && menu && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+        if (chevron) chevron.style.transform = 'rotate(0deg)';
+      }
+    });
+
+    // Role Switcher Handler (Distinct Student vs Professor Views)
     function setRole(role) {
       if (state.currentRole !== role && state.activeModalProblem) closeSolveModal();
       state.currentRole = role;
-      const studentBtn = document.getElementById('role-btn-student');
-      const profBtn = document.getElementById('role-btn-prof');
+      const isProfessor = role === 'professor';
+
       const userAvatar = document.getElementById('user-avatar-text');
+      const userCircle = document.getElementById('user-avatar-circle');
       const userName = document.getElementById('user-name-text');
       const userSub = document.getElementById('user-sub-text');
-      const heroBadge = document.getElementById('hero-badge-text');
+      const userBadge = document.getElementById('user-role-badge');
+      const checkStudent = document.getElementById('check-student');
+      const checkProf = document.getElementById('check-prof');
+      const optStudent = document.getElementById('account-opt-student');
+      const optProf = document.getElementById('account-opt-prof');
 
-      if (role === 'student') {
-        studentBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-emerald-500 text-white shadow-xs";
-        profBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-all";
-        userAvatar.textContent = "찬";
-        userName.textContent = demoStudent.name;
-        userSub.textContent = "언어인지과학과 (학생)";
-        heroBadge.textContent = "한국외대 학생 자기주도 학습 모드";
-        showToast("👨‍🎓 학생 모드로 전환되었습니다. 동료 문제를 풀고 제작해 보세요!");
+      const studentDashView = document.getElementById('student-dashboard-view');
+      const profDashView = document.getElementById('professor-dashboard-view');
+      const mypageWrapper = document.getElementById('mypage-nav-wrapper');
+      const scholarshipsWrapper = document.getElementById('scholarships-nav-wrapper');
+      const analyticsWrapper = document.getElementById('analytics-nav-wrapper');
+      const sidebarTitle = document.getElementById('sidebar-menu-title');
+      const navDashboardText = document.getElementById('nav-dashboard-text');
+      const navCreateText = document.getElementById('nav-create-text');
+      const navCreateBadge = document.getElementById('nav-create-badge');
+
+      if (!isProfessor) {
+        // Student Mode UI
+        if (userAvatar) userAvatar.textContent = "찬";
+        if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
+        if (userName) userName.textContent = "이영찬 학우";
+        if (userSub) userSub.textContent = "언어인지과학과 · 21학번";
+        if (userBadge) {
+          userBadge.textContent = "학생";
+          userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200";
+        }
+        if (checkStudent) checkStudent.classList.remove('hidden');
+        if (checkProf) checkProf.classList.add('hidden');
+        if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-emerald-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-emerald-50/50";
+        if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
+
+        if (sidebarTitle) sidebarTitle.textContent = "학습 메뉴";
+        if (navDashboardText) navDashboardText.textContent = "홈 대시보드";
+        if (navCreateText) navCreateText.textContent = "문제 제작 스튜디오";
+        if (navCreateBadge) {
+          navCreateBadge.textContent = "틀 제공";
+          navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold";
+        }
+
+        if (mypageWrapper) mypageWrapper.classList.remove('hidden');
+        if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
+        if (analyticsWrapper) analyticsWrapper.classList.add('hidden');
+
+        if (studentDashView) studentDashView.classList.remove('hidden');
+        if (profDashView) profDashView.classList.add('hidden');
+
+        if (state.currentTab === 'analytics') switchTab('dashboard');
+        showToast("👨‍🎓 학생 모드로 전환되었습니다. 내 학습 현황과 동료 문제를 확인하세요!");
       } else {
-        profBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-indigo-600 text-white shadow-xs";
-        studentBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-all";
-        userAvatar.textContent = "김";
-        userName.textContent = "김인철 교수";
-        userSub.textContent = "언어인지과학과 (교수자)";
-        heroBadge.textContent = "교수자 수업 인사이트 & 피드백 모드";
-        showToast("👨‍🏫 교수자 모드로 전환되었습니다. 학생 오답률 통계와 강의 피드백을 확인하세요!");
+        // Professor Mode UI
+        if (userAvatar) userAvatar.textContent = "김";
+        if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
+        if (userName) userName.textContent = "김인철 교수";
+        if (userSub) userSub.textContent = "언어인지과학과 · 학과장";
+        if (userBadge) {
+          userBadge.textContent = "교수자";
+          userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200";
+        }
+        if (checkStudent) checkStudent.classList.add('hidden');
+        if (checkProf) checkProf.classList.remove('hidden');
+        if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-indigo-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-indigo-50/50";
+        if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
+
+        if (sidebarTitle) sidebarTitle.textContent = "교수 수업 관리";
+        if (navDashboardText) navDashboardText.textContent = "수업 종합 대시보드";
+        if (navCreateText) navCreateText.textContent = "공식 문항 출제";
+        if (navCreateBadge) {
+          navCreateBadge.textContent = "교수 공식";
+          navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
+        }
+
+        if (mypageWrapper) mypageWrapper.classList.add('hidden');
+        if (scholarshipsWrapper) scholarshipsWrapper.classList.add('hidden');
+        if (analyticsWrapper) analyticsWrapper.classList.remove('hidden');
+
+        if (studentDashView) studentDashView.classList.add('hidden');
+        if (profDashView) profDashView.classList.remove('hidden');
+
+        if (state.currentTab === 'mypage' || state.currentTab === 'scholarships') switchTab('dashboard');
+        showToast("👨‍🏫 교수자 모드로 전환되었습니다. 학생 오답률 통계와 수업 인사이트를 확인하세요!");
       }
-      const isProfessor = role === 'professor';
-      document.getElementById('mypage-nav-wrapper').classList.toggle('hidden', isProfessor);
-      document.getElementById('exam-review-links').classList.toggle('hidden', isProfessor);
-      document.getElementById('analytics-nav-wrapper').classList.toggle('hidden', !isProfessor);
-      if (!isProfessor && state.currentTab === 'analytics') switchTab('dashboard');
-      if (isProfessor && (state.currentTab === 'mypage' || state.variantSource)) switchTab('dashboard');
       renderWeekActivity();
       lucide.createIcons();
-    }
-
-    // Top View Mode Toggle (App Prototype vs Design System Viewer)
-    function setViewMode(mode) {
-      const appBtn = document.getElementById('mode-btn-app');
-      const dsBtn = document.getElementById('mode-btn-ds');
-
-      if (mode === 'app') {
-        if (appBtn) appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
-        if (dsBtn) dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
-        switchTab('dashboard');
-      } else {
-        if (dsBtn) dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
-        if (appBtn) appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
-        switchTab('design-system');
-      }
-    }
-
-    // Language Toggle
-    function setLang(lang) {
-      state.currentLang = lang;
-      ['ko', 'en', 'de'].forEach(l => {
-        const btn = document.getElementById(`lang-btn-${l}`);
-        if (btn) {
-          if (l === lang) {
-            btn.className = "px-2.5 py-1 rounded-lg font-bold bg-white text-slate-900 shadow-2xs";
-          } else {
-            btn.className = "px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-slate-900";
-          }
-        }
-      });
-      renderHomeProblems();
-      renderCourseProblems();
-      showToast(`🌐 다국어 설정이 [${lang.toUpperCase()}]로 변경되었습니다.`);
     }
 
     // Tab Navigation
     function switchTab(tabId) {
       if (tabId === 'mypage' && state.currentRole !== 'student') return;
+      if (tabId === 'scholarships' && state.currentRole !== 'student') return;
       if (tabId === 'analytics' && state.currentRole !== 'professor') return;
       if (tabId !== 'analytics' && state.supplementSource) closeSupplementForm();
       if (tabId !== 'create' && state.variantSource) resetVariantForm();
       state.currentTab = tabId;
-      const tabs = ['dashboard', 'courses', 'create', 'mypage', 'scholarships', 'analytics', 'design-system'];
+      const tabs = ['dashboard', 'courses', 'create', 'mypage', 'scholarships', 'analytics'];
 
       tabs.forEach(t => {
         const sec = document.getElementById(`tab-${t}`);
         const nav = document.getElementById(`nav-${t}`);
-        if (t === tabId) {
-          sec.classList.remove('hidden');
-          if (nav) {
-            nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs";
-          }
-        } else {
-          sec.classList.add('hidden');
-          if (nav) {
-            nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all";
+        if (sec) {
+          if (t === tabId) {
+            sec.classList.remove('hidden');
+            if (nav) {
+              nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs";
+            }
+          } else {
+            sec.classList.add('hidden');
+            if (nav) {
+              nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all";
+            }
           }
         }
       });
 
-      // Synchronize top view toggle state if present
-      const appBtn = document.getElementById('mode-btn-app');
-      const dsBtn = document.getElementById('mode-btn-ds');
-      if (appBtn && dsBtn) {
-        if (tabId === 'design-system') {
-          dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
-          appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
-        } else {
-          appBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-xs";
-          dsBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
-        }
-      }
+      if (tabId === 'mypage') renderWrongAnswers();
+      if (tabId === 'analytics') renderAnalytics();
+      if (tabId === 'dashboard') renderUpcomingExams();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
 
       if (tabId === 'mypage') renderWrongAnswers();
       if (tabId === 'analytics') renderAnalytics();
@@ -1727,7 +1833,7 @@
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-[#002C6C] border border-blue-200">${item.category}</span>
               <div class="flex items-center gap-1.5">
-                <span class="text-xs font-extrabold text-blue-700 bg-blue-100/70 px-2 py-0.5 rounded-md">매칭도 ${item.matchScore}%</span>
+                <span class="text-xs font-extrabold text-blue-700 bg-blue-100/70 px-2 py-0.5 rounded-md">적합도 ${item.matchScore}%</span>
                 <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md">D-${item.deadlineDays}</span>
               </div>
             </div>
@@ -1737,8 +1843,8 @@
               <p class="text-xs text-blue-900 font-semibold mt-1">혜택: ${item.reward}</p>
             </div>
 
-            <p class="text-xs text-slate-500 leading-relaxed bg-slate-50 p-3 rounded-2xl border border-slate-100">
-              💡 <span class="font-semibold text-slate-700">AiTEMS 추천 근거:</span> ${item.reason}
+            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <span class="font-bold text-slate-800">📌 프로그램 안내:</span> ${item.reason}
             </p>
 
             <div class="flex flex-wrap gap-1.5 pt-1">
@@ -1958,54 +2064,6 @@
         toast.style.transform = 'translateY(10px) scale(0.95)';
         setTimeout(() => toast.remove(), 300);
       }, 3500);
-    }
-
-    // Copy Figma Tokens & SVG
-    function copyFigmaTokens() {
-      const tokens = `
-// HUFS-ITDA Design Tokens (Figma JSON)
-{
-  "colors": {
-    "hufs-navy": "#002C6C",
-    "minerva-blue": "#0C3E85",
-    "cyan-accent": "#0096B4",
-    "student-mint": "#10B981",
-    "prof-indigo": "#6366F1",
-    "error-red": "#EF4444"
-  },
-  "typography": {
-    "fontFamily": "Pretendard Variable",
-    "display": { "fontSize": 24, "fontWeight": 800 },
-    "heading": { "fontSize": 18, "fontWeight": 700 },
-    "body": { "fontSize": 14, "fontWeight": 600 },
-    "caption": { "fontSize": 12, "fontWeight": 400 }
-  }
-}
-      `.trim();
-
-      navigator.clipboard.writeText(tokens).then(() => {
-        showToast("📋 피그마 디자인 토큰 JSON이 클립보드에 복사되었습니다!");
-      }).catch(() => {
-        showToast("토큰 복사에 실패했습니다.");
-      });
-    }
-
-    function copyFigmaLogoSVG() {
-      const svgCode = `
-<svg width="240" height="60" viewBox="0 0 240 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="240" height="60" rx="16" fill="#002C6C"/>
-  <circle cx="36" cy="30" r="16" fill="#0096B4"/>
-  <path d="M28 30C28 26.6863 30.6863 24 34 24C36.5 24 38.5 25.5 39.5 27.5L42.5 32.5C43.5 34.5 45.5 36 48 36C51.3137 36 54 33.3137 54 30C54 26.6863 51.3137 24 48 24C45.5 24 43.5 25.5 42.5 27.5L39.5 32.5C38.5 34.5 36.5 36 34 36C30.6863 36 28 33.3137 28 30Z" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-  <text x="64" y="34" fill="white" font-family="Pretendard, sans-serif" font-weight="800" font-size="18">외대잇다</text>
-  <text x="64" y="46" fill="#93C5FD" font-family="Pretendard, sans-serif" font-weight="700" font-size="9" letter-spacing="0.1em">HUFS ITDA</text>
-</svg>
-      `.trim();
-
-      navigator.clipboard.writeText(svgCode).then(() => {
-        showToast("🎨 피그마 로고 벡터 SVG가 복사되었습니다! Figma에서 바로 [Cmd+V] 해보세요.");
-      }).catch(() => {
-        showToast("SVG 복사에 실패했습니다.");
-      });
     }
   </script>
 </body>
