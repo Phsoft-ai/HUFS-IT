@@ -230,6 +230,21 @@
           </button>
         </div>
       </div>
+
+      <!-- Sidebar Bottom: Settings & Academic Management -->
+      <div id="settings-nav-wrapper" class="p-3 md:p-4 border-t border-slate-100 space-y-1">
+        <div id="sidebar-settings-title" class="hidden md:block px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+          학적 & 설정
+        </div>
+        <button onclick="switchTab('settings')" id="nav-settings" aria-label="설정 및 졸업 학점 현황" title="설정 및 졸업 학점 현황" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+          <i data-lucide="settings" class="w-5 h-5 shrink-0 text-slate-400"></i>
+          <div class="hidden md:flex flex-col text-left">
+            <span class="font-bold text-xs text-slate-800" id="nav-settings-title">설정 · 졸업 학점</span>
+            <span class="text-[10px] text-blue-600 font-semibold" id="nav-settings-sub">가상 시뮬레이터</span>
+          </div>
+          <span id="nav-settings-badge" class="hidden md:inline-flex ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="시뮬레이션 가능"></span>
+        </button>
+      </div>
     </aside>
 
     <!-- Main Scrollable Content Area -->
@@ -611,6 +626,20 @@
       </section>
 
       <section id="tab-mypage" class="hidden space-y-4 spring-pop">
+        <!-- Mypage Top Sub-Navigation -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <div class="flex items-center gap-2">
+            <button onclick="switchTab('mypage')" class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold bg-[#002C6C] text-white shadow-xs flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="notebook-pen" class="w-4 h-4 text-sky-300"></i> 내 오답 복습
+            </button>
+            <button onclick="switchTab('settings')" class="spring-interactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="graduation-cap" class="w-4 h-4 text-blue-600"></i> 졸업 학점 현황 & 가상 시뮬레이터
+              <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded-full">추천</span>
+            </button>
+          </div>
+          <span class="text-xs text-slate-400">한국외대 언어인지과학과 · 21학번</span>
+        </div>
+
         <div class="rounded-2xl border border-slate-200 bg-white p-5 space-y-4">
           <div>
             <p class="text-xs font-semibold text-blue-700">마이페이지</p>
@@ -813,61 +842,700 @@
       <!-- ========================================================
            TAB 5: 교수자 전용 학습 분석실 (오답률 & 수업 개선 피드백)
            ======================================================== -->
-      <section id="tab-analytics" class="hidden space-y-5 spring-pop">
-        <div class="rounded-3xl bg-indigo-900 p-6 text-white md:p-8">
-          <h2 class="text-2xl font-bold">교수자 문항 분석</h2>
-          <p class="mt-2 text-sm text-indigo-100">학생별 첫 제출을 기준으로 응답 수·오답률·보기별 선택을 집계합니다. 재풀이는 학생의 복습 기록에 반영됩니다.</p>
+      <section id="tab-analytics" class="hidden space-y-6 spring-pop">
+        <!-- 1. 헤더: 교수 수업 분석실 & 종합 인사이트 배너 -->
+        <div class="rounded-3xl bg-gradient-to-r from-indigo-950 via-indigo-900 to-[#002C6C] p-6 text-white md:p-8 shadow-xl relative overflow-hidden">
+          <div class="absolute -right-12 -bottom-12 w-72 h-72 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none"></div>
+          <div class="absolute right-48 -top-12 w-56 h-56 rounded-full bg-sky-400/10 blur-2xl pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div class="space-y-2 max-w-2xl">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 text-xs font-bold">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i> AI 수업 진단 엔진 가동 중
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-slate-200 text-xs font-medium border border-white/10">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 실시간 응답 집계 활성
+                </span>
+              </div>
+              <h2 class="text-2xl md:text-3xl font-black tracking-tight text-white flex items-center gap-2">
+                <span>오답률 & 수업 종합 인사이트</span>
+              </h2>
+              <p class="text-xs md:text-sm text-indigo-100 leading-relaxed">
+                수강생 104명의 실시간 문항 풀이 로그와 오답 선택 분포를 종합 분석하여 수업 취약 단원을 진단하고, 차시별 교수 처방전과 공식 보충 문제를 즉시 연계합니다.
+              </p>
+            </div>
+
+            <!-- 헤더 퀵 액션 버튼 -->
+            <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+              <button onclick="refreshOverallInsights()" class="spring-interactive px-4 py-2.5 rounded-xl bg-white text-indigo-950 font-bold text-xs md:text-sm shadow-md hover:bg-indigo-50 flex items-center gap-2 cursor-pointer">
+                <i data-lucide="rotate-cw" id="refresh-insight-icon" class="w-4 h-4 text-indigo-600 transition-transform"></i>
+                <span>AI 인사이트 새로고침</span>
+              </button>
+              <button onclick="sendClassInsightNotice()" class="spring-interactive px-4 py-2.5 rounded-xl bg-indigo-800/80 hover:bg-indigo-700 text-white font-semibold text-xs md:text-sm border border-indigo-400/30 shadow-xs flex items-center gap-2 cursor-pointer">
+                <i data-lucide="send" class="w-4 h-4 text-sky-300"></i>
+                <span>수강생 피드백 공지 발송</span>
+              </button>
+            </div>
+          </div>
         </div>
-        <label class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-          과목
-          <select id="analytics-course" onchange="renderAnalytics()" class="rounded-lg border border-slate-300 bg-white p-2">
-            <option value="all">전체 과목</option>
-            <option value="cog">언어인지과학개론</option>
-            <option value="biz">글로벌비즈니스영어</option>
-            <option value="ai">인공지능과자연어처리</option>
-          </select>
-        </label>
-        <form id="supplement-form" class="hidden rounded-2xl border border-indigo-200 bg-white p-5 space-y-4">
-          <div>
-            <h3 class="text-lg font-bold text-indigo-900">공식 보충 문제 만들기</h3>
-            <p id="supplement-target" class="mt-1 text-sm text-slate-600"></p>
+
+        <!-- 2. 컨트롤 & 필터 바 -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-2">
+              <label for="analytics-course" class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="filter" class="w-3.5 h-3.5 text-indigo-600"></i> 과목 필터
+              </label>
+              <select id="analytics-course" onchange="renderAnalytics()" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs md:text-sm font-bold text-slate-800 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer">
+                <option value="all">전체 과목 종합 분석</option>
+                <option value="cog">언어인지과학개론 (김인철 교수)</option>
+                <option value="biz">글로벌비즈니스영어 (박진우 교수)</option>
+                <option value="ai">인공지능과자연어처리 (최성훈 교수)</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <label for="analytics-week-filter" class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i> 주차 필터
+              </label>
+              <select id="analytics-week-filter" onchange="renderAnalytics()" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs md:text-sm font-semibold text-slate-700 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer">
+                <option value="all">전체 주차 (1~3주차)</option>
+                <option value="w1">1주차</option>
+                <option value="w2">2주차</option>
+                <option value="w3">3주차</option>
+              </select>
+            </div>
           </div>
-          <label class="block space-y-1 text-sm font-semibold">문제 본문
-            <textarea id="supplement-question" required maxlength="500" rows="2" class="block w-full rounded-lg border border-slate-300 p-2"></textarea>
-          </label>
-          <div class="grid gap-3 sm:grid-cols-2">
-            <label class="block space-y-1 text-sm font-semibold">보기 1
-              <input id="supplement-option-1" required maxlength="240" class="block w-full rounded-lg border border-slate-300 p-2">
-            </label>
-            <label class="block space-y-1 text-sm font-semibold">보기 2
-              <input id="supplement-option-2" required maxlength="240" class="block w-full rounded-lg border border-slate-300 p-2">
-            </label>
-            <label class="block space-y-1 text-sm font-semibold">보기 3
-              <input id="supplement-option-3" required maxlength="240" class="block w-full rounded-lg border border-slate-300 p-2">
-            </label>
-            <label class="block space-y-1 text-sm font-semibold">보기 4
-              <input id="supplement-option-4" required maxlength="240" class="block w-full rounded-lg border border-slate-300 p-2">
-            </label>
+
+          <!-- 집계 현황 요약 태그 -->
+          <div class="flex items-center gap-2 text-xs text-slate-600 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-100 font-medium">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span id="analytics-sample-size">총 98명 첫 제출 응답 집계 완료 (참여율 94.2%)</span>
           </div>
-          <label class="block space-y-1 text-sm font-semibold">정답
-            <select id="supplement-answer" required class="block rounded-lg border border-slate-300 p-2">
-              <option value="">선택하세요</option>
-              <option value="0">1번</option>
-              <option value="1">2번</option>
-              <option value="2">3번</option>
-              <option value="3">4번</option>
-            </select>
-          </label>
-          <label class="block space-y-1 text-sm font-semibold">해설
-            <textarea id="supplement-explanation" required maxlength="500" rows="2" class="block w-full rounded-lg border border-slate-300 p-2"></textarea>
-          </label>
-          <div class="flex flex-wrap gap-2">
-            <button type="submit" class="spring-interactive cursor-pointer rounded-lg bg-indigo-700 px-4 py-2 text-sm font-bold text-white">공식 보충 문제 게시</button>
-            <button type="button" onclick="closeSupplementForm()" class="cursor-pointer rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold">취소</button>
+        </div>
+
+        <!-- 3. 핵심 지표 4대 카드 (KPI Container) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="analytics-kpi-container">
+          <!-- Rendered dynamically by renderAnalytics() -->
+        </div>
+
+        <!-- 4. 심층 종합 분석 2단 그리드: [주차별 오답률 추이] vs [AI 종합 진단 & 수업 처방전] -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <!-- 좌측 5칸: 주차별 오답률 추이 및 난이도 진단 -->
+          <div class="lg:col-span-5 bg-white p-5 md:p-6 rounded-3xl border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-600"></i>
+                  <span>주차별 오답률 추이 & 난이도 곡선</span>
+                </h3>
+                <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">난이도 분포</span>
+              </div>
+              <p class="text-xs text-slate-500">주차별 평균 오답률 변화와 급격한 난이도 상승 지점을 감지합니다.</p>
+            </div>
+
+            <!-- 주차별 바 리스트 -->
+            <div class="space-y-4 my-2" id="analytics-weekly-bars">
+              <!-- Rendered by JS -->
+            </div>
+
+            <!-- 취약 주간 경고 카드 -->
+            <div id="analytics-week-warning" class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-900 space-y-1">
+              <div class="font-bold flex items-center gap-1.5 text-amber-800">
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-600"></i>
+                <span id="analytics-warning-title">수업 난이도 경고: 2주차 인지신경망</span>
+              </div>
+              <p class="text-[11px] text-amber-700 leading-relaxed" id="analytics-warning-desc">
+                2주차에서 오답률이 30%p 급증했습니다. 뇌 영역 기능 구분의 추상적 개념이 복합 출제되어 학생들의 선지 혼란이 집중 발생하고 있습니다.
+              </p>
+            </div>
           </div>
-        </form>
-        <p id="analytics-status" class="text-sm font-semibold text-indigo-700" role="status"></p>
-        <div id="analytics-list" class="grid gap-4 lg:grid-cols-2"></div>
+
+          <!-- 우측 7칸: 🤖 외대 AI 강의 처방전 & 수업 가이드 -->
+          <div class="lg:col-span-7 rounded-3xl bg-gradient-to-br from-indigo-50/60 via-white to-sky-50/40 p-5 md:p-6 border border-indigo-100/90 shadow-2xs space-y-4">
+            <div class="flex items-center justify-between border-b border-indigo-100/80 pb-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-xs">
+                  <i data-lucide="bot" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-base font-extrabold text-indigo-950 flex items-center gap-1.5">
+                    <span>외대 AI 스마트 수업 처방전</span>
+                    <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-md font-bold">Auto-Gen</span>
+                  </h3>
+                  <p class="text-xs text-slate-500">학생 오답 빅데이터 기반 차시별 맞춤형 교수법 제안</p>
+                </div>
+              </div>
+              <button onclick="copyAiPrescription()" class="spring-interactive text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1 bg-white px-2.5 py-1.5 rounded-lg border border-indigo-200 shadow-2xs cursor-pointer">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> 복사
+              </button>
+            </div>
+
+            <!-- 동적 AI 처방전 텍스트 -->
+            <div id="analytics-ai-prescription" class="space-y-3">
+              <!-- Rendered by JS -->
+            </div>
+
+            <!-- 퀵 액션 연계 바 -->
+            <div class="pt-3 border-t border-indigo-100/80 flex flex-wrap items-center justify-between gap-3">
+              <div class="text-xs text-slate-600">
+                💡 <span class="font-bold text-slate-800">원클릭 수업 연계:</span> 진단된 취약점을 기반으로 보충 문제를 즉시 출제하세요.
+              </div>
+              <button onclick="prefillSupplementFromWeakest()" class="spring-interactive px-3.5 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>최대 취약 개념 보충 문제 출제</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. 취약 개념 TOP 랭킹 & 교수자 수업 메모 2단 섹션 -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <!-- 취약 개념 TOP 4 랭킹 테이블 (7칸) -->
+          <div class="lg:col-span-7 bg-white p-5 md:p-6 rounded-3xl border border-slate-200/90 shadow-2xs space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="flame" class="w-4 h-4 text-rose-500"></i>
+                  <span>집중 취약 개념 랭킹 (Top Weak Concepts)</span>
+                </h3>
+                <p class="text-xs text-slate-500 mt-0.5">오답률이 높은 핵심 개념과 수강생들이 가장 많이 헷갈린 오답 선지입니다.</p>
+              </div>
+              <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200">오답률 순</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-100 text-slate-400 font-bold">
+                    <th class="py-2.5 px-3 w-10">순위</th>
+                    <th class="py-2.5 px-3">핵심 개념 / 과목</th>
+                    <th class="py-2.5 px-3">오답률</th>
+                    <th class="py-2.5 px-3">주요 오답 함정</th>
+                    <th class="py-2.5 px-3 text-right">보충 조치</th>
+                  </tr>
+                </thead>
+                <tbody id="analytics-ranking-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Rendered by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 교수자 강의실 메모 & 액션 노트 (5칸) -->
+          <div class="lg:col-span-5 bg-white p-5 md:p-6 rounded-3xl border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="check-square" class="w-4 h-4 text-indigo-600"></i>
+                  <span>교수자 강의실 메모 & 액션 노트</span>
+                </h3>
+                <span class="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full" id="memo-count-badge">2건</span>
+              </div>
+              <p class="text-xs text-slate-500">오답 분석 결과를 바탕으로 다음 수업 때 전달할 핵심 포인트를 기록하세요.</p>
+            </div>
+
+            <!-- 메모 추가 인풋 -->
+            <form onsubmit="addProfMemo(event)" class="flex gap-2">
+              <input type="text" id="prof-memo-input" placeholder="수업 전 체크할 메모 입력 (예: 음성 샘플 재생)" maxlength="80" class="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+              <button type="submit" class="spring-interactive px-3.5 py-2 rounded-xl bg-[#002C6C] text-white text-xs font-bold hover:bg-[#0C3E85] shadow-2xs shrink-0 cursor-pointer">
+                추가
+              </button>
+            </form>
+
+            <!-- 메모 목록 -->
+            <ul id="prof-memo-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+              <!-- Rendered by JS -->
+            </ul>
+
+            <div class="pt-2 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-100">
+              <span>💡 체크박스를 클릭하여 수업 완료 여부를 표시할 수 있습니다.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. 문항별 상세 오답률 & 학생 반응 분석 헤더 -->
+        <div class="pt-4 border-t border-slate-200/90 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span>문항별 상세 오답률 & 학생 반응 분석</span>
+                <span class="text-xs font-semibold text-slate-500" id="analytics-item-count"></span>
+              </h3>
+              <p class="text-xs text-slate-500">개별 문항의 보기별 선택 분포와 수강생 실시간 댓글/질문 내역을 확인합니다.</p>
+            </div>
+          </div>
+
+          <!-- 공식 보충 문제 만들기 폼 -->
+          <form id="supplement-form" class="hidden rounded-3xl border border-indigo-200 bg-white p-6 space-y-4 shadow-md spring-pop">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 공식 보충 문제 만들기
+              </div>
+              <h3 class="text-lg font-bold text-indigo-950">공식 보충 문제 출제하기</h3>
+              <p id="supplement-target" class="mt-1 text-sm text-slate-600 font-medium"></p>
+            </div>
+            <label class="block space-y-1 text-sm font-semibold text-slate-800">문제 본문
+              <textarea id="supplement-question" required maxlength="500" rows="2" class="block w-full rounded-xl border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"></textarea>
+            </label>
+            <div class="grid gap-3 sm:grid-cols-2">
+              <label class="block space-y-1 text-sm font-semibold text-slate-700">보기 1
+                <input id="supplement-option-1" required maxlength="240" class="block w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+              </label>
+              <label class="block space-y-1 text-sm font-semibold text-slate-700">보기 2
+                <input id="supplement-option-2" required maxlength="240" class="block w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+              </label>
+              <label class="block space-y-1 text-sm font-semibold text-slate-700">보기 3
+                <input id="supplement-option-3" required maxlength="240" class="block w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+              </label>
+              <label class="block space-y-1 text-sm font-semibold text-slate-700">보기 4
+                <input id="supplement-option-4" required maxlength="240" class="block w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+              </label>
+            </div>
+            <label class="block space-y-1 text-sm font-semibold text-slate-800">정답 선택
+              <select id="supplement-answer" required class="block w-full sm:w-64 rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                <option value="">선택하세요</option>
+                <option value="0">1번</option>
+                <option value="1">2번</option>
+                <option value="2">3번</option>
+                <option value="3">4번</option>
+              </select>
+            </label>
+            <label class="block space-y-1 text-sm font-semibold text-slate-800">해설 작성
+              <textarea id="supplement-explanation" required maxlength="500" rows="2" class="block w-full rounded-xl border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"></textarea>
+            </label>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button type="submit" class="spring-interactive cursor-pointer rounded-xl bg-indigo-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-indigo-800 shadow-xs">공식 보충 문제 게시</button>
+              <button type="button" onclick="closeSupplementForm()" class="cursor-pointer rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">취소</button>
+            </div>
+          </form>
+
+          <p id="analytics-status" class="text-sm font-semibold text-indigo-700" role="status"></p>
+          <div id="analytics-list" class="grid gap-4 lg:grid-cols-2"></div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           TAB 6: 마이페이지 · 학사 설정 & 졸업 학점 현황 (가상 시뮬레이터)
+           ======================================================== -->
+      <section id="tab-settings" class="hidden space-y-6 spring-pop">
+        <!-- Sub Navigation Bar between Mypage Views -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <div class="flex items-center gap-2">
+            <button onclick="switchTab('mypage')" class="spring-interactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="notebook-pen" class="w-4 h-4 text-slate-400"></i> 내 오답 복습
+            </button>
+            <button onclick="switchGradSubTab('audit')" id="subtab-btn-audit" class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold bg-[#002C6C] text-white shadow-xs flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="graduation-cap" class="w-4 h-4 text-sky-300"></i> 졸업 학점 현황 & 가상 시뮬레이터
+              <span class="text-[10px] bg-sky-400/20 text-sky-200 border border-sky-300/30 font-bold px-1.5 py-0.2 rounded-full">Interactive</span>
+            </button>
+            <button onclick="switchGradSubTab('settings')" id="subtab-btn-settings" class="spring-interactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="sliders-horizontal" class="w-4 h-4 text-slate-400"></i> 학적 & 환경설정
+            </button>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> 종합정보시스템 동기화됨
+            </span>
+            <span class="text-[11px] text-slate-400 hidden sm:inline">2026-2학기 기준</span>
+          </div>
+        </div>
+
+        <!-- SUB-VIEW 1: Graduation Audit & Virtual Simulation View -->
+        <div id="grad-audit-subview" class="space-y-6">
+          <!-- Student Academic Profile Card -->
+          <div class="bg-white rounded-3xl border border-slate-200/80 p-5 md:p-6 shadow-2xs">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#002C6C] to-[#0096B4] text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-blue-900/15">
+                  <i data-lucide="graduation-cap" class="w-7 h-7"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-900">이영찬 학우의 졸업 사정 현황</h2>
+                    <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">4학년 1학기 (7학기 이수)</span>
+                    <span id="badge-track-label" class="text-xs font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">이중전공 트랙</span>
+                  </div>
+                  <p class="text-xs md:text-sm text-slate-500 mt-1" id="student-academic-desc">
+                    인문대학 언어인지과학과 (제1전공 54학점) & AI데이터융합전공 (이중전공 42학점) · 학번: 202101842
+                  </p>
+                </div>
+              </div>
+
+              <!-- GPA & Standing Summary -->
+              <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
+                <div class="text-right">
+                  <div class="text-[11px] font-semibold text-slate-400">현재 누적 평점 (GPA)</div>
+                  <div class="text-xl font-extrabold text-[#002C6C] flex items-center justify-end gap-1">
+                    <span>3.92</span><span class="text-xs text-slate-400 font-normal">/ 4.50</span>
+                  </div>
+                </div>
+                <div class="w-px h-8 bg-slate-200"></div>
+                <div class="text-left">
+                  <div class="text-[11px] font-semibold text-slate-400">전공 평점</div>
+                  <div class="text-sm font-bold text-emerald-700">4.08 / 4.50</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Credits & Virtual Simulation Master Banner -->
+          <div id="grad-master-banner" class="rounded-3xl p-6 md:p-8 bg-gradient-to-br from-[#002C6C] via-[#0C3E85] to-[#124b94] text-white shadow-xl relative overflow-hidden">
+            <!-- Background Decorative circles -->
+            <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/5 blur-2xl pointer-events-none"></div>
+            <div class="absolute right-32 -bottom-20 w-72 h-72 rounded-full bg-[#0096B4]/20 blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 space-y-6">
+              <!-- Top Row: Title & Action Buttons -->
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-5">
+                <div>
+                  <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-semibold text-sky-200 mb-2">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i> 가상 수강 학점 시뮬레이션
+                  </div>
+                  <h3 class="text-xl md:text-2xl font-black tracking-tight text-white">
+                    총 졸업 이수 학점 진단 & 가상 플래너
+                  </h3>
+                  <p class="text-xs md:text-sm text-blue-100 mt-1">
+                    가상으로 과목을 바구니에 담아 다음 학기 이수 시 졸업 요건이 충족되는지 실시간으로 시뮬레이션하세요.
+                  </p>
+                </div>
+
+                <!-- Simulation Quick Control Buttons -->
+                <div class="flex flex-wrap items-center gap-2">
+                  <button onclick="applyOptimalGraduationPlan()" class="spring-interactive px-4 py-2.5 rounded-xl bg-white text-[#002C6C] font-bold text-xs md:text-sm shadow-md hover:bg-sky-50 flex items-center gap-1.5 cursor-pointer">
+                    <i data-lucide="wand-2" class="w-4 h-4 text-[#002C6C]"></i>
+                    <span>✨ 추천 플랜 한 번에 채우기 (+22학점)</span>
+                  </button>
+                  <button onclick="resetVirtualSimulation()" class="spring-interactive px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs md:text-sm border border-white/20 flex items-center gap-1.5 cursor-pointer">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    <span>초기화</span>
+                  </button>
+                  <button onclick="copyGraduationPlan()" class="spring-interactive px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs md:text-sm border border-white/20 flex items-center gap-1.5 cursor-pointer">
+                    <i data-lucide="share-2" class="w-4 h-4"></i>
+                    <span>플랜 요약</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Main Progress Metrics Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                <!-- Column 1: Current Earned Credits -->
+                <div class="space-y-1">
+                  <div class="text-xs font-medium text-blue-200">기존 취득 학점 / 졸업 기준</div>
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-3xl md:text-4xl font-extrabold text-white" id="stat-base-credits">112</span>
+                    <span class="text-lg text-blue-200" id="stat-req-total-label">/ 134 학점</span>
+                  </div>
+                  <div class="text-xs text-blue-200">
+                    현재 이수율: <span class="font-bold text-sky-300" id="stat-base-pct">83.6%</span>
+                  </div>
+                </div>
+
+                <!-- Column 2: Virtual Simulation Addition -->
+                <div class="space-y-1 p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
+                  <div class="text-xs font-medium text-emerald-200 flex items-center justify-between">
+                    <span>가상 수강 시뮬레이션</span>
+                    <span id="stat-virtual-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-white border border-white/30">대기 중</span>
+                  </div>
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-2xl md:text-3xl font-extrabold text-emerald-300" id="stat-virtual-add">+0</span>
+                    <span class="text-xs text-blue-100">학점 추가 중</span>
+                  </div>
+                  <div class="text-xs text-blue-100 flex items-center justify-between">
+                    <span>최종 가상 이수:</span>
+                    <span class="font-bold text-white" id="stat-simulated-total">112 / 134 학점 (83.6%)</span>
+                  </div>
+                </div>
+
+                <!-- Column 3: Predicted GPA & Status -->
+                <div class="space-y-1 p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
+                  <div class="text-xs font-medium text-sky-200">가상 반영 시 예상 졸업 평점</div>
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-2xl md:text-3xl font-extrabold text-white" id="stat-simulated-gpa">3.92</span>
+                    <span class="text-xs text-blue-200">/ 4.50</span>
+                    <span class="text-xs font-bold text-emerald-300 ml-1" id="stat-gpa-diff">(변동 없음)</span>
+                  </div>
+                  <div class="text-xs text-blue-200" id="stat-gpa-desc">
+                    가상 과목 성적(A+/A0 등)에 따라 실시간 반영
+                  </div>
+                </div>
+              </div>
+
+              <!-- Combined Dynamic Progress Bar -->
+              <div class="space-y-2">
+                <div class="flex justify-between text-xs font-semibold text-blue-100">
+                  <span>총 학점 이수 진행률</span>
+                  <span id="progress-bar-legend">기존 취득 112학점 (83.6%) + 가상 0학점</span>
+                </div>
+                <div class="w-full h-5 bg-black/30 rounded-full p-1 flex overflow-hidden backdrop-blur-xs border border-white/10">
+                  <!-- Base credits bar -->
+                  <div id="bar-base-credits" class="h-full bg-gradient-to-r from-sky-400 to-blue-300 rounded-l-full transition-all duration-500" style="width: 83.6%;"></div>
+                  <!-- Virtual credits bar -->
+                  <div id="bar-virtual-credits" class="h-full bg-gradient-to-r from-emerald-400 to-teal-300 transition-all duration-500 relative" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Status Banner (Dynamically changes from Warning to Success) -->
+              <div id="grad-status-alert" class="p-4 rounded-2xl bg-amber-500/20 border border-amber-300/30 text-amber-100 flex items-center justify-between transition-all">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-amber-400/20 flex items-center justify-center shrink-0 text-amber-300" id="grad-status-icon">
+                    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-white" id="grad-status-title">졸업까지 22학점이 더 필요해요!</h4>
+                    <p class="text-xs text-amber-200 mt-0.5" id="grad-status-desc">
+                      제1전공 9학점, 이중전공 10학점, 자유선택 3학점이 부족합니다. 아래 시뮬레이터에서 과목을 담아보세요.
+                    </p>
+                  </div>
+                </div>
+                <button onclick="applyOptimalGraduationPlan()" id="grad-status-cta" class="hidden sm:inline-flex px-3 py-1.5 rounded-lg bg-amber-400 text-slate-900 font-bold text-xs hover:bg-amber-300 transition-colors cursor-pointer shrink-0">
+                  추천 과목 담기
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Detailed Category Requirements Breakdown (5 Areas) -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-lg font-bold text-slate-900">이수 영역별 세부 현황 & 충족 진단</h3>
+                <p class="text-xs text-slate-500" id="categories-subtitle">한국외대 이중전공 규정(제1전공 54 + 이중전공 42)에 따른 영역별 요건입니다.</p>
+              </div>
+              <div class="text-xs text-slate-500 font-medium hidden sm:block">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-600 mr-1"></span>기존 취득
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 ml-2 mr-1"></span>가상 시뮬레이션
+              </div>
+            </div>
+
+            <!-- Categories Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="grad-categories-grid">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Section 3: Graduation Certification & Non-Credit Requirements -->
+          <div class="bg-white rounded-3xl border border-slate-200/80 p-5 md:p-6 shadow-2xs space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#002C6C] flex items-center justify-center font-bold">
+                  <i data-lucide="award" class="w-4 h-4"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-900">졸업인증제 & 비교과 필수 요건</h3>
+              </div>
+              <span class="text-xs font-semibold text-slate-500">외대 필수 졸업 사정 요건</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="grad-certifications-grid">
+              <!-- Certification 1: Foreign Language -->
+              <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-emerald-800">외국어 졸업인증</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">충족 완료 ✅</span>
+                </div>
+                <div class="text-sm font-bold text-slate-800">TOEIC 910점 (공식 등록)</div>
+                <p class="text-[11px] text-slate-500">기준: FLEX 700점 또는 TOEIC 850점 이상 충족</p>
+              </div>
+
+              <!-- Certification 2: Thesis / Capstone -->
+              <div class="p-4 rounded-2xl border border-amber-200 bg-amber-50/40 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-amber-800">졸업논문 · 캡스톤</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">진행 중 ⏳</span>
+                </div>
+                <div class="text-sm font-bold text-slate-800">2026-2학기 캡스톤 심사 예정</div>
+                <p class="text-[11px] text-slate-500">캡스톤디자인 과목 수강 및 최종 발표 심사 합격 시 완료</p>
+              </div>
+
+              <!-- Certification 3: Service / HUFS Mileage -->
+              <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-emerald-800">사회봉사 & HUFS 인재인증</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">충족 완료 ✅</span>
+                </div>
+                <div class="text-sm font-bold text-slate-800">36시간 이수 (기준 32시간)</div>
+                <p class="text-[11px] text-slate-500">교내외 봉사활동 및 비교과 마일리지 충족 완료</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Interactive Virtual Course Cart & Studio -->
+          <div class="bg-white rounded-3xl border border-slate-200/80 p-5 md:p-6 shadow-2xs space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                  </div>
+                  <h3 class="text-lg font-bold text-slate-900">가상 수강 시뮬레이션 바구니</h3>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">
+                  남은 학기 동안 들을 과목을 가상으로 담아 요건을 충족해보세요. 과목별 예상 학점을 바꾸면 졸업 평점도 실시간으로 계산됩니다.
+                </p>
+              </div>
+
+              <!-- Cart Summary Stats -->
+              <div class="flex items-center gap-3">
+                <div class="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                  <span class="text-slate-500">담긴 과목:</span>
+                  <span class="font-bold text-slate-900 ml-1" id="cart-course-count">0과목</span>
+                </div>
+                <div class="px-3.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs">
+                  <span class="text-emerald-700 font-medium">가상 총 학점:</span>
+                  <span class="font-extrabold text-emerald-800 ml-1" id="cart-credits-count">0학점</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recommended Courses Quick-Add Chips -->
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="sparkle" class="w-3.5 h-3.5 text-blue-600"></i> 부족한 학점 충족 추천 개설 과목 (원클릭 추가)
+                </span>
+                <span class="text-[11px] text-slate-400">클릭 시 가상 바구니에 즉시 담깁니다</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5" id="grad-quick-catalog">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Virtual Cart Table / List -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-slate-700">현재 담긴 가상 수강 과목 목록</h4>
+                <button onclick="resetVirtualSimulation()" class="text-xs text-slate-400 hover:text-rose-600 transition-colors font-medium cursor-pointer">
+                  전체 비우기
+                </button>
+              </div>
+
+              <div id="virtual-cart-container" class="rounded-2xl border border-slate-200 overflow-hidden">
+                <!-- Rendered by JS: either empty message or table -->
+              </div>
+            </div>
+
+            <!-- Manual Custom Course Add Form (Collapsible) -->
+            <div class="pt-2 border-t border-slate-100">
+              <details class="group">
+                <summary class="flex items-center justify-between cursor-pointer text-xs font-bold text-blue-700 hover:text-blue-900 py-1">
+                  <span class="flex items-center gap-1.5">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> 직접 원하는 과목명과 학점 입력하기
+                  </span>
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
+                </summary>
+                <form id="custom-course-form" onsubmit="addCustomVirtualCourse(event)" class="mt-3 p-4 rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-5 gap-3">
+                  <div class="sm:col-span-2 space-y-1">
+                    <label class="text-[11px] font-bold text-slate-600 block">과목명</label>
+                    <input type="text" id="custom-course-name" required placeholder="예: 인지언어학특론" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white focus:outline-blue-600">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-slate-600 block">이수구분</label>
+                    <select id="custom-course-cat" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+                      <option value="major1Required">제1전공 전필</option>
+                      <option value="major1Elective">제1전공 전선</option>
+                      <option value="major2Required">이중전공 전필</option>
+                      <option value="major2Elective">이중전공 전선</option>
+                      <option value="freeElective">자유선택</option>
+                      <option value="geElective">교양선택</option>
+                    </select>
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-slate-600 block">학점</label>
+                    <select id="custom-course-credits" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+                      <option value="3" selected>3학점</option>
+                      <option value="1">1학점</option>
+                      <option value="2">2학점</option>
+                      <option value="4">4학점</option>
+                    </select>
+                  </div>
+                  <div class="space-y-1 flex flex-col justify-end">
+                    <button type="submit" class="w-full text-xs font-bold py-2 rounded-xl bg-[#002C6C] text-white hover:bg-blue-900 transition-colors cursor-pointer">
+                      + 가상 과목 등록
+                    </button>
+                  </div>
+                </form>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-VIEW 2: Academic & System Settings View -->
+        <div id="grad-settings-subview" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-2xs space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <h3 class="text-lg font-bold text-slate-900">학사 전공 트랙 및 졸업 요건 설정</h3>
+              <p class="text-xs text-slate-500 mt-1">
+                이수 트랙을 변경하여 단일전공, 이중전공, 부전공별 요구 학점 변화를 가상으로 비교해볼 수 있습니다.
+              </p>
+            </div>
+
+            <!-- Track Selector -->
+            <div class="space-y-3">
+              <label class="text-xs font-bold text-slate-700 block">다전공 이수 트랙 선택</label>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button type="button" onclick="changeGradTrack('double')" id="track-btn-double" class="p-4 rounded-2xl border-2 border-[#002C6C] bg-blue-50/50 text-left transition-all cursor-pointer">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-sm text-[#002C6C]">이중전공 트랙</span>
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#002C6C]"></i>
+                  </div>
+                  <p class="text-xs text-slate-600">제1전공 54 + 이중 42 (총 134학점)</p>
+                  <span class="inline-block mt-2 text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-semibold">현재 나의 트랙</span>
+                </button>
+
+                <button type="button" onclick="changeGradTrack('single')" id="track-btn-single" class="p-4 rounded-2xl border border-slate-200 bg-white text-left hover:border-slate-300 transition-all cursor-pointer">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-sm text-slate-800">단일전공 심화 트랙</span>
+                    <i data-lucide="circle" class="w-4 h-4 text-slate-300"></i>
+                  </div>
+                  <p class="text-xs text-slate-600">제1전공 70학점 심화 (총 134학점)</p>
+                  <span class="inline-block mt-2 text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">전공심화</span>
+                </button>
+
+                <button type="button" onclick="changeGradTrack('minor')" id="track-btn-minor" class="p-4 rounded-2xl border border-slate-200 bg-white text-left hover:border-slate-300 transition-all cursor-pointer">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-sm text-slate-800">부전공 트랙</span>
+                    <i data-lucide="circle" class="w-4 h-4 text-slate-300"></i>
+                  </div>
+                  <p class="text-xs text-slate-600">제1전공 54 + 부전공 21 (총 134학점)</p>
+                  <span class="inline-block mt-2 text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">부전공</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Academic Limits & Info -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="text-xs font-bold text-slate-800">학기당 최대 수강 신청 가능 학점</h4>
+                <div class="flex items-center justify-between text-xs text-slate-600">
+                  <span>기본 신청 한도</span>
+                  <span class="font-semibold text-slate-800">18 학점</span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-600">
+                  <span>직전학기 우수자 (GPA 3.75 이상)</span>
+                  <span class="font-bold text-emerald-600">최대 21 학점 (+3 추가 승인)</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">이영찬 학우는 직전 학기 4.02로 최대 21학점 신청 가능 대상입니다.</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="text-xs font-bold text-slate-800">외대 학사 알림 및 수강 일정 동기화</h4>
+                <div class="flex items-center justify-between text-xs text-slate-700">
+                  <span>졸업 예비 사정 알림 수신</span>
+                  <input type="checkbox" checked class="w-4 h-4 accent-blue-600 cursor-pointer">
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-700">
+                  <span>수강신청 장바구니 일정 D-Day 푸시</span>
+                  <input type="checkbox" checked class="w-4 h-4 accent-blue-600 cursor-pointer">
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-700">
+                  <span>외국어 졸업인증 유효기간 만료 사전 알림</span>
+                  <input type="checkbox" checked class="w-4 h-4 accent-blue-600 cursor-pointer">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
     </main>
@@ -960,10 +1628,58 @@
       selectedAnswerIdx: null,
       answerSubmitted: false,
       attempts: [],
-      problemComments: [],
+      problemComments: [
+        {
+          id: 1,
+          problemId: 2,
+          author: "박지민 (21학번)",
+          body: "교수님, 베르니케 환자가 말을 청산유수로 하길래 4번(자발적 대화 불가)을 골랐는데, 의미가 안 통한다는 점이 핵심이군요. 유창성과 이해력의 괴리를 꼭 기억하겠습니다!"
+        },
+        {
+          id: 2,
+          problemId: 2,
+          author: "김서현 (22학번)",
+          body: "1번 선지와 2번 선지가 너무 헷갈렸습니다. 브로카 실어증과 베르니케 실어증 증상이 반대로 매칭된 표가 수업 슬라이드에 추가되면 복습하기 훨씬 좋을 것 같습니다."
+        },
+        {
+          id: 3,
+          problemId: 4,
+          author: "정우진 (20학번)",
+          body: "Query와 Key의 내적이 왜 어텐션 유사도 가중치로 귀결되는지 기하학적 차원에서 조금 더 자세히 설명해주시면 좋겠습니다!"
+        },
+        {
+          id: 4,
+          problemId: 3,
+          author: "이채원 (23학번)",
+          body: "FOB와 CIF의 위험 이전 시점이 동일하게 '본선 적재(On Board)' 시점이라는 것이 이번 퀴즈의 가장 큰 함정이었습니다 ㅎㅎ"
+        }
+      ],
+      profMemos: [
+        { id: 1, text: "11/12(목) 2주차 퀴즈 2번 문항(베르니케 실어증) 환자 발화 음성 샘플 재생 및 판서 비교", date: "11.08", completed: false },
+        { id: 2, text: "자연어처리 실습 시 BPE 알고리즘과 형태소 규칙 사전 비교 슬라이드 추가", date: "11.07", completed: true },
+        { id: 3, text: "중간고사 전 Incoterms FOB 본선 적재 시점 다이어그램 LMS 공지 배포", date: "11.06", completed: false }
+      ],
       variantSource: null,
       supplementSource: null,
       standardProblemDraft: null,
+
+      // Graduation Audit & Simulation State
+      gradAudit: {
+        track: 'double',             // 'double' (54+42) | 'single' (70) | 'minor' (54+21)
+        activeSubTab: 'audit',       // 'audit' | 'settings'
+        virtualCourses: [],          // Array of virtual course objects
+        baseCredits: {
+          geRequired: 14,            // 교양필수
+          geElective: 18,            // 교양선택
+          major1Required: 15,        // 제1전공 전필 (언어인지과학)
+          major1Elective: 30,        // 제1전공 전선 (언어인지과학)
+          major2Required: 9,         // 이중전공 전필 (AI데이터융합)
+          major2Elective: 23,        // 이중전공 전선 (AI데이터융합)
+          freeElective: 3            // 자유선택
+        },
+        baseGpa: 3.92,
+        baseEarnedCredits: 112
+      },
 
       // Initial Data (Realistic HUFS Mock Data)
       problems: [
@@ -1118,8 +1834,72 @@
       ]
     };
 
+    // Realistic Mock Attempts Initializer
+    function initMockAttempts() {
+      if (state.attempts && state.attempts.length > 0) return;
+      const initialAttempts = [];
+      // Problem 1: Broca (cog, w2) - 42명 응답, 12명 오답 (정답 0번)
+      const p1Dist = [30, 6, 4, 2];
+      p1Dist.forEach((count, optIdx) => {
+        for (let i = 0; i < count; i++) {
+          initialAttempts.push({
+            studentId: `s-p1-${optIdx}-${i}`,
+            problemId: 1,
+            selectedAnswerIdx: optIdx,
+            isCorrect: optIdx === 0,
+            submittedAt: Date.now() - (1000 * 60 * (i * 15 + 10))
+          });
+        }
+      });
+
+      // Problem 2: Wernicke (cog, w2) - 98명 응답, 72명 오답 (정답 1번)
+      const p2Dist = [32, 26, 12, 28];
+      p2Dist.forEach((count, optIdx) => {
+        for (let i = 0; i < count; i++) {
+          initialAttempts.push({
+            studentId: `s-p2-${optIdx}-${i}`,
+            problemId: 2,
+            selectedAnswerIdx: optIdx,
+            isCorrect: optIdx === 1,
+            submittedAt: Date.now() - (1000 * 60 * (i * 8 + 5))
+          });
+        }
+      });
+
+      // Problem 3: FOB Incoterms (biz, w1) - 56명 응답, 20명 오답 (정답 0번)
+      const p3Dist = [36, 8, 7, 5];
+      p3Dist.forEach((count, optIdx) => {
+        for (let i = 0; i < count; i++) {
+          initialAttempts.push({
+            studentId: `s-p3-${optIdx}-${i}`,
+            problemId: 3,
+            selectedAnswerIdx: optIdx,
+            isCorrect: optIdx === 0,
+            submittedAt: Date.now() - (1000 * 60 * (i * 20 + 30))
+          });
+        }
+      });
+
+      // Problem 4: Self-Attention (ai, w3) - 68명 응답, 29명 오답 (정답 0번)
+      const p4Dist = [39, 16, 8, 5];
+      p4Dist.forEach((count, optIdx) => {
+        for (let i = 0; i < count; i++) {
+          initialAttempts.push({
+            studentId: `s-p4-${optIdx}-${i}`,
+            problemId: 4,
+            selectedAnswerIdx: optIdx,
+            isCorrect: optIdx === 0,
+            submittedAt: Date.now() - (1000 * 60 * (i * 12 + 15))
+          });
+        }
+      });
+
+      state.attempts = initialAttempts;
+    }
+
     // Initialize App
     document.addEventListener('DOMContentLoaded', () => {
+      initMockAttempts();
       lucide.createIcons();
       document.getElementById('activity-form').addEventListener('submit', publishWeekActivity);
       document.getElementById('modal-comment-form').addEventListener('submit', postProblemComment);
@@ -1130,6 +1910,7 @@
       renderHomeProblems();
       renderCourseProblems();
       renderScholarships();
+      renderGraduationAudit();
     });
 
     // Account Dropdown Functions
@@ -1186,114 +1967,127 @@
       const mypageWrapper = document.getElementById('mypage-nav-wrapper');
       const scholarshipsWrapper = document.getElementById('scholarships-nav-wrapper');
       const analyticsWrapper = document.getElementById('analytics-nav-wrapper');
-      const sidebarTitle = document.getElementById('sidebar-menu-title');
-      const navDashboardText = document.getElementById('nav-dashboard-text');
-      const navCreateText = document.getElementById('nav-create-text');
-      const navCreateBadge = document.getElementById('nav-create-badge');
+        const sidebarTitle = document.getElementById('sidebar-menu-title');
+        const navDashboardText = document.getElementById('nav-dashboard-text');
+        const navCreateText = document.getElementById('nav-create-text');
+        const navCreateBadge = document.getElementById('nav-create-badge');
+        const navSettingsTitle = document.getElementById('nav-settings-title');
+        const navSettingsSub = document.getElementById('nav-settings-sub');
+        const navSettingsBadge = document.getElementById('nav-settings-badge');
+        const sidebarSettingsTitle = document.getElementById('sidebar-settings-title');
 
-      if (!isProfessor) {
-        // Student Mode UI
-        if (userAvatar) userAvatar.textContent = "찬";
-        if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
-        if (userName) userName.textContent = "이영찬 학우";
-        if (userSub) userSub.textContent = "언어인지과학과 · 21학번";
-        if (userBadge) {
-          userBadge.textContent = "학생";
-          userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200";
+        if (!isProfessor) {
+          // Student Mode UI
+          if (userAvatar) userAvatar.textContent = "찬";
+          if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
+          if (userName) userName.textContent = "이영찬 학우";
+          if (userSub) userSub.textContent = "언어인지과학과 · 21학번";
+          if (userBadge) {
+            userBadge.textContent = "학생";
+            userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200";
+          }
+          if (checkStudent) checkStudent.classList.remove('hidden');
+          if (checkProf) checkProf.classList.add('hidden');
+          if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-emerald-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-emerald-50/50";
+          if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
+
+          if (sidebarTitle) sidebarTitle.textContent = "학습 메뉴";
+          if (navDashboardText) navDashboardText.textContent = "홈 대시보드";
+          if (navCreateText) navCreateText.textContent = "문제 제작 스튜디오";
+          if (navCreateBadge) {
+            navCreateBadge.textContent = "틀 제공";
+            navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold";
+          }
+          if (navSettingsTitle) navSettingsTitle.textContent = "설정 · 졸업 학점";
+          if (navSettingsSub) navSettingsSub.textContent = "가상 시뮬레이터";
+          if (navSettingsBadge) navSettingsBadge.classList.remove('hidden');
+          if (sidebarSettingsTitle) sidebarSettingsTitle.textContent = "학적 & 설정";
+
+          if (mypageWrapper) mypageWrapper.classList.remove('hidden');
+          if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
+          if (analyticsWrapper) analyticsWrapper.classList.add('hidden');
+
+          if (studentDashView) studentDashView.classList.remove('hidden');
+          if (profDashView) profDashView.classList.add('hidden');
+
+          if (state.currentTab === 'analytics') switchTab('dashboard');
+          showToast("👨‍🎓 학생 모드로 전환되었습니다. 내 학습 현황과 동료 문제를 확인하세요!");
+        } else {
+          // Professor Mode UI
+          if (userAvatar) userAvatar.textContent = "김";
+          if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
+          if (userName) userName.textContent = "김인철 교수";
+          if (userSub) userSub.textContent = "언어인지과학과 · 학과장";
+          if (userBadge) {
+            userBadge.textContent = "교수자";
+            userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200";
+          }
+          if (checkStudent) checkStudent.classList.add('hidden');
+          if (checkProf) checkProf.classList.remove('hidden');
+          if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-indigo-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-indigo-50/50";
+          if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
+
+          if (sidebarTitle) sidebarTitle.textContent = "교수 수업 관리";
+          if (navDashboardText) navDashboardText.textContent = "수업 종합 대시보드";
+          if (navCreateText) navCreateText.textContent = "공식 문항 출제";
+          if (navCreateBadge) {
+            navCreateBadge.textContent = "교수 공식";
+            navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
+          }
+          if (navSettingsTitle) navSettingsTitle.textContent = "교수 환경 설정";
+          if (navSettingsSub) navSettingsSub.textContent = "연구실 & 계정 관리";
+          if (navSettingsBadge) navSettingsBadge.classList.add('hidden');
+          if (sidebarSettingsTitle) sidebarSettingsTitle.textContent = "시스템 & 설정";
+
+          if (mypageWrapper) mypageWrapper.classList.add('hidden');
+          if (scholarshipsWrapper) scholarshipsWrapper.classList.add('hidden');
+          if (analyticsWrapper) analyticsWrapper.classList.remove('hidden');
+
+          if (studentDashView) studentDashView.classList.add('hidden');
+          if (profDashView) profDashView.classList.remove('hidden');
+
+          if (state.currentTab === 'mypage' || state.currentTab === 'scholarships') switchTab('dashboard');
+          showToast("👨‍🏫 교수자 모드로 전환되었습니다. 학생 오답률 통계와 수업 인사이트를 확인하세요!");
         }
-        if (checkStudent) checkStudent.classList.remove('hidden');
-        if (checkProf) checkProf.classList.add('hidden');
-        if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-emerald-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-emerald-50/50";
-        if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
-
-        if (sidebarTitle) sidebarTitle.textContent = "학습 메뉴";
-        if (navDashboardText) navDashboardText.textContent = "홈 대시보드";
-        if (navCreateText) navCreateText.textContent = "문제 제작 스튜디오";
-        if (navCreateBadge) {
-          navCreateBadge.textContent = "틀 제공";
-          navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold";
-        }
-
-        if (mypageWrapper) mypageWrapper.classList.remove('hidden');
-        if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
-        if (analyticsWrapper) analyticsWrapper.classList.add('hidden');
-
-        if (studentDashView) studentDashView.classList.remove('hidden');
-        if (profDashView) profDashView.classList.add('hidden');
-
-        if (state.currentTab === 'analytics') switchTab('dashboard');
-        showToast("👨‍🎓 학생 모드로 전환되었습니다. 내 학습 현황과 동료 문제를 확인하세요!");
-      } else {
-        // Professor Mode UI
-        if (userAvatar) userAvatar.textContent = "김";
-        if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
-        if (userName) userName.textContent = "김인철 교수";
-        if (userSub) userSub.textContent = "언어인지과학과 · 학과장";
-        if (userBadge) {
-          userBadge.textContent = "교수자";
-          userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200";
-        }
-        if (checkStudent) checkStudent.classList.add('hidden');
-        if (checkProf) checkProf.classList.remove('hidden');
-        if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-indigo-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-indigo-50/50";
-        if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
-
-        if (sidebarTitle) sidebarTitle.textContent = "교수 수업 관리";
-        if (navDashboardText) navDashboardText.textContent = "수업 종합 대시보드";
-        if (navCreateText) navCreateText.textContent = "공식 문항 출제";
-        if (navCreateBadge) {
-          navCreateBadge.textContent = "교수 공식";
-          navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
-        }
-
-        if (mypageWrapper) mypageWrapper.classList.add('hidden');
-        if (scholarshipsWrapper) scholarshipsWrapper.classList.add('hidden');
-        if (analyticsWrapper) analyticsWrapper.classList.remove('hidden');
-
-        if (studentDashView) studentDashView.classList.add('hidden');
-        if (profDashView) profDashView.classList.remove('hidden');
-
-        if (state.currentTab === 'mypage' || state.currentTab === 'scholarships') switchTab('dashboard');
-        showToast("👨‍🏫 교수자 모드로 전환되었습니다. 학생 오답률 통계와 수업 인사이트를 확인하세요!");
+        renderWeekActivity();
+        lucide.createIcons();
       }
-      renderWeekActivity();
-      lucide.createIcons();
-    }
 
-    // Tab Navigation
-    function switchTab(tabId) {
-      if (tabId === 'mypage' && state.currentRole !== 'student') return;
-      if (tabId === 'scholarships' && state.currentRole !== 'student') return;
-      if (tabId === 'analytics' && state.currentRole !== 'professor') return;
-      if (tabId !== 'analytics' && state.supplementSource) closeSupplementForm();
-      if (tabId !== 'create' && state.variantSource) resetVariantForm();
-      state.currentTab = tabId;
-      const tabs = ['dashboard', 'courses', 'create', 'mypage', 'scholarships', 'analytics'];
+      // Tab Navigation
+      function switchTab(tabId) {
+        if (tabId === 'mypage' && state.currentRole !== 'student') return;
+        if (tabId === 'scholarships' && state.currentRole !== 'student') return;
+        if (tabId === 'analytics' && state.currentRole !== 'professor') return;
+        if (tabId !== 'analytics' && state.supplementSource) closeSupplementForm();
+        if (tabId !== 'create' && state.variantSource) resetVariantForm();
+        state.currentTab = tabId;
+        const tabs = ['dashboard', 'courses', 'create', 'mypage', 'scholarships', 'analytics', 'settings'];
 
-      tabs.forEach(t => {
-        const sec = document.getElementById(`tab-${t}`);
-        const nav = document.getElementById(`nav-${t}`);
-        if (sec) {
-          if (t === tabId) {
-            sec.classList.remove('hidden');
-            if (nav) {
-              nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs";
-            }
-          } else {
-            sec.classList.add('hidden');
-            if (nav) {
-              nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all";
+        tabs.forEach(t => {
+          const sec = document.getElementById(`tab-${t}`);
+          const nav = document.getElementById(`nav-${t}`);
+          if (sec) {
+            if (t === tabId) {
+              sec.classList.remove('hidden');
+              if (nav) {
+                nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs";
+              }
+            } else {
+              sec.classList.add('hidden');
+              if (nav) {
+                nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all";
+              }
             }
           }
-        }
-      });
+        });
 
-      if (tabId === 'mypage') renderWrongAnswers();
-      if (tabId === 'analytics') renderAnalytics();
-      if (tabId === 'dashboard') renderUpcomingExams();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      lucide.createIcons();
-    }
+        if (tabId === 'mypage') renderWrongAnswers();
+        if (tabId === 'analytics') renderAnalytics();
+        if (tabId === 'dashboard') renderUpcomingExams();
+        if (tabId === 'settings') renderGraduationAudit();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        lucide.createIcons();
+      }
 
     function escapeProblemText(value) {
       return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -1329,50 +2123,546 @@
       }).join('') : '<p class="text-sm text-slate-500">예정된 시험이 없어요.</p>';
     }
 
+    // ========================================================
+    // PROFESSOR ANALYTICS & OVERALL INSIGHTS LOGIC
+    // ========================================================
     function renderAnalytics() {
       if (state.currentRole !== 'professor') return;
-      const course = document.getElementById('analytics-course').value;
-      const problems = state.problems.filter(problem => course === 'all' || problem.course === course);
+      initMockAttempts();
+
+      const courseSelect = document.getElementById('analytics-course');
+      const weekSelect = document.getElementById('analytics-week-filter');
+      const course = courseSelect ? courseSelect.value : 'all';
+      const week = weekSelect ? weekSelect.value : 'all';
+
+      // 1. 종합 인사이트 섹션 렌더링
+      renderAnalyticsInsights(course, week);
+
+      // 2. 문항별 카드 목록 렌더링
+      const filteredProblems = state.problems.filter(problem => {
+        const matchCourse = course === 'all' || problem.course === course;
+        const matchWeek = week === 'all' || problem.week === week;
+        return matchCourse && matchWeek;
+      });
+
+      const itemCount = document.getElementById('analytics-item-count');
+      if (itemCount) {
+        itemCount.textContent = `· 총 ${filteredProblems.length}개 문항 집계 중`;
+      }
+
       const list = document.getElementById('analytics-list');
-      list.innerHTML = problems.map(problem => {
+      if (list) {
+        list.innerHTML = filteredProblems.length ? filteredProblems.map(problem => {
+          const firstAttempts = new Map();
+          for (const attempt of state.attempts) {
+            if (attempt.problemId === problem.id && !firstAttempts.has(attempt.studentId)) {
+              firstAttempts.set(attempt.studentId, attempt);
+            }
+          }
+          const responses = [...firstAttempts.values()];
+          const total = responses.length;
+          const wrong = responses.filter(attempt => !attempt.isCorrect).length;
+          const errorPct = total ? Math.round(100 * wrong / total) : (problem.errorRate || 0);
+          const comments = state.problemComments.filter(comment => comment.problemId === problem.id);
+
+          return `
+            <article class="rounded-3xl border border-slate-200/90 bg-white p-6 space-y-4 shadow-2xs hover:shadow-md transition-all">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">${escapeProblemText(problem.courseName)}</span>
+                  <span class="text-xs font-medium text-slate-500">${escapeProblemText(problem.weekName)}</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${problem.isOfficial ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-100 text-slate-700'}">
+                    ${problem.isOfficial ? '교수 공식' : '학우 출제'}
+                  </span>
+                  <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full ${errorPct >= 60 ? 'bg-rose-50 text-rose-600 border border-rose-200' : (errorPct >= 40 ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200')}">
+                    오답률 ${errorPct}%
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="break-words font-extrabold text-slate-900 text-base leading-snug">${escapeProblemText(problem.title)}</h3>
+                <p class="text-xs text-slate-500 mt-1 flex items-center gap-3">
+                  <span class="font-semibold text-slate-700">응답 완료: ${total}명</span>
+                  <span>오답: ${wrong}명</span>
+                  <span>정답: ${total - wrong}명</span>
+                </p>
+              </div>
+
+              <!-- 보기별 선택 분포 시각화 프로그레스 -->
+              <div class="space-y-2 bg-slate-50/70 p-3.5 rounded-2xl border border-slate-100">
+                <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                  <span>선택지별 응답 분포 (첫 제출 기준)</span>
+                  <span class="text-[11px] text-slate-400 font-normal">정답 보기 강조</span>
+                </div>
+                <div class="space-y-2">
+                  ${problem.options.map((option, index) => {
+                    const count = responses.filter(attempt => attempt.selectedAnswerIdx === index).length;
+                    const pct = total ? Math.round(100 * count / total) : 0;
+                    const isAnswer = index === problem.answerIdx;
+                    return `
+                      <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs">
+                          <span class="font-medium ${isAnswer ? 'text-emerald-700 font-bold' : 'text-slate-700'}">
+                            ${index + 1}번 · ${escapeProblemText(option)} ${isAnswer ? '<span class="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-bold ml-1">정답</span>' : ''}
+                          </span>
+                          <span class="font-bold shrink-0 ml-2 ${isAnswer ? 'text-emerald-700' : 'text-slate-600'}">${count}명 (${pct}%)</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                          <div class="h-2 rounded-full transition-all duration-500 ${isAnswer ? 'bg-emerald-500' : (pct >= 30 ? 'bg-rose-400' : 'bg-slate-400')}" style="width: ${pct}%"></div>
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+
+              <!-- 학생 댓글 및 피드백 -->
+              <div class="space-y-2 border-t border-slate-100 pt-3">
+                <div class="flex items-center justify-between">
+                  <h4 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-indigo-500"></i>
+                    <span>수강생 피드백 & 질문 (${comments.length}건)</span>
+                  </h4>
+                  ${comments.length ? `<span class="text-[10px] text-indigo-600 font-medium">실시간 접수</span>` : ''}
+                </div>
+                ${comments.length ? `
+                  <ul class="space-y-2">
+                    ${comments.map(comment => `
+                      <li class="rounded-xl bg-indigo-50/50 border border-indigo-100/60 p-3 text-xs space-y-1">
+                        <div class="flex items-center justify-between font-bold text-indigo-900">
+                          <span>${escapeProblemText(comment.author)}</span>
+                          <span class="text-[10px] font-normal text-indigo-400">학우 의견</span>
+                        </div>
+                        <p class="whitespace-pre-wrap break-words text-slate-700 leading-relaxed">${escapeProblemText(comment.body)}</p>
+                      </li>
+                    `).join('')}
+                  </ul>
+                ` : '<p class="text-xs text-slate-400 py-1">등록된 학생 질문이나 의견이 아직 없습니다.</p>'}
+              </div>
+
+              <div class="pt-2 flex items-center justify-between">
+                <button onclick="openSupplementForm(${problem.id})" class="spring-interactive cursor-pointer rounded-xl bg-indigo-50 hover:bg-indigo-100 px-4 py-2 text-xs font-bold text-indigo-800 flex items-center gap-1.5">
+                  <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                  <span>이 문항 기반 보충 문제 만들기</span>
+                </button>
+                <button onclick="openSolveModal(${problem.id})" class="spring-interactive text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+                  <span>문제 원문 검토</span>
+                  <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </article>
+          `;
+        }).join('') : '<div class="col-span-2 text-center py-12 bg-white rounded-3xl border border-slate-200 text-slate-500 text-sm">해당 조건에 부합하는 분석 문항이 없습니다.</div>';
+      }
+
+      lucide.createIcons();
+    }
+
+    function renderAnalyticsInsights(course, week) {
+      // 1. 통계 집계
+      const relevantProblems = state.problems.filter(p => course === 'all' || p.course === course);
+      
+      let totalResponses = 0;
+      let totalWrong = 0;
+      const problemStats = relevantProblems.map(p => {
         const firstAttempts = new Map();
         for (const attempt of state.attempts) {
-          if (attempt.problemId === problem.id && !firstAttempts.has(attempt.studentId)) {
+          if (attempt.problemId === p.id && !firstAttempts.has(attempt.studentId)) {
             firstAttempts.set(attempt.studentId, attempt);
           }
         }
-        const responses = [...firstAttempts.values()];
-        const total = responses.length;
-        const wrong = responses.filter(attempt => !attempt.isCorrect).length;
-        const comments = state.problemComments.filter(comment => comment.problemId === problem.id);
-        return `
-          <article class="rounded-2xl border border-slate-200 bg-white p-5 space-y-3">
-            <p class="text-xs font-semibold text-indigo-700">${escapeProblemText(problem.courseName)} · ${escapeProblemText(problem.weekName)} · ${problem.isOfficial ? '교수 공식' : '학우 출제'}</p>
-            <h3 class="break-words font-bold text-slate-900">${escapeProblemText(problem.title)}</h3>
-            <p class="text-sm font-semibold text-slate-700">응답 ${total}명 · ${total ? `오답률 ${Math.round(100 * wrong / total)}% (${wrong}/${total}명)` : '오답률 — 아직 응답이 없어요'}</p>
-            <div class="space-y-1">
-              <p class="text-xs font-bold text-slate-700">보기별 선택 분포</p>
-              <ul class="space-y-1">
-                ${problem.options.map((option, index) => {
-                  const count = responses.filter(attempt => attempt.selectedAnswerIdx === index).length;
-                  return `<li class="flex items-start justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2 text-xs">
-                    <span class="min-w-0 break-words">${index + 1}번 · ${escapeProblemText(option)}${index === problem.answerIdx ? ' <span class="font-bold text-emerald-700">(정답)</span>' : ''}</span>
-                    <span class="shrink-0 font-bold text-slate-700">${count}명${total ? ` · ${Math.round(100 * count / total)}%` : ''}</span>
-                  </li>`;
-                }).join('')}
-              </ul>
+        const resp = [...firstAttempts.values()];
+        const count = resp.length;
+        const wrong = resp.filter(a => !a.isCorrect).length;
+        const rate = count ? Math.round(100 * wrong / count) : (p.errorRate || 0);
+        totalResponses += count;
+        totalWrong += wrong;
+        return { problem: p, total: count, wrong, errorRate: rate };
+      });
+
+      // 오답률 내림차순 정렬
+      problemStats.sort((a, b) => b.errorRate - a.errorRate);
+      const worst = problemStats[0] || { problem: state.problems[1] || state.problems[0], errorRate: 74, total: 98, wrong: 72 };
+      const avgErrorRate = totalResponses ? Math.round(100 * totalWrong / totalResponses) : 44;
+
+      // 상단 샘플 수 라벨
+      const sampleSummary = document.getElementById('analytics-sample-size');
+      if (sampleSummary) {
+        sampleSummary.textContent = `총 98명 첫 제출 응답 집계 완료 (참여율 94.2% · 누적 ${state.attempts.length}건)`;
+      }
+
+      // 2. 핵심 지표 4대 카드 렌더링
+      const kpiContainer = document.getElementById('analytics-kpi-container');
+      if (kpiContainer) {
+        const rateStatusColor = avgErrorRate >= 50 ? 'text-rose-600 bg-rose-50 border-rose-200' : (avgErrorRate >= 40 ? 'text-amber-600 bg-amber-50 border-amber-200' : 'text-emerald-600 bg-emerald-50 border-emerald-200');
+        const rateStatusText = avgErrorRate >= 50 ? '🚨 위험 (심화 보충 권장)' : (avgErrorRate >= 40 ? '⚠️ 주의 단계 (개념 재확인)' : '🟢 안정권 (양호한 성취도)');
+
+        kpiContainer.innerHTML = `
+          <!-- KPI 1: 평균 오답률 -->
+          <div class="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-2 relative overflow-hidden">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">수업 평균 오답률</span>
+              <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center">
+                <i data-lucide="percent" class="w-4 h-4"></i>
+              </div>
             </div>
-            <div class="space-y-1 border-t border-slate-100 pt-3">
-              <h4 class="text-xs font-bold text-slate-700">학생 댓글 ${comments.length}개</h4>
-              ${comments.length ? `<ul class="space-y-2">${comments.map(comment => `
-                <li class="rounded-lg bg-slate-50 px-3 py-2">
-                  <p class="text-xs font-semibold">${escapeProblemText(comment.author)}</p>
-                  <p class="mt-1 whitespace-pre-wrap break-words text-sm">${escapeProblemText(comment.body)}</p>
-                </li>`).join('')}</ul>` : '<p class="text-xs text-slate-500">등록된 댓글이 없어요.</p>'}
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-black text-slate-900">${avgErrorRate}%</span>
+              <span class="text-xs font-bold text-rose-600 flex items-center gap-0.5">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +5.8%p
+              </span>
             </div>
-            <button onclick="openSupplementForm(${problem.id})" class="spring-interactive cursor-pointer rounded-lg bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-800">이 주차에 보충 문제 만들기</button>
-          </article>`;
-      }).join('') || '<p class="text-sm text-slate-500">이 과목에는 분석할 문항이 없어요.</p>';
+            <div class="pt-1">
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full border ${rateStatusColor}">${rateStatusText}</span>
+            </div>
+          </div>
+
+          <!-- KPI 2: 최대 취약 개념 -->
+          <div class="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-2 relative overflow-hidden">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">최대 취약 개념</span>
+              <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                <i data-lucide="alert-octagon" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div>
+              <div class="text-lg font-black text-rose-600 truncate" title="${worst.problem.title}">
+                ${worst.problem.concept || worst.problem.title}
+              </div>
+              <div class="text-xs text-slate-500 mt-0.5 flex items-center gap-1.5">
+                <span class="font-bold text-slate-700">${worst.problem.courseName}</span>
+                <span>·</span>
+                <span>오답률 <strong class="text-rose-600">${worst.errorRate}%</strong></span>
+              </div>
+            </div>
+            <div class="pt-1">
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                수강생 74% 혼동 유발
+              </span>
+            </div>
+          </div>
+
+          <!-- KPI 3: 수강생 응답 참여도 -->
+          <div class="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-2 relative overflow-hidden">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">풀이 참여율</span>
+              <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                <i data-lucide="users" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-black text-slate-900">94.2%</span>
+              <span class="text-xs text-slate-500">98 / 104명</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+              <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 94.2%"></div>
+            </div>
+            <div class="pt-0.5 text-[11px] text-slate-500 font-medium">
+              누적 풀이 <strong class="text-slate-700">${state.attempts.length}회</strong> 제출 완료
+            </div>
+          </div>
+
+          <!-- KPI 4: 피드백 & 혼선 질문 -->
+          <div class="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-2 relative overflow-hidden">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">학습 혼선 & 질문</span>
+              <div class="w-8 h-8 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-black text-slate-900">${state.problemComments.length}건</span>
+              <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">미해결 2건</span>
+            </div>
+            <div class="pt-1 text-[11px] text-slate-500 truncate" title="#유창성착오 #BPE규칙 #FOB인도">
+              주요 키워드: <span class="font-semibold text-slate-700">#유창성착각 #BPE규칙</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. 주차별 오답률 바 차트 렌더링
+      const weeklyBars = document.getElementById('analytics-weekly-bars');
+      if (weeklyBars) {
+        const weeksData = [
+          { week: 'w1', name: '1주차: 기초 개념 및 용어 체계', rate: 36, status: '안정', color: 'bg-emerald-500' },
+          { week: 'w2', name: '2주차: 핵심 인지 메커니즘 & 심화', rate: 58, status: '🚨 급상승', color: 'bg-rose-500' },
+          { week: 'w3', name: '3주차: 실무 응용 & 모델 구조', rate: 43, status: '보통', color: 'bg-amber-500' }
+        ];
+
+        weeklyBars.innerHTML = weeksData.map(w => `
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-800">${w.name}</span>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-bold px-1.5 py-0.2 rounded ${w.rate >= 50 ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-700'}">${w.status}</span>
+                <span class="font-black text-slate-900">${w.rate}%</span>
+              </div>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+              <div class="${w.color} h-2.5 rounded-full transition-all duration-700" style="width: ${w.rate}%"></div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 주차별 경고 카드 업데이트
+      const warningDesc = document.getElementById('analytics-warning-desc');
+      if (warningDesc) {
+        if (course === 'biz') {
+          warningDesc.textContent = "1주차 무역 조건에서 FOB와 CIF의 위험 이전 분기점(본선 적재 시점)을 창고 입고 시점과 혼동한 학생이 21%로 집계되었습니다.";
+        } else if (course === 'ai') {
+          warningDesc.textContent = "3주차 트랜스포머 Self-Attention에서 내적의 목적(주의 가중치 산출)을 차원 압축으로 오해한 학생이 35%로 집계되었습니다.";
+        } else {
+          warningDesc.textContent = "2주차 인지신경망에서 오답률이 30%p 급증했습니다. 뇌 영역 기능 구분의 추상적 개념이 복합 출제되어 학생들의 선지 혼란이 집중 발생하고 있습니다.";
+        }
+      }
+
+      // 4. AI 종합 강의 처방전 동적 렌더링
+      const prescriptionBox = document.getElementById('analytics-ai-prescription');
+      if (prescriptionBox) {
+        if (course === 'biz') {
+          prescriptionBox.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">1</span>
+                <span>핵심 오답 메커니즘 진단</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                학생들이 Incoterms 2020 규칙 중 FOB 조건의 <strong>'본선 적재(On Board)'</strong> 시점을 일상적 관점의 '보세구역 입고' 또는 '최종 인수'와 혼동하고 있습니다.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">2</span>
+                <span>다음 차시 수업 판서 및 교수 가이드</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                선적항 크레인 작업 사진과 함께 매도인→매수인 간 비용/위험 분기점을 화살표 다이어그램으로 판서하고, B/L(선하증권) 발행 시점과의 연계 설명을 추천합니다.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">3</span>
+                <span>원클릭 추천 액션 플랜</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                FOB와 CIF의 차이점을 묻는 1분 점검 퀴즈를 출제하여 개념 정착을 유도하세요.
+              </p>
+            </div>
+          `;
+        } else if (course === 'ai') {
+          prescriptionBox.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">1</span>
+                <span>핵심 오답 메커니즘 진단</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                Self-Attention의 Scaled Dot-Product 내적 연산이 '문맥 내 단어 간 유사도 가중치'를 도출한다는 기하학적 의미를 단순 '차원 축소'로 오해하는 수강생이 35%입니다.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">2</span>
+                <span>다음 차시 수업 판서 및 교수 가이드</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                수식 QK^T / √d_k 연산 과정을 히트맵 매트릭스로 시각화하고, 코사인 유사도와의 수학적 연관성을 10분간 강조 판서하는 것이 효과적입니다.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">3</span>
+                <span>원클릭 추천 액션 플랜</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                형태소 규칙 사전과 BPE 서브워드 토큰화의 차이를 묻는 심화 보충 퀴즈를 게시하세요.
+              </p>
+            </div>
+          `;
+        } else {
+          // 전체 또는 언어인지과학개론
+          prescriptionBox.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">1</span>
+                <span>핵심 오답 메커니즘 진단 (Why Students Fail)</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                수강생 74%가 <strong>'발화의 유창함(Fluency)'</strong>을 '정상적인 언어 소통'으로 동일시하는 인지 편향을 보였습니다. 베르니케 실어증 환자의 무의미한 언어 산출(word salad)을 정상 유창성으로 착각하여 오답 선지를 대거 선택했습니다.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">2</span>
+                <span>다음 차시 수업 판서 및 교수 가이드</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                강의 도입 10분 동안 베르니케 환자의 실제 발화 녹음 샘플(유창하지만 의미 없는 발화)을 들려주고, <strong>브로카(말더듬/이해 양호) vs 베르니케(유창함/이해 불가)</strong> 2x2 매트릭스 대조 표를 칠판에 정리해 주시면 오해를 즉각 해소할 수 있습니다.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs space-y-1">
+              <div class="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px]">3</span>
+                <span>원클릭 추천 액션 플랜</span>
+              </div>
+              <p class="text-xs text-slate-600 pl-7 leading-relaxed">
+                하단의 <strong>[최대 취약 개념 보충 문제 출제]</strong>를 클릭하여 베르니케 실어증 판별 공식 퀴즈를 즉시 게시하고 수강생 LMS로 복습 안내를 발송하세요.
+              </p>
+            </div>
+          `;
+        }
+      }
+
+      // 5. 취약 개념 TOP 랭킹 테이블 렌더링
+      const rankingTbody = document.getElementById('analytics-ranking-tbody');
+      if (rankingTbody) {
+        rankingTbody.innerHTML = problemStats.map((item, idx) => {
+          const rankColors = ['bg-rose-100 text-rose-700', 'bg-amber-100 text-amber-800', 'bg-indigo-100 text-indigo-800', 'bg-slate-100 text-slate-700'];
+          const rankBadge = rankColors[idx] || 'bg-slate-100 text-slate-700';
+          const trapText = idx === 0
+            ? '유창한 무의미 발화를 정상 상태로 오인 (선지 1, 4번 58% 선택)'
+            : (idx === 1
+              ? 'Query·Key 내적을 단순 차원 압축으로 혼동 (선지 2번 24% 선택)'
+              : 'FOB 본선 적재를 창고 입고 시점으로 혼동 (선지 3번 21% 선택)');
+
+          return `
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="py-3 px-3 font-bold">
+                <span class="w-5 h-5 rounded-md ${rankBadge} flex items-center justify-center font-black text-[11px]">${idx + 1}</span>
+              </td>
+              <td class="py-3 px-3">
+                <div class="font-bold text-slate-900">${escapeProblemText(item.problem.title)}</div>
+                <div class="text-[11px] text-slate-400">${escapeProblemText(item.problem.courseName)} · ${escapeProblemText(item.problem.weekName)}</div>
+              </td>
+              <td class="py-3 px-3">
+                <span class="font-extrabold ${item.errorRate >= 60 ? 'text-rose-600' : 'text-amber-600'}">${item.errorRate}%</span>
+                <span class="text-[10px] text-slate-400 block">${item.wrong}/${item.total}명</span>
+              </td>
+              <td class="py-3 px-3 text-slate-600 max-w-xs">
+                ${trapText}
+              </td>
+              <td class="py-3 px-3 text-right">
+                <button onclick="openSupplementForm(${item.problem.id})" class="spring-interactive px-2.5 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[11px] shadow-2xs cursor-pointer">
+                  보충 출제
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 6. 교수자 메모 렌더링
+      renderProfMemos();
+    }
+
+    // Interactive Helper Functions
+    function refreshOverallInsights() {
+      const icon = document.getElementById('refresh-insight-icon');
+      if (icon) icon.classList.add('animate-spin');
+      setTimeout(() => {
+        if (icon) icon.classList.remove('animate-spin');
+        renderAnalytics();
+        showToast("✨ 최신 12건의 수강생 풀이 로그를 반영하여 AI 종합 진단을 갱신했습니다!");
+      }, 400);
+    }
+
+    function sendClassInsightNotice() {
+      showToast("📢 수강생 전체에게 [2주차 취약 개념 핵심 정리 가이드] 알림톡을 발송했습니다!");
+    }
+
+    function copyAiPrescription() {
+      const text = `[외대잇다 AI 스마트 수업 처방전 요약]
+1. 취약 개념: 베르니케 실어증(오답률 74%) - 유창성과 이해력의 괴리
+2. 차시 가이드: 도입 10분간 환자 발화 녹음 샘플 청취 및 브로카 vs 베르니케 2x2 대조 판서
+3. 추천 액션: 2주차 공식 보충 문제 즉시 출제`;
+      navigator.clipboard?.writeText(text);
+      showToast("📋 AI 수업 처방전 요약본이 클립보드에 복사되었습니다!");
+    }
+
+    function prefillSupplementFromWeakest() {
+      const targetProb = state.problems.find(p => p.id === 2) || state.problems[0];
+      if (!targetProb) return;
+
+      openSupplementForm(targetProb.id);
+      document.getElementById('supplement-question').value = "[개념 보충 퀴즈] 베르니케 실어증 환자의 발화 특징 중 '착어증(paraphasia)'과 '신조어(neologism)'가 의미하는 바로 가장 정확한 것은?";
+      document.getElementById('supplement-option-1').value = "발음 근육이 마비되어 단어의 첫 글자만 반복하여 더듬거리는 현상";
+      document.getElementById('supplement-option-2').value = "문법적 억양은 유창하나 의미적 연관이 없는 엉뚱한 단어나 지어낸 말을 남발하는 현상";
+      document.getElementById('supplement-option-3').value = "상대방의 질문을 청각적으로 이해하지 못해 앵무새처럼 되묻는 반향어 현상";
+      document.getElementById('supplement-option-4').value = "문장 부호나 조사를 전혀 사용하지 못하고 오직 명사로만 나열하는 전보문식 발화";
+      document.getElementById('supplement-answer').value = "1";
+      document.getElementById('supplement-explanation').value = "베르니케 실어증은 발화의 유창성은 보존되나 언어 이해 및 의미 처리 중추의 손상으로 말에 실질적인 내용이 결여되고 착어증과 신조어를 빈번히 산출합니다.";
+
+      const form = document.getElementById('supplement-form');
+      if (form) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      showToast("🎯 최대 취약 개념(베르니케 실어증) 맞춤형 보충 문제 템플릿이 자동 입력되었습니다.");
+    }
+
+    // Professor Notes (In-memory)
+    function renderProfMemos() {
+      const list = document.getElementById('prof-memo-list');
+      const badge = document.getElementById('memo-count-badge');
+      if (!list || !state.profMemos) return;
+
+      if (badge) {
+        badge.textContent = `${state.profMemos.filter(m => !m.completed).length}건 대기`;
+      }
+
+      list.innerHTML = state.profMemos.length ? state.profMemos.map(memo => `
+        <li class="flex items-start justify-between gap-2 p-2.5 rounded-xl border border-slate-100 ${memo.completed ? 'bg-slate-50/60 opacity-60' : 'bg-white shadow-2xs'} transition-all">
+          <label class="flex items-start gap-2.5 cursor-pointer flex-1 min-w-0">
+            <input type="checkbox" ${memo.completed ? 'checked' : ''} onchange="toggleProfMemo(${memo.id})" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+            <div class="min-w-0">
+              <p class="text-xs ${memo.completed ? 'line-through text-slate-400' : 'font-medium text-slate-800'} break-words">${escapeProblemText(memo.text)}</p>
+              <span class="text-[10px] text-slate-400">${memo.date}</span>
+            </div>
+          </label>
+          <button onclick="deleteProfMemo(${memo.id})" class="text-slate-300 hover:text-rose-500 p-1 transition-colors cursor-pointer" title="메모 삭제">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </li>
+      `).join('') : '<li class="text-xs text-slate-400 text-center py-4">등록된 수업 액션 메모가 없습니다.</li>';
+
+      lucide.createIcons();
+    }
+
+    function addProfMemo(e) {
+      e.preventDefault();
+      const input = document.getElementById('prof-memo-input');
+      const text = input ? input.value.trim() : '';
+      if (!text) return;
+
+      if (!state.profMemos) state.profMemos = [];
+      state.profMemos.unshift({
+        id: Date.now(),
+        text,
+        date: '11.08',
+        completed: false
+      });
+
+      input.value = '';
+      renderProfMemos();
+      showToast("📝 수업 액션 메모가 추가되었습니다.");
+    }
+
+    function toggleProfMemo(id) {
+      const memo = state.profMemos.find(m => m.id === id);
+      if (memo) {
+        memo.completed = !memo.completed;
+        renderProfMemos();
+      }
+    }
+
+    function deleteProfMemo(id) {
+      state.profMemos = state.profMemos.filter(m => m.id !== id);
+      renderProfMemos();
+      showToast("메모가 삭제되었습니다.");
     }
 
     function openSupplementForm(problemId) {
@@ -2037,6 +3327,577 @@
     function closeSolveModal() {
       document.getElementById('solve-modal').classList.add('hidden');
       state.activeModalProblem = null;
+    }
+
+    // ========================================================
+    // GRADUATION AUDIT & VIRTUAL SIMULATOR SYSTEM
+    // ========================================================
+
+    const gradRequirementsByTrack = {
+      double: {
+        trackName: '이중전공 트랙',
+        total: 134,
+        categories: {
+          geRequired: { name: '교양필수(기초)', req: 14, desc: '미네르바(4), 실용영어(4), 컴퓨팅사고(3), 대학영어(3)' },
+          geElective: { name: '교양선택(균형)', req: 18, desc: '언어와문학, 인간과역사, 사회구조 등 3개 영역' },
+          major1Required: { name: '제1전공 전필', req: 18, desc: '언어인지과학입문, 음성음운론, 캡스톤디자인 등' },
+          major1Elective: { name: '제1전공 전선', req: 36, desc: '심리언어학, 인공지능자연어처리, 컴퓨터언어학 등' },
+          major2Required: { name: '이중전공 전필', req: 12, desc: '파이썬프로그래밍, 자료구조론, AI캡스톤실습 등' },
+          major2Elective: { name: '이중전공 전선', req: 30, desc: '딥러닝, 머신러닝, 자연어처리 등' },
+          freeElective: { name: '자유선택', req: 6, desc: '타과 전공 및 일반교양' }
+        }
+      },
+      single: {
+        trackName: '단일전공 심화 트랙',
+        total: 134,
+        categories: {
+          geRequired: { name: '교양필수(기초)', req: 14, desc: '미네르바, 실용영어, 컴퓨팅사고 등' },
+          geElective: { name: '교양선택(균형)', req: 18, desc: '균형교양 영역' },
+          major1Required: { name: '제1전공 전필', req: 24, desc: '심화 전공필수 과목군' },
+          major1Elective: { name: '제1전공 전선', req: 46, desc: '심화 전공선택 46학점' },
+          major2Required: { name: '이중전공 전필', req: 0, desc: '해당 없음' },
+          major2Elective: { name: '이중전공 전선', req: 0, desc: '해당 없음' },
+          freeElective: { name: '자유선택', req: 32, desc: '자유 이수 학점' }
+        }
+      },
+      minor: {
+        trackName: '부전공 트랙',
+        total: 134,
+        categories: {
+          geRequired: { name: '교양필수(기초)', req: 14, desc: '미네르바, 실용영어, 컴퓨팅사고 등' },
+          geElective: { name: '교양선택(균형)', req: 18, desc: '균형교양 영역' },
+          major1Required: { name: '제1전공 전필', req: 18, desc: '제1전공 필수' },
+          major1Elective: { name: '제1전공 전선', req: 36, desc: '제1전공 선택' },
+          major2Required: { name: '부전공 전필', req: 6, desc: '부전공 필수' },
+          major2Elective: { name: '부전공 전선', req: 15, desc: '부전공 선택' },
+          freeElective: { name: '자유선택', req: 27, desc: '자유 이수 학점' }
+        }
+      }
+    };
+
+    const gradCatalog = [
+      { id: 'rec-1', name: '언어인지과학 캡스톤디자인', category: 'major1Required', categoryLabel: '제1전공 전필', credits: 3, grade: 'A+' },
+      { id: 'rec-2', name: '자연어이해와 LLM 응용', category: 'major1Elective', categoryLabel: '제1전공 전선', credits: 3, grade: 'A0' },
+      { id: 'rec-3', name: '신경언어학 최신연구', category: 'major1Elective', categoryLabel: '제1전공 전선', credits: 3, grade: 'A+' },
+      { id: 'rec-4', name: 'AI빅데이터 캡스톤실습', category: 'major2Required', categoryLabel: '이중전공 전필', credits: 3, grade: 'A+' },
+      { id: 'rec-5', name: '딥러닝과 시퀀스 모델링', category: 'major2Elective', categoryLabel: '이중전공 전선', credits: 4, grade: 'A0' },
+      { id: 'rec-6', name: '클라우드 AI 파이프라인', category: 'major2Elective', categoryLabel: '이중전공 전선', credits: 3, grade: 'A+' },
+      { id: 'rec-7', name: '글로벌 테크 비즈니스 협상', category: 'freeElective', categoryLabel: '자유선택', credits: 3, grade: 'A+' }
+    ];
+
+    const gradePoints = {
+      'A+': 4.5,
+      'A0': 4.0,
+      'B+': 3.5,
+      'B0': 3.0,
+      'C+': 2.5,
+      'C0': 2.0,
+      'P': null
+    };
+
+    function switchGradSubTab(subTab) {
+      state.gradAudit.activeSubTab = subTab;
+      const viewAudit = document.getElementById('grad-audit-subview');
+      const viewSettings = document.getElementById('grad-settings-subview');
+      const btnAudit = document.getElementById('subtab-btn-audit');
+      const btnSettings = document.getElementById('subtab-btn-settings');
+
+      if (subTab === 'audit') {
+        if (viewAudit) viewAudit.classList.remove('hidden');
+        if (viewSettings) viewSettings.classList.add('hidden');
+        if (btnAudit) btnAudit.className = "px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold bg-[#002C6C] text-white shadow-xs flex items-center gap-1.5 cursor-pointer";
+        if (btnSettings) btnSettings.className = "spring-interactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1.5 cursor-pointer";
+        renderGraduationAudit();
+      } else {
+        if (viewAudit) viewAudit.classList.add('hidden');
+        if (viewSettings) viewSettings.classList.remove('hidden');
+        if (btnAudit) btnAudit.className = "spring-interactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1.5 cursor-pointer";
+        if (btnSettings) btnSettings.className = "px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold bg-[#002C6C] text-white shadow-xs flex items-center gap-1.5 cursor-pointer";
+      }
+      lucide.createIcons();
+    }
+
+    function changeGradTrack(track) {
+      state.gradAudit.track = track;
+      const trackDef = gradRequirementsByTrack[track];
+
+      // Update track selector buttons UI
+      ['double', 'single', 'minor'].forEach(t => {
+        const btn = document.getElementById(`track-btn-${t}`);
+        if (!btn) return;
+        if (t === track) {
+          btn.className = "p-4 rounded-2xl border-2 border-[#002C6C] bg-blue-50/50 text-left transition-all cursor-pointer";
+          const icon = btn.querySelector('i');
+          if (icon) icon.outerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4 text-[#002C6C]"></i>';
+        } else {
+          btn.className = "p-4 rounded-2xl border border-slate-200 bg-white text-left hover:border-slate-300 transition-all cursor-pointer";
+          const icon = btn.querySelector('i');
+          if (icon) icon.outerHTML = '<i data-lucide="circle" class="w-4 h-4 text-slate-300"></i>';
+        }
+      });
+
+      const badge = document.getElementById('badge-track-label');
+      if (badge) badge.textContent = trackDef.trackName;
+
+      const subTitle = document.getElementById('categories-subtitle');
+      if (subTitle) {
+        if (track === 'double') {
+          subTitle.textContent = "한국외대 이중전공 규정(제1전공 54 + 이중전공 42)에 따른 영역별 요건입니다.";
+        } else if (track === 'single') {
+          subTitle.textContent = "한국외대 단일전공 심화 규정(제1전공 70학점)에 따른 영역별 요건입니다.";
+        } else {
+          subTitle.textContent = "한국외대 부전공 규정(제1전공 54 + 부전공 21)에 따른 영역별 요건입니다.";
+        }
+      }
+
+      showToast(`🎓 ${trackDef.trackName}(으)로 졸업 요건 기준이 변경되었습니다.`);
+      renderGraduationAudit();
+      lucide.createIcons();
+    }
+
+    function renderGraduationAudit() {
+      const audit = state.gradAudit;
+      const trackKey = audit.track || 'double';
+      const trackConfig = gradRequirementsByTrack[trackKey] || gradRequirementsByTrack.double;
+      const totalReq = trackConfig.total;
+      const baseEarned = audit.baseEarnedCredits; // 112
+
+      // Sum virtual credits per category
+      const virtualByCat = {
+        geRequired: 0,
+        geElective: 0,
+        major1Required: 0,
+        major1Elective: 0,
+        major2Required: 0,
+        major2Elective: 0,
+        freeElective: 0
+      };
+
+      let virtualTotalCredits = 0;
+      let virtualGpaCredits = 0;
+      let virtualQualityPoints = 0;
+
+      audit.virtualCourses.forEach(c => {
+        const cred = Number(c.credits) || 0;
+        virtualTotalCredits += cred;
+        if (virtualByCat[c.category] !== undefined) {
+          virtualByCat[c.category] += cred;
+        } else {
+          virtualByCat.freeElective += cred;
+        }
+
+        const pt = gradePoints[c.grade];
+        if (pt !== null && pt !== undefined) {
+          virtualGpaCredits += cred;
+          virtualQualityPoints += (cred * pt);
+        }
+      });
+
+      const simulatedTotal = baseEarned + virtualTotalCredits;
+      const basePct = Math.min(100, ((baseEarned / totalReq) * 100)).toFixed(1);
+      const simulatedPct = Math.min(100, ((simulatedTotal / totalReq) * 100)).toFixed(1);
+
+      // Predicted GPA
+      let simulatedGpa = audit.baseGpa;
+      if (virtualGpaCredits > 0) {
+        const baseQualityPoints = 112 * 3.92; // 439.04
+        simulatedGpa = ((baseQualityPoints + virtualQualityPoints) / (112 + virtualGpaCredits)).toFixed(2);
+      }
+      const gpaDiff = (Number(simulatedGpa) - audit.baseGpa).toFixed(2);
+
+      // Master Banner Elements
+      const elBaseCredits = document.getElementById('stat-base-credits');
+      const elReqTotalLabel = document.getElementById('stat-req-total-label');
+      const elBasePct = document.getElementById('stat-base-pct');
+      const elVirtualAdd = document.getElementById('stat-virtual-add');
+      const elVirtualBadge = document.getElementById('stat-virtual-badge');
+      const elSimTotal = document.getElementById('stat-simulated-total');
+      const elSimGpa = document.getElementById('stat-simulated-gpa');
+      const elGpaDiff = document.getElementById('stat-gpa-diff');
+      const elGpaDesc = document.getElementById('stat-gpa-desc');
+      const barBase = document.getElementById('bar-base-credits');
+      const barVirtual = document.getElementById('bar-virtual-credits');
+      const legend = document.getElementById('progress-bar-legend');
+
+      if (elBaseCredits) elBaseCredits.textContent = baseEarned;
+      if (elReqTotalLabel) elReqTotalLabel.textContent = `/ ${totalReq} 학점`;
+      if (elBasePct) elBasePct.textContent = `${basePct}%`;
+      if (elVirtualAdd) elVirtualAdd.textContent = `+${virtualTotalCredits}`;
+      if (elVirtualBadge) {
+        if (virtualTotalCredits > 0) {
+          elVirtualBadge.textContent = `${audit.virtualCourses.length}과목 반영 중`;
+          elVirtualBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-400 text-emerald-950 border border-emerald-300";
+        } else {
+          elVirtualBadge.textContent = "시뮬레이션 대기";
+          elVirtualBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-white border border-white/30";
+        }
+      }
+      if (elSimTotal) elSimTotal.textContent = `${simulatedTotal} / ${totalReq} 학점 (${simulatedPct}%)`;
+      if (elSimGpa) elSimGpa.textContent = simulatedGpa;
+      if (elGpaDiff) {
+        if (Number(gpaDiff) > 0) {
+          elGpaDiff.textContent = `(🔺 +${gpaDiff} 상승)`;
+          elGpaDiff.className = "text-xs font-bold text-emerald-300 ml-1";
+        } else if (Number(gpaDiff) < 0) {
+          elGpaDiff.textContent = `(🔻 ${gpaDiff})`;
+          elGpaDiff.className = "text-xs font-bold text-rose-300 ml-1";
+        } else {
+          elGpaDiff.textContent = `(변동 없음)`;
+          elGpaDiff.className = "text-xs font-bold text-blue-200 ml-1";
+        }
+      }
+      if (elGpaDesc) {
+        elGpaDesc.textContent = virtualGpaCredits > 0
+          ? `가상 수강 ${virtualGpaCredits}학점 성적 반영 결과입니다.`
+          : '가상 과목 성적(A+/A0 등)에 따라 실시간 반영';
+      }
+
+      // Bar widths
+      if (barBase) {
+        const baseWidthVal = Math.min(100, (baseEarned / totalReq) * 100);
+        barBase.style.width = `${baseWidthVal}%`;
+      }
+      if (barVirtual) {
+        const maxRemain = 100 - Math.min(100, (baseEarned / totalReq) * 100);
+        const virtualWidthVal = Math.min(maxRemain, (virtualTotalCredits / totalReq) * 100);
+        barVirtual.style.width = `${virtualWidthVal}%`;
+      }
+      if (legend) {
+        legend.textContent = `기존 취득 ${baseEarned}학점 (${basePct}%) + 가상 ${virtualTotalCredits}학점 = 총 ${simulatedTotal}학점 (${simulatedPct}%)`;
+      }
+
+      // Categories calculations and checking requirements
+      let allCategoriesMet = true;
+      let totalShortage = 0;
+      const categoryRows = [];
+
+      for (const [catKey, catDef] of Object.entries(trackConfig.categories)) {
+        if (catDef.req === 0) continue;
+        const base = audit.baseCredits[catKey] || 0;
+        const virt = virtualByCat[catKey] || 0;
+        const currentSum = base + virt;
+        const shortage = Math.max(0, catDef.req - currentSum);
+        if (shortage > 0) {
+          allCategoriesMet = false;
+          totalShortage += shortage;
+        }
+
+        categoryRows.push({
+          key: catKey,
+          name: catDef.name,
+          desc: catDef.desc,
+          req: catDef.req,
+          base,
+          virt,
+          sum: currentSum,
+          shortage,
+          isBaseMet: base >= catDef.req,
+          isSimMet: currentSum >= catDef.req
+        });
+      }
+
+      // Status Alert Box
+      const alertBox = document.getElementById('grad-status-alert');
+      const alertIcon = document.getElementById('grad-status-icon');
+      const alertTitle = document.getElementById('grad-status-title');
+      const alertDesc = document.getElementById('grad-status-desc');
+      const alertCta = document.getElementById('grad-status-cta');
+
+      const isGradReady = simulatedTotal >= totalReq && allCategoriesMet;
+
+      if (alertBox) {
+        if (isGradReady) {
+          alertBox.className = "p-4 rounded-2xl bg-emerald-500/25 border border-emerald-300/40 text-emerald-100 flex items-center justify-between transition-all spring-pop";
+          if (alertIcon) alertIcon.innerHTML = '<i data-lucide="check-check" class="w-5 h-5 text-emerald-300"></i>';
+          if (alertTitle) alertTitle.textContent = "🎉 졸업 요건 100% 가상 충족 완료!";
+          if (alertDesc) alertDesc.textContent = `총 ${simulatedTotal}학점을 가상 수강하여 2027년 2월 졸업 사정 통과가 가능합니다. (예상 졸업 평점 ${simulatedGpa})`;
+          if (alertCta) {
+            alertCta.textContent = "계획서 복사하기";
+            alertCta.onclick = copyGraduationPlan;
+          }
+        } else {
+          alertBox.className = "p-4 rounded-2xl bg-amber-500/20 border border-amber-300/30 text-amber-100 flex items-center justify-between transition-all";
+          if (alertIcon) alertIcon.innerHTML = '<i data-lucide="alert-triangle" class="w-5 h-5 text-amber-300"></i>';
+          const needed = Math.max(0, totalReq - simulatedTotal);
+          if (alertTitle) alertTitle.textContent = `졸업까지 ${needed}학점이 더 필요해요!`;
+          if (alertDesc) alertDesc.textContent = `현재 부족 학점: 총 ${needed}학점 (세부 영역 부족: ${totalShortage}학점). 추천 과목을 가상 바구니에 담아보세요.`;
+          if (alertCta) {
+            alertCta.textContent = "추천 과목 담기";
+            alertCta.onclick = applyOptimalGraduationPlan;
+          }
+        }
+      }
+
+      // Render Categories Grid
+      const grid = document.getElementById('grad-categories-grid');
+      if (grid) {
+        grid.innerHTML = categoryRows.map(row => {
+          let badgeHtml = '';
+          if (row.isBaseMet) {
+            badgeHtml = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">충족 완료 ✅</span>`;
+          } else if (row.isSimMet) {
+            badgeHtml = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 animate-pulse">✨ 가상 충족</span>`;
+          } else {
+            badgeHtml = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">⚠️ ${row.shortage}학점 부족</span>`;
+          }
+
+          const baseBarWidth = Math.min(100, (row.base / row.req) * 100);
+          const virtBarWidth = Math.min(100 - baseBarWidth, (row.virt / row.req) * 100);
+
+          return `
+            <div class="bg-white rounded-2xl border ${row.isSimMet ? 'border-slate-200' : 'border-amber-200/80'} p-4.5 space-y-3 shadow-2xs hover:shadow-xs transition-shadow">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-bold text-sm text-slate-900">${row.name}</h4>
+                  <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">${row.desc}</p>
+                </div>
+                ${badgeHtml}
+              </div>
+
+              <div class="flex items-baseline justify-between text-xs">
+                <span class="text-slate-500 font-medium">이수 현황:</span>
+                <span class="font-bold text-slate-900">
+                  <span class="text-blue-700 font-extrabold">${row.base}</span>
+                  ${row.virt > 0 ? `<span class="text-emerald-600 font-bold"> +${row.virt}</span>` : ''}
+                  <span class="text-slate-400 font-normal"> / ${row.req} 학점</span>
+                </span>
+              </div>
+
+              <!-- Dual progress bar -->
+              <div class="w-full h-2.5 bg-slate-100 rounded-full flex overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-l-full transition-all duration-300" style="width: ${baseBarWidth}%;"></div>
+                <div class="h-full bg-emerald-500 transition-all duration-300" style="width: ${virtBarWidth}%;"></div>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-50">
+                <span>기준 ${row.req}학점</span>
+                <span class="${row.shortage === 0 ? 'text-emerald-600 font-semibold' : 'text-amber-600 font-bold'}">
+                  ${row.shortage === 0 ? '충족' : `필요: ${row.shortage}학점`}
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Recommended Courses Quick-Add Chips
+      const catalogContainer = document.getElementById('grad-quick-catalog');
+      if (catalogContainer) {
+        catalogContainer.innerHTML = gradCatalog.map(c => {
+          const isAdded = audit.virtualCourses.some(vc => vc.catalogId === c.id || vc.name === c.name);
+          return `
+            <div class="p-3 rounded-xl border ${isAdded ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-white hover:border-blue-300'} transition-all space-y-1.5 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1">
+                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">${c.categoryLabel}</span>
+                  <span class="text-xs font-extrabold text-[#002C6C]">${c.credits}학점</span>
+                </div>
+                <h5 class="font-bold text-xs text-slate-900 mt-1 line-clamp-1" title="${c.name}">${c.name}</h5>
+              </div>
+              <button onclick="${isAdded ? `removeVirtualCourseById('${c.id}')` : `addVirtualCourse('${c.id}')`}" class="w-full mt-2 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${isAdded ? 'bg-emerald-100 text-emerald-800 hover:bg-rose-100 hover:text-rose-700' : 'bg-blue-50 text-[#002C6C] hover:bg-blue-100'}">
+                ${isAdded ? '담김 ✓ (제외)' : '+ 가상 담기'}
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Virtual Cart Container
+      const cartContainer = document.getElementById('virtual-cart-container');
+      const cartCourseCount = document.getElementById('cart-course-count');
+      const cartCreditsCount = document.getElementById('cart-credits-count');
+
+      if (cartCourseCount) cartCourseCount.textContent = `${audit.virtualCourses.length}과목`;
+      if (cartCreditsCount) cartCreditsCount.textContent = `${virtualTotalCredits}학점`;
+
+      if (cartContainer) {
+        if (audit.virtualCourses.length === 0) {
+          cartContainer.innerHTML = `
+            <div class="p-8 text-center space-y-2 bg-slate-50/60">
+              <div class="w-10 h-10 rounded-2xl bg-slate-200 text-slate-400 mx-auto flex items-center justify-center">
+                <i data-lucide="package-open" class="w-5 h-5"></i>
+              </div>
+              <p class="text-xs font-bold text-slate-700">담긴 가상 과목이 없습니다</p>
+              <p class="text-[11px] text-slate-400">위의 추천 개설 과목의 [가상 담기] 또는 [✨ 추천 플랜 한 번에 채우기] 버튼을 눌러보세요.</p>
+            </div>
+          `;
+        } else {
+          cartContainer.innerHTML = `
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+                  <tr>
+                    <th class="py-2.5 px-4">과목명</th>
+                    <th class="py-2.5 px-3">이수구분</th>
+                    <th class="py-2.5 px-3">학점</th>
+                    <th class="py-2.5 px-3">예상 성적</th>
+                    <th class="py-2.5 px-3 text-right">삭제</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 bg-white">
+                  ${audit.virtualCourses.map((vc, idx) => `
+                    <tr class="hover:bg-slate-50/70 transition-colors">
+                      <td class="py-2.5 px-4 font-bold text-slate-900">${vc.name}</td>
+                      <td class="py-2.5 px-3">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                          ${vc.categoryLabel}
+                        </span>
+                      </td>
+                      <td class="py-2.5 px-3 font-extrabold text-[#002C6C]">${vc.credits}학점</td>
+                      <td class="py-2.5 px-3">
+                        <select onchange="updateVirtualGrade(${idx}, this.value)" class="px-2 py-1 rounded-lg border border-slate-200 bg-white font-bold text-xs text-slate-800 cursor-pointer focus:outline-blue-600">
+                          <option value="A+" ${vc.grade === 'A+' ? 'selected' : ''}>A+ (4.5)</option>
+                          <option value="A0" ${vc.grade === 'A0' ? 'selected' : ''}>A0 (4.0)</option>
+                          <option value="B+" ${vc.grade === 'B+' ? 'selected' : ''}>B+ (3.5)</option>
+                          <option value="B0" ${vc.grade === 'B0' ? 'selected' : ''}>B0 (3.0)</option>
+                          <option value="P" ${vc.grade === 'P' ? 'selected' : ''}>Pass (P)</option>
+                        </select>
+                      </td>
+                      <td class="py-2.5 px-3 text-right">
+                        <button onclick="removeVirtualCourse(${idx})" class="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer" title="과목 제외">
+                          <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+        }
+      }
+
+      lucide.createIcons();
+    }
+
+    function addVirtualCourse(catalogId) {
+      const item = gradCatalog.find(c => c.id === catalogId);
+      if (!item) return;
+
+      const exists = state.gradAudit.virtualCourses.some(vc => vc.catalogId === catalogId);
+      if (exists) {
+        showToast(`'${item.name}' 과목은 이미 가상 수강 목록에 담겨 있습니다.`);
+        return;
+      }
+
+      state.gradAudit.virtualCourses.push({
+        catalogId: item.id,
+        name: item.name,
+        category: item.category,
+        categoryLabel: item.categoryLabel,
+        credits: item.credits,
+        grade: item.grade || 'A+'
+      });
+
+      showToast(`➕ '${item.name}' (${item.credits}학점) 가상 수강 추가 완료!`);
+      renderGraduationAudit();
+    }
+
+    function removeVirtualCourse(idx) {
+      const removed = state.gradAudit.virtualCourses.splice(idx, 1);
+      if (removed.length > 0) {
+        showToast(`➖ '${removed[0].name}' 과목이 제외되었습니다.`);
+      }
+      renderGraduationAudit();
+    }
+
+    function removeVirtualCourseById(catalogId) {
+      const idx = state.gradAudit.virtualCourses.findIndex(vc => vc.catalogId === catalogId);
+      if (idx !== -1) {
+        removeVirtualCourse(idx);
+      }
+    }
+
+    function updateVirtualGrade(idx, grade) {
+      if (state.gradAudit.virtualCourses[idx]) {
+        state.gradAudit.virtualCourses[idx].grade = grade;
+        renderGraduationAudit();
+        showToast(`성적이 ${grade}로 변경되어 예상 졸업 평점이 갱신되었습니다.`);
+      }
+    }
+
+    function addCustomVirtualCourse(event) {
+      event.preventDefault();
+      const nameInput = document.getElementById('custom-course-name');
+      const catInput = document.getElementById('custom-course-cat');
+      const credInput = document.getElementById('custom-course-credits');
+
+      const name = nameInput.value.trim();
+      const category = catInput.value;
+      const credits = Number(credInput.value);
+
+      if (!name) return;
+
+      const catLabels = {
+        major1Required: '제1전공 전필',
+        major1Elective: '제1전공 전선',
+        major2Required: '이중전공 전필',
+        major2Elective: '이중전공 전선',
+        freeElective: '자유선택',
+        geElective: '교양선택'
+      };
+
+      state.gradAudit.virtualCourses.push({
+        catalogId: `custom-${Date.now()}`,
+        name,
+        category,
+        categoryLabel: catLabels[category] || '자유선택',
+        credits,
+        grade: 'A+'
+      });
+
+      nameInput.value = '';
+      showToast(`📝 커스텀 과목 '${name}' (${credits}학점) 추가 완료!`);
+      renderGraduationAudit();
+    }
+
+    function applyOptimalGraduationPlan() {
+      // Add all 7 catalog courses that fulfill the remaining 22 credits exactly
+      state.gradAudit.virtualCourses = gradCatalog.map(c => ({
+        catalogId: c.id,
+        name: c.name,
+        category: c.category,
+        categoryLabel: c.categoryLabel,
+        credits: c.credits,
+        grade: c.grade || 'A+'
+      }));
+
+      showToast("🎉 졸업 요건 22학점 최적 플랜이 가상 수강에 일괄 적용되었습니다! (100% 충족)");
+      renderGraduationAudit();
+    }
+
+    function resetVirtualSimulation() {
+      state.gradAudit.virtualCourses = [];
+      showToast("가상 시뮬레이션 목록이 초기화되었습니다.");
+      renderGraduationAudit();
+    }
+
+    function copyGraduationPlan() {
+      const audit = state.gradAudit;
+      const trackDef = gradRequirementsByTrack[audit.track || 'double'];
+      const totalCredits = 112 + audit.virtualCourses.reduce((sum, c) => sum + Number(c.credits), 0);
+
+      const courseLines = audit.virtualCourses.map((c, i) => `${i + 1}. [${c.categoryLabel}] ${c.name} (${c.credits}학점, 예상: ${c.grade})`).join('\n');
+
+      const planText = `[외대잇다] 이영찬 학우 졸업 학점 가상 시뮬레이션 계획서
+- 학적: 한국외대 언어인지과학과 (21학번) / AI데이터융합전공
+- 이수 트랙: ${trackDef.trackName} (졸업 기준 ${trackDef.total}학점)
+- 기존 취득 학점: 112학점 (누적 평점 3.92)
+- 가상 수강 과목: 총 ${audit.virtualCourses.length}과목 (+${audit.virtualCourses.reduce((sum, c) => sum + Number(c.credits), 0)}학점)
+- 시뮬레이션 총 이수: ${totalCredits} / ${trackDef.total} 학점 (${((totalCredits / trackDef.total) * 100).toFixed(1)}%)
+- 수강 계획 과목:
+${courseLines || '(가상 수강 과목 없음)'}
+- 생성일: 2026. 11. 08.`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(planText).then(() => {
+          showToast("📋 가상 졸업 수강 계획서가 클립보드에 복사되었습니다!");
+        }).catch(() => {
+          showToast("📋 가상 수강 계획서가 준비되었습니다.");
+        });
+      } else {
+        showToast("📋 가상 수강 계획서 생성이 완료되었습니다.");
+      }
     }
 
     // Toast Notification System
