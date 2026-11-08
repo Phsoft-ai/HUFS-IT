@@ -45,6 +45,14 @@
       box-sizing: border-box;
     }
 
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
     /* 쫀득한 피직스 인터랙션 & 스프링 커브 */
     .spring-interactive {
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -89,12 +97,12 @@
     }
   </style>
 </head>
-<body class="bg-[#F8FAFC] text-slate-900 min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+<body class="bg-[#F8FAFC] text-slate-900 h-screen h-[100dvh] flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900 overflow-hidden">
 
   <!-- ========================================================
        TOP GLOBAL NAVIGATION BAR
        ======================================================== -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 md:px-8 py-3.5 flex items-center justify-between shadow-xs">
+  <header class="shrink-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 md:px-8 py-3.5 flex items-center justify-between shadow-xs">
     <!-- Brand / Logo Area -->
     <div class="flex items-center gap-3.5">
       <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#002C6C] via-[#0C3E85] to-[#0096B4] flex items-center justify-center text-white shadow-md shadow-blue-900/20">
@@ -181,9 +189,9 @@
   <!-- ========================================================
        MAIN APP WRAPPER (SIDEBAR + CONTENT)
        ======================================================== -->
-  <div class="flex-1 flex overflow-hidden">
+  <div class="flex-1 flex overflow-hidden min-h-0 w-full">
     <!-- Left Navigation Sidebar -->
-    <aside class="w-20 md:w-64 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 transition-all duration-200 z-30">
+    <aside class="w-20 md:w-64 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 h-full overflow-y-auto z-30 transition-all duration-200">
       <div class="p-3 md:p-4 space-y-1.5">
         <div id="sidebar-menu-title" class="hidden md:block px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
           학습 메뉴
@@ -248,7 +256,7 @@
     </aside>
 
     <!-- Main Scrollable Content Area -->
-    <main class="flex-1 overflow-y-auto p-4 md:p-8 max-w-7xl mx-auto w-full">
+    <main class="flex-1 min-h-0 overflow-y-auto p-4 md:p-8 max-w-7xl mx-auto w-full">
 
       <!-- ========================================================
            TAB 1: 홈 대시보드 (학생 모드 / 교수자 모드 분리)
@@ -1911,6 +1919,21 @@
       renderCourseProblems();
       renderScholarships();
       renderGraduationAudit();
+
+      // Check URL query or hash for initial tab / role deep linking
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlTab = params.get('tab') || (window.location.hash ? window.location.hash.replace('#', '') : null);
+        if (urlTab && ['dashboard', 'courses', 'create', 'mypage', 'scholarships', 'analytics', 'settings'].includes(urlTab)) {
+          switchTab(urlTab);
+        }
+        const urlRole = params.get('role');
+        if (urlRole && (urlRole === 'student' || urlRole === 'professor')) {
+          setRole(urlRole);
+        }
+      } catch (e) {
+        /* ignore fallback */
+      }
     });
 
     // Account Dropdown Functions
@@ -2085,7 +2108,9 @@
         if (tabId === 'analytics') renderAnalytics();
         if (tabId === 'dashboard') renderUpcomingExams();
         if (tabId === 'settings') renderGraduationAudit();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const mainEl = document.querySelector('main');
+        if (mainEl) mainEl.scrollTop = 0;
+        window.scrollTo({ top: 0, behavior: 'instant' });
         lucide.createIcons();
       }
 
@@ -3414,6 +3439,8 @@
         if (btnAudit) btnAudit.className = "spring-interactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1.5 cursor-pointer";
         if (btnSettings) btnSettings.className = "px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold bg-[#002C6C] text-white shadow-xs flex items-center gap-1.5 cursor-pointer";
       }
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.scrollTop = 0;
       lucide.createIcons();
     }
 
