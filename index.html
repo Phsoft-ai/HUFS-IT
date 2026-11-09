@@ -2951,7 +2951,11 @@
       function switchTab(tabId) {
         if (tabId === 'mypage' && state.currentRole !== 'student') return;
         if (tabId === 'scholarships' && state.currentRole !== 'student') return;
-        if (tabId === 'analytics' && state.currentRole !== 'professor') return;
+        if (tabId === 'analytics' && state.currentRole !== 'professor') {
+          selectAccount('professor');
+          switchTab('analytics');
+          return;
+        }
         if (tabId !== 'analytics' && state.supplementSource) closeSupplementForm();
         if (tabId !== 'create' && state.variantSource) resetVariantForm();
         state.currentTab = tabId;
