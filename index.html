@@ -2867,12 +2867,19 @@
           if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-emerald-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-emerald-50/50";
           if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
 
-          if (sidebarTitle) sidebarTitle.textContent = "학습 메뉴";
+          if (sidebarTitle) sidebarTitle.textContent = "지식 선순환 (Core)";
           if (navDashboardText) navDashboardText.textContent = "홈 대시보드";
-          if (navCreateText) navCreateText.textContent = "문제 제작 스튜디오";
+          if (navCreateText) navCreateText.textContent = "문제 만들기 (출제)";
           if (navCreateBadge) {
             navCreateBadge.textContent = "틀 제공";
             navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold";
+          }
+          const navAnalyticsText = document.getElementById('nav-analytics-text');
+          if (navAnalyticsText) navAnalyticsText.textContent = "교수 분석실 (전달)";
+          const navAnalyticsBadge = document.getElementById('nav-analytics-badge');
+          if (navAnalyticsBadge) {
+            navAnalyticsBadge.textContent = "피드백";
+            navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
           }
           if (navSettingsTitle) navSettingsTitle.textContent = "설정 · 졸업 학점";
           if (navSettingsSub) navSettingsSub.textContent = "가상 시뮬레이터";
@@ -2881,7 +2888,7 @@
 
           if (mypageWrapper) mypageWrapper.classList.remove('hidden');
           if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
-          if (analyticsWrapper) analyticsWrapper.classList.add('hidden');
+          if (analyticsWrapper) analyticsWrapper.classList.remove('hidden');
 
           if (studentDashView) studentDashView.classList.remove('hidden');
           if (profDashView) profDashView.classList.add('hidden');
@@ -2891,9 +2898,9 @@
           showToast(tMsg);
         } else {
           // Professor Mode UI
-          if (userAvatar) userAvatar.textContent = "홍";
+          if (userAvatar) userAvatar.textContent = "김";
           if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
-          if (userName) userName.textContent = "홍길동 교수";
+          if (userName) userName.textContent = "김인철 교수";
           if (userSub) userSub.textContent = "언어인지과학과 · 학과장";
           if (userBadge) {
             userBadge.textContent = "교수자";
@@ -2910,6 +2917,13 @@
           if (navCreateBadge) {
             navCreateBadge.textContent = "교수 공식";
             navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
+          }
+          const navAnalyticsText = document.getElementById('nav-analytics-text');
+          if (navAnalyticsText) navAnalyticsText.textContent = "오답률 & 수업 인사이트";
+          const navAnalyticsBadge = document.getElementById('nav-analytics-badge');
+          if (navAnalyticsBadge) {
+            navAnalyticsBadge.textContent = "교수 피드백";
+            navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
           }
           if (navSettingsTitle) navSettingsTitle.textContent = "교수 환경 설정";
           if (navSettingsSub) navSettingsSub.textContent = "연구실 & 계정 관리";
