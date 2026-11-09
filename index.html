@@ -202,66 +202,117 @@
   <div class="flex-1 flex overflow-hidden min-h-0 w-full">
     <!-- Left Navigation Sidebar -->
     <aside class="w-20 md:w-64 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 h-full overflow-y-auto z-30 transition-all duration-200">
-      <div class="p-3 md:p-4 space-y-1.5">
-        <div id="sidebar-menu-title" class="hidden md:block px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          학습 메뉴
+      <div class="p-3 md:p-4 space-y-2">
+        <div id="sidebar-menu-title" class="hidden md:block px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+          외대잇다 네비게이션
         </div>
 
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs">
+        <!-- 홈 대시보드 -->
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs cursor-pointer">
           <i data-lucide="home" class="w-5 h-5 shrink-0 text-[#0C3E85]"></i>
           <span class="hidden md:inline" id="nav-dashboard-text">홈 대시보드</span>
         </button>
 
-        <!-- 교수자 전용 메뉴: 수업 종합 분석실 (학생일 때는 반드시 hidden!) -->
-        <div id="analytics-nav-wrapper" class="hidden">
-          <button onclick="switchTab('analytics')" id="nav-analytics" aria-label="수업 종합 분석" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
-            <i data-lucide="line-chart" class="w-5 h-5 shrink-0 text-indigo-600"></i>
-            <span class="hidden md:inline" id="nav-analytics-text">수업 종합 분석</span>
-            <span class="hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold" id="nav-analytics-badge">교수 전용</span>
+        <!-- [CORE LOOP : 지식 선순환] 강조 섹션 -->
+        <div id="core-loop-sidebar-wrapper" class="p-2 md:p-2.5 rounded-2xl bg-gradient-to-b from-blue-50/90 via-indigo-50/50 to-blue-50/20 border border-blue-200/90 shadow-2xs space-y-1">
+          <!-- 그룹 타이틀 & 배지 -->
+          <div class="hidden md:flex items-center justify-between px-2 py-1 mb-1">
+            <span class="text-[11px] font-extrabold text-[#002C6C] tracking-wide flex items-center gap-1.5">
+              <i data-lucide="repeat" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>CORE LOOP : 지식 선순환</span>
+            </span>
+            <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-md bg-blue-600 text-white shadow-2xs">
+              대회 핵심
+            </span>
+          </div>
+
+          <!-- 1. 문제 만들기 (출제 스튜디오) -->
+          <div id="create-nav-wrapper">
+            <button onclick="switchTab('create')" id="nav-create" class="nav-item w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-white/90 hover:text-blue-900 transition-all cursor-pointer">
+              <span class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-black text-[11px]">1</span>
+              <div class="hidden md:flex flex-col text-left leading-tight min-w-0">
+                <span class="font-bold text-xs text-slate-900 truncate" id="nav-create-text">문제 만들기</span>
+                <span class="text-[10px] text-slate-500 font-medium truncate" id="nav-create-sub">출제 스튜디오</span>
+              </div>
+              <span id="nav-create-badge" class="hidden md:inline-block ml-auto text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded font-bold shrink-0">틀 제공</span>
+            </button>
+          </div>
+
+          <!-- 2. 문제 풀기 (강의별 문제함 & 오답 복습) -->
+          <button onclick="switchTab('courses')" id="nav-courses" class="nav-item w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-white/90 hover:text-blue-900 transition-all cursor-pointer">
+            <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-800 flex items-center justify-center shrink-0 font-black text-[11px]">2</span>
+            <div class="hidden md:flex flex-col text-left leading-tight min-w-0">
+              <span class="font-bold text-xs text-slate-900 truncate" id="nav-courses-text">문제 풀기</span>
+              <span class="text-[10px] text-slate-500 font-medium truncate" id="nav-courses-sub">강의별 문제함 & 오답 복습</span>
+            </div>
+            <span class="hidden md:inline-block ml-auto text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-bold shrink-0">4과목</span>
           </button>
+
+          <!-- 3. 교수자 분석실 (전달된 오답률 & 보충 피드백) (학생 모드에서도 바로 엿볼 수 있게 노출) -->
+          <div id="analytics-nav-wrapper">
+            <button onclick="openProfAnalyticsPeek()" id="nav-analytics" class="nav-item w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-white/90 hover:text-indigo-900 transition-all cursor-pointer">
+              <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-800 flex items-center justify-center shrink-0 font-black text-[11px]">3</span>
+              <div class="hidden md:flex flex-col text-left leading-tight min-w-0">
+                <span class="font-bold text-xs text-slate-900 truncate" id="nav-analytics-text">교수자 분석실</span>
+                <span class="text-[10px] text-indigo-600 font-semibold truncate" id="nav-analytics-sub">오답률 & 보충 피드백</span>
+              </div>
+              <span id="nav-analytics-badge" class="hidden md:inline-block ml-auto text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold shrink-0">3단계 엿보기</span>
+            </button>
+          </div>
         </div>
 
-        <button onclick="switchTab('courses')" id="nav-courses" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
-          <i data-lucide="book-marked" class="w-5 h-5 shrink-0 text-slate-400"></i>
-          <span class="hidden md:inline" id="nav-courses-text">강의별 문제 은행</span>
-          <span class="hidden md:inline-block ml-auto text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold text-slate-600">4과목</span>
-        </button>
+        <!-- [CAMPUS LIFE : 부가 서비스] 하단으로 분리 및 톤다운 -->
+        <div class="pt-2 space-y-1">
+          <div class="hidden md:block px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            CAMPUS LIFE : 부가 서비스
+          </div>
 
-        <div id="create-nav-wrapper">
-          <button onclick="switchTab('create')" id="nav-create" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
-            <i data-lucide="pen-tool" class="w-5 h-5 shrink-0 text-slate-400"></i>
-            <span class="hidden md:inline" id="nav-create-text">문제 제작 스튜디오</span>
-            <span id="nav-create-badge" class="hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold">틀 제공</span>
-          </button>
-        </div>
+          <!-- 내 오답 복습노트 -->
+          <div id="mypage-nav-wrapper">
+            <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all cursor-pointer">
+              <i data-lucide="notebook-pen" class="w-4 h-4 shrink-0 text-slate-400"></i>
+              <span class="hidden md:inline text-xs font-semibold text-slate-700">내 오답 복습노트</span>
+            </button>
+          </div>
 
-        <div id="mypage-nav-wrapper">
-          <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
-            <i data-lucide="notebook-pen" class="w-5 h-5 shrink-0 text-slate-400"></i>
-            <span class="hidden md:inline">내 오답 복습노트</span>
-          </button>
-        </div>
+          <!-- 비교과·장학 지원 -->
+          <div id="scholarships-nav-wrapper">
+            <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all cursor-pointer">
+              <i data-lucide="award" class="w-4 h-4 shrink-0 text-slate-400"></i>
+              <span class="hidden md:inline text-xs font-semibold text-slate-700">비교과·장학 지원</span>
+            </button>
+          </div>
 
-        <div id="scholarships-nav-wrapper">
-          <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
-            <i data-lucide="award" class="w-5 h-5 shrink-0 text-slate-400"></i>
-            <span class="hidden md:inline">교내 장학·비교과</span>
-          </button>
+          <!-- 졸업 학점 시뮬레이터 -->
+          <div id="settings-nav-wrapper">
+            <button onclick="openGradAudit()" id="nav-settings" aria-label="졸업 학점 시뮬레이터" title="졸업 학점 시뮬레이터" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all cursor-pointer">
+              <i data-lucide="graduation-cap" class="w-4 h-4 shrink-0 text-slate-400"></i>
+              <div class="hidden md:flex flex-col text-left leading-tight min-w-0">
+                <span class="font-bold text-xs text-slate-800 truncate" id="nav-settings-title">졸업 학점 시뮬레이터</span>
+                <span class="text-[10px] text-blue-600 font-semibold truncate" id="nav-settings-sub">학점 감사 & 가상 설계</span>
+              </div>
+              <span id="nav-settings-badge" class="hidden md:inline-flex ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="시뮬레이션 가능"></span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Sidebar Bottom: Settings & Academic Management -->
-      <div id="settings-nav-wrapper" class="p-3 md:p-4 border-t border-slate-100 space-y-1">
-        <div id="sidebar-settings-title" class="hidden md:block px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          학적 & 설정
-        </div>
-        <button onclick="openSettingsTab()" id="nav-settings" aria-label="설정 및 졸업 학점 현황" title="설정 및 졸업 학점 현황" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
-          <i data-lucide="settings" class="w-5 h-5 shrink-0 text-slate-400"></i>
-          <div class="hidden md:flex flex-col text-left">
-            <span class="font-bold text-xs text-slate-800" id="nav-settings-title">설정 · 졸업 학점</span>
-            <span class="text-[10px] text-blue-600 font-semibold" id="nav-settings-sub">가상 시뮬레이터</span>
+      <!-- Sidebar Bottom: Role Quick Switch & Status -->
+      <div class="p-3 md:p-4 border-t border-slate-100 bg-slate-50/50">
+        <button onclick="toggleAccountMenu()" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-white border border-slate-200/80 shadow-2xs transition-all cursor-pointer group">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div id="sidebar-role-badge" class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform">
+              <span id="sidebar-role-initial">철</span>
+            </div>
+            <div class="hidden md:flex flex-col text-left truncate">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-slate-800 truncate" id="sidebar-user-name">김철수</span>
+                <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-50 text-emerald-700 border border-emerald-200" id="sidebar-user-role-badge">학생</span>
+              </div>
+              <span class="text-[10px] text-slate-400 truncate">클릭 시 교수자 전환</span>
+            </div>
           </div>
-          <span id="nav-settings-badge" class="hidden md:inline-flex ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="시뮬레이션 가능"></span>
+          <i data-lucide="chevrons-up-down" class="w-4 h-4 text-slate-400 group-hover:text-slate-600 hidden md:block shrink-0"></i>
         </button>
       </div>
     </aside>
@@ -778,9 +829,35 @@
       </section>
 
       <!-- ========================================================
-           TAB 5: 교수자 전용 학습 분석실 (오답률 & 수업 개선 피드백)
+           TAB 5: 교수자 학습 분석실 (오답률 & 수업 개선 피드백)
            ======================================================== -->
       <section id="tab-analytics" class="hidden space-y-6 spring-pop">
+        <!-- [CORE LOOP 3단계 시연 엿보기 배너] (학생 모드에서 진입 시 자동 노출) -->
+        <div id="analytics-student-peek-banner" class="hidden p-4 md:p-5 rounded-3xl bg-gradient-to-r from-indigo-500/10 via-blue-500/10 to-purple-500/10 border-2 border-indigo-200/90 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-start md:items-center gap-3.5">
+            <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <i data-lucide="eye" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-indigo-950 uppercase tracking-wide">CORE LOOP 3단계 · 교수자 분석실 엿보기</span>
+                <span class="text-[10px] bg-indigo-600 text-white font-bold px-2 py-0.5 rounded-full">학생 시연 모드</span>
+              </div>
+              <p class="text-xs md:text-sm text-slate-700 font-medium mt-1 leading-relaxed">
+                학생들이 푼 오답 데이터가 이 분석실로 실시간 전달되어 집계됩니다. 교수자는 오답률 급증 개념을 한눈에 파악하고 즉시 맞춤 보충 문제를 배포합니다.
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="selectAccount('professor')" class="spring-interactive px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="user-check" class="w-3.5 h-3.5"></i> 교수자 계정으로 전환
+            </button>
+            <button onclick="switchTab('dashboard')" class="spring-interactive px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs cursor-pointer">
+              학생 홈으로
+            </button>
+          </div>
+        </div>
+
         <!-- 1. 클린 화이트 헤더 & 퀵 액션 -->
         <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/90 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="space-y-1.5">
@@ -2686,154 +2763,222 @@
       const mypageWrapper = document.getElementById('mypage-nav-wrapper');
       const scholarshipsWrapper = document.getElementById('scholarships-nav-wrapper');
       const analyticsWrapper = document.getElementById('analytics-nav-wrapper');
-        const sidebarTitle = document.getElementById('sidebar-menu-title');
-        const navDashboardText = document.getElementById('nav-dashboard-text');
-        const navCreateText = document.getElementById('nav-create-text');
-        const navCreateBadge = document.getElementById('nav-create-badge');
-        const navSettingsTitle = document.getElementById('nav-settings-title');
-        const navSettingsSub = document.getElementById('nav-settings-sub');
-        const navSettingsBadge = document.getElementById('nav-settings-badge');
-        const sidebarSettingsTitle = document.getElementById('sidebar-settings-title');
+      const settingsWrapper = document.getElementById('settings-nav-wrapper');
+      const sidebarTitle = document.getElementById('sidebar-menu-title');
+      const navDashboardText = document.getElementById('nav-dashboard-text');
+      const navCreateText = document.getElementById('nav-create-text');
+      const navCreateSub = document.getElementById('nav-create-sub');
+      const navCreateBadge = document.getElementById('nav-create-badge');
+      const navCoursesText = document.getElementById('nav-courses-text');
+      const navCoursesSub = document.getElementById('nav-courses-sub');
+      const navAnalyticsText = document.getElementById('nav-analytics-text');
+      const navAnalyticsSub = document.getElementById('nav-analytics-sub');
+      const navAnalyticsBadge = document.getElementById('nav-analytics-badge');
+      const navSettingsTitle = document.getElementById('nav-settings-title');
+      const navSettingsSub = document.getElementById('nav-settings-sub');
+      const navSettingsBadge = document.getElementById('nav-settings-badge');
 
-        if (!isProfessor) {
-          // Student Mode UI
-          if (userAvatar) userAvatar.textContent = "철";
-          if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
-          if (userName) userName.textContent = "김철수 학생";
-          if (userSub) userSub.textContent = "언어인지과학과 · 21학번";
-          if (userBadge) {
-            userBadge.textContent = "학생";
-            userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200";
-          }
-          if (checkStudent) checkStudent.classList.remove('hidden');
-          if (checkProf) checkProf.classList.add('hidden');
-          if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-emerald-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-emerald-50/50";
-          if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
+      const sbName = document.getElementById('sidebar-user-name');
+      const sbRoleBadge = document.getElementById('sidebar-user-role-badge');
+      const sbInitial = document.getElementById('sidebar-role-initial');
+      const sbCircle = document.getElementById('sidebar-role-badge');
 
-          if (sidebarTitle) sidebarTitle.textContent = "지식 선순환 (Core)";
-          if (navDashboardText) navDashboardText.textContent = "홈 대시보드";
-          if (navCreateText) navCreateText.textContent = "문제 만들기 (출제)";
-          if (navCreateBadge) {
-            navCreateBadge.textContent = "틀 제공";
-            navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold";
-          }
-          const navAnalyticsText = document.getElementById('nav-analytics-text');
-          if (navAnalyticsText) navAnalyticsText.textContent = "교수 분석실 (전달)";
-          const navAnalyticsBadge = document.getElementById('nav-analytics-badge');
-          if (navAnalyticsBadge) {
-            navAnalyticsBadge.textContent = "피드백";
-            navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
-          }
-          if (navSettingsTitle) navSettingsTitle.textContent = "설정 · 졸업 학점";
-          if (navSettingsSub) navSettingsSub.textContent = "가상 시뮬레이터";
-          if (navSettingsBadge) navSettingsBadge.classList.remove('hidden');
-          if (sidebarSettingsTitle) sidebarSettingsTitle.textContent = "학적 & 설정";
-
-          if (mypageWrapper) mypageWrapper.classList.remove('hidden');
-          if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
-          if (analyticsWrapper) analyticsWrapper.classList.add('hidden');
-
-          if (studentDashView) studentDashView.classList.remove('hidden');
-          if (profDashView) profDashView.classList.add('hidden');
-
-          if (state.currentTab === 'analytics') switchTab('dashboard');
-          const tMsg = I18N[state.currentLang] ? I18N[state.currentLang].toastStudentSwitched : "👨‍🎓 학생 모드로 전환되었습니다. 내 학습 현황과 동료 문제를 확인하세요!";
-          showToast(tMsg);
-        } else {
-          // Professor Mode UI
-          if (userAvatar) userAvatar.textContent = "김";
-          if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
-          if (userName) userName.textContent = "김인철 교수";
-          if (userSub) userSub.textContent = "언어인지과학과 · 학과장";
-          if (userBadge) {
-            userBadge.textContent = "교수자";
-            userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200";
-          }
-          if (checkStudent) checkStudent.classList.add('hidden');
-          if (checkProf) checkProf.classList.remove('hidden');
-          if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-indigo-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-indigo-50/50";
-          if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
-
-          if (sidebarTitle) sidebarTitle.textContent = "교수 수업 관리";
-          if (navDashboardText) navDashboardText.textContent = "수업 종합 대시보드";
-          if (navCreateText) navCreateText.textContent = "공식 문항 출제";
-          if (navCreateBadge) {
-            navCreateBadge.textContent = "교수 공식";
-            navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
-          }
-          const navAnalyticsText = document.getElementById('nav-analytics-text');
-          if (navAnalyticsText) navAnalyticsText.textContent = "오답률 & 수업 인사이트";
-          const navAnalyticsBadge = document.getElementById('nav-analytics-badge');
-          if (navAnalyticsBadge) {
-            navAnalyticsBadge.textContent = "교수 피드백";
-            navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold";
-          }
-          if (navSettingsTitle) navSettingsTitle.textContent = "교수 환경 설정";
-          if (navSettingsSub) navSettingsSub.textContent = "연구실 & 계정 관리";
-          if (navSettingsBadge) navSettingsBadge.classList.add('hidden');
-          if (sidebarSettingsTitle) sidebarSettingsTitle.textContent = "시스템 & 설정";
-
-          if (mypageWrapper) mypageWrapper.classList.add('hidden');
-          if (scholarshipsWrapper) scholarshipsWrapper.classList.add('hidden');
-          if (analyticsWrapper) analyticsWrapper.classList.remove('hidden');
-
-          if (studentDashView) studentDashView.classList.add('hidden');
-          if (profDashView) profDashView.classList.remove('hidden');
-
-          if (state.currentTab === 'mypage' || state.currentTab === 'scholarships') switchTab('dashboard');
-          const tMsg = I18N[state.currentLang] ? I18N[state.currentLang].toastProfSwitched : "👨‍🏫 교수자 모드로 전환되었습니다. 학생 오답률 통계와 수업 인사이트를 확인하세요!";
-          showToast(tMsg);
+      if (!isProfessor) {
+        // Student Mode UI
+        if (userAvatar) userAvatar.textContent = "철";
+        if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
+        if (userName) userName.textContent = "김철수 학생";
+        if (userSub) userSub.textContent = "언어인지과학과 · 21학번";
+        if (userBadge) {
+          userBadge.textContent = "학생";
+          userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200";
         }
-        applyTranslations(state.currentLang);
-        if (isProfessor) renderProfessorDashboard();
-        if (isProfessor && state.currentTab === 'analytics') renderAnalytics();
-        lucide.createIcons();
+        if (checkStudent) checkStudent.classList.remove('hidden');
+        if (checkProf) checkProf.classList.add('hidden');
+        if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-emerald-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-emerald-50/50";
+        if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
+
+        if (sbName) sbName.textContent = "김철수";
+        if (sbRoleBadge) {
+          sbRoleBadge.textContent = "학생";
+          sbRoleBadge.className = "text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-50 text-emerald-700 border border-emerald-200";
+        }
+        if (sbInitial) sbInitial.textContent = "철";
+        if (sbCircle) sbCircle.className = "w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform";
+
+        if (sidebarTitle) sidebarTitle.textContent = "외대잇다 네비게이션";
+        if (navDashboardText) navDashboardText.textContent = "홈 대시보드";
+        if (navCreateText) navCreateText.textContent = "문제 만들기";
+        if (navCreateSub) navCreateSub.textContent = "출제 스튜디오";
+        if (navCreateBadge) {
+          navCreateBadge.textContent = "틀 제공";
+          navCreateBadge.className = "hidden md:inline-block ml-auto text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded font-bold shrink-0";
+        }
+        if (navCoursesText) navCoursesText.textContent = "문제 풀기";
+        if (navCoursesSub) navCoursesSub.textContent = "강의별 문제함 & 오답 복습";
+        if (navAnalyticsText) navAnalyticsText.textContent = "교수자 분석실";
+        if (navAnalyticsSub) navAnalyticsSub.textContent = "전달된 오답률 & 보충 피드백";
+        if (navAnalyticsBadge) {
+          navAnalyticsBadge.textContent = "3단계 엿보기";
+          navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold shrink-0";
+        }
+        if (navSettingsTitle) navSettingsTitle.textContent = "졸업 학점 시뮬레이터";
+        if (navSettingsSub) navSettingsSub.textContent = "학점 감사 & 가상 설계";
+        if (navSettingsBadge) navSettingsBadge.classList.remove('hidden');
+
+        if (mypageWrapper) mypageWrapper.classList.remove('hidden');
+        if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
+        if (analyticsWrapper) analyticsWrapper.classList.remove('hidden');
+        if (settingsWrapper) settingsWrapper.classList.remove('hidden');
+
+        if (studentDashView) studentDashView.classList.remove('hidden');
+        if (profDashView) profDashView.classList.add('hidden');
+
+        const peekBanner = document.getElementById('analytics-student-peek-banner');
+        if (peekBanner) {
+          if (state.currentTab === 'analytics') peekBanner.classList.remove('hidden');
+          else peekBanner.classList.add('hidden');
+        }
+
+        const tMsg = I18N[state.currentLang] ? I18N[state.currentLang].toastStudentSwitched : "👨‍🎓 학생 모드로 전환되었습니다. 내 학습 현황과 동료 문제를 확인하세요!";
+        showToast(tMsg);
+      } else {
+        // Professor Mode UI
+        if (userAvatar) userAvatar.textContent = "김";
+        if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
+        if (userName) userName.textContent = "김인철 교수";
+        if (userSub) userSub.textContent = "언어인지과학과 · 학과장";
+        if (userBadge) {
+          userBadge.textContent = "교수자";
+          userBadge.className = "text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200";
+        }
+        if (checkStudent) checkStudent.classList.add('hidden');
+        if (checkProf) checkProf.classList.remove('hidden');
+        if (optProf) optProf.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-indigo-50/60 flex items-center justify-between transition-colors cursor-pointer group bg-indigo-50/50";
+        if (optStudent) optStudent.className = "w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer group";
+
+        if (sbName) sbName.textContent = "김인철 교수";
+        if (sbRoleBadge) {
+          sbRoleBadge.textContent = "교수자";
+          sbRoleBadge.className = "text-[9px] font-bold px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200";
+        }
+        if (sbInitial) sbInitial.textContent = "김";
+        if (sbCircle) sbCircle.className = "w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform";
+
+        if (sidebarTitle) sidebarTitle.textContent = "교수 수업 관리";
+        if (navDashboardText) navDashboardText.textContent = "수업 종합 대시보드";
+        if (navCreateText) navCreateText.textContent = "공식 문항 출제";
+        if (navCreateSub) navCreateSub.textContent = "교수 공식 보충 문항";
+        if (navCreateBadge) {
+          navCreateBadge.textContent = "교수 공식";
+          navCreateBadge.className = "hidden md:inline-block ml-auto text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold shrink-0";
+        }
+        if (navCoursesText) navCoursesText.textContent = "강의별 문항 관리";
+        if (navCoursesSub) navCoursesSub.textContent = "학생 출제 및 공식 문제";
+        if (navAnalyticsText) navAnalyticsText.textContent = "수업 종합 분석실";
+        if (navAnalyticsSub) navAnalyticsSub.textContent = "오답률 & 수업 인사이트";
+        if (navAnalyticsBadge) {
+          navAnalyticsBadge.textContent = "실시간 분석";
+          navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold shrink-0";
+        }
+        if (navSettingsTitle) navSettingsTitle.textContent = "졸업 학점 시뮬레이터";
+        if (navSettingsSub) navSettingsSub.textContent = "학생 학점 지도 & 감사";
+        if (navSettingsBadge) navSettingsBadge.classList.remove('hidden');
+
+        if (mypageWrapper) mypageWrapper.classList.remove('hidden');
+        if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
+        if (analyticsWrapper) analyticsWrapper.classList.remove('hidden');
+        if (settingsWrapper) settingsWrapper.classList.remove('hidden');
+
+        if (studentDashView) studentDashView.classList.add('hidden');
+        if (profDashView) profDashView.classList.remove('hidden');
+
+        const peekBanner = document.getElementById('analytics-student-peek-banner');
+        if (peekBanner) peekBanner.classList.add('hidden');
+
+        const tMsg = I18N[state.currentLang] ? I18N[state.currentLang].toastProfSwitched : "👨‍🏫 교수자 모드로 전환되었습니다. 학생 오답률 통계와 수업 인사이트를 확인하세요!";
+        showToast(tMsg);
       }
+      applyTranslations(state.currentLang);
+      if (isProfessor) renderProfessorDashboard();
+      if (state.currentTab === 'analytics') renderAnalytics();
+      lucide.createIcons();
+    }
 
-      // Tab Navigation
-      function switchTab(tabId) {
-        if (tabId === 'mypage' && state.currentRole !== 'student') return;
-        if (tabId === 'scholarships' && state.currentRole !== 'student') return;
-        if (tabId === 'analytics' && state.currentRole !== 'professor') {
-          selectAccount('professor');
-          switchTab('analytics');
-          return;
-        }
-        if (tabId !== 'analytics' && state.supplementSource) closeSupplementForm();
-        if (tabId !== 'create' && state.variantSource) resetVariantForm();
-        state.currentTab = tabId;
-        const tabs = ['dashboard', 'courses', 'create', 'mypage', 'scholarships', 'analytics', 'settings'];
+    // Role switcher quick toggle & navigation helpers
+    function toggleAccountMenu() {
+      const nextRole = state.currentRole === 'student' ? 'professor' : 'student';
+      selectAccount(nextRole);
+    }
 
-        tabs.forEach(t => {
-          const sec = document.getElementById(`tab-${t}`);
-          const nav = document.getElementById(`nav-${t}`);
-          if (sec) {
-            if (t === tabId) {
-              sec.classList.remove('hidden');
-              if (nav) {
-                nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs";
-              }
-            } else {
-              sec.classList.add('hidden');
-              if (nav) {
-                nav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all";
-              }
+    function openProfAnalyticsPeek() {
+      switchTab('analytics');
+      if (state.currentRole === 'student') {
+        showToast("👨‍🏫 [교수자 분석실 엿보기] 학생 오답률 통계와 교수 피드백 화면입니다.");
+      }
+    }
+
+    function openGradAudit() {
+      switchTab('settings');
+      if (typeof switchGradSubTab === 'function') {
+        switchGradSubTab('audit');
+      }
+    }
+
+    // Tab Navigation
+    function switchTab(tabId) {
+      if (tabId !== 'analytics' && state.supplementSource) closeSupplementForm();
+      if (tabId !== 'create' && state.variantSource) resetVariantForm();
+      state.currentTab = tabId;
+      const tabs = ['dashboard', 'courses', 'create', 'mypage', 'scholarships', 'analytics', 'settings'];
+
+      tabs.forEach(t => {
+        const sec = document.getElementById(`tab-${t}`);
+        const nav = document.getElementById(`nav-${t}`);
+        if (sec) {
+          if (t === tabId) {
+            sec.classList.remove('hidden');
+            if (nav) {
+              nav.classList.add('bg-blue-100/90', 'text-[#002C6C]', 'font-bold', 'shadow-2xs');
+              nav.classList.remove('text-slate-600', 'text-slate-500');
+            }
+          } else {
+            sec.classList.add('hidden');
+            if (nav) {
+              nav.classList.remove('bg-blue-100/90', 'text-[#002C6C]', 'font-bold', 'shadow-2xs');
+              nav.classList.add('text-slate-600');
             }
           }
-        });
-
-        if (tabId === 'mypage') renderWrongAnswers();
-        if (tabId === 'analytics') renderAnalytics();
-        if (tabId === 'dashboard') {
-          renderUpcomingExams();
-          if (state.currentRole === 'professor') renderProfessorDashboard();
         }
-        if (tabId === 'settings') renderGraduationAudit();
-        const mainEl = document.querySelector('main');
-        if (mainEl) mainEl.scrollTop = 0;
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        lucide.createIcons();
+      });
+
+      // Student Peek Banner for Analytics
+      const peekBanner = document.getElementById('analytics-student-peek-banner');
+      if (peekBanner) {
+        if (tabId === 'analytics' && state.currentRole === 'student') {
+          peekBanner.classList.remove('hidden');
+        } else {
+          peekBanner.classList.add('hidden');
+        }
       }
+
+      if (tabId === 'mypage') renderWrongAnswers();
+      if (tabId === 'analytics') renderAnalytics();
+      if (tabId === 'dashboard') {
+        renderUpcomingExams();
+        if (state.currentRole === 'professor') renderProfessorDashboard();
+      }
+      if (tabId === 'courses') renderCourseList();
+      if (tabId === 'scholarships') renderScholarships();
+      if (tabId === 'settings') {
+        if (typeof renderGraduationAudit === 'function') renderGraduationAudit();
+      }
+
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.scrollTop = 0;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      lucide.createIcons();
+    }
 
     function escapeProblemText(value) {
       return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -2930,8 +3075,6 @@
     }
 
     function renderAnalytics() {
-      if (state.currentRole !== 'professor') return;
-
       const courseSelect = document.getElementById('analytics-course');
       const weekSelect = document.getElementById('analytics-week-filter');
       const course = courseSelect ? courseSelect.value : 'all';
@@ -3229,7 +3372,10 @@
     }
 
     function prefillSupplementFromWeakest() {
-      if (state.currentRole !== 'professor') return;
+      if (state.currentRole !== 'professor') {
+        selectAccount('professor');
+        showToast('👨‍🏫 교수자 모드로 전환되었습니다. 보충 문제를 작성하세요.');
+      }
       const target = getSelectedAnalytics().ranked.find(item => item.wrong > 0);
       if (!target) {
         showToast('선택한 범위에 보충이 필요한 오답 기록이 없습니다.');
@@ -3375,7 +3521,10 @@
     }
 
     function openWrongAnswers(course) {
-      if (state.currentRole !== 'student') return;
+      if (state.currentRole !== 'student') {
+        selectAccount('student');
+        showToast('👨‍🎓 학생 모드로 전환되었습니다. 오답 복습 노트를 확인하세요.');
+      }
       if (courseNames[course]) {
         document.getElementById('wrong-course').value = course;
         document.getElementById('wrong-sort').value = 'most';
