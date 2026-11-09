@@ -117,8 +117,15 @@
       </div>
     </div>
 
-    <!-- Right Controls: Modern Account Dropdown -->
-    <div class="relative" id="account-dropdown-wrapper">
+    <!-- Right Controls: Core Flow Tour Button & Account Dropdown -->
+    <div class="flex items-center gap-2.5">
+      <button onclick="startCoreFlowTour()" class="spring-interactive hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-[#002C6C] to-blue-700 text-white text-xs font-bold shadow-xs hover:shadow-md cursor-pointer border border-blue-800/60" title="대회 심사위원 추천 시연 동선">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
+        <span>대회 핵심 선순환 시연</span>
+        <span class="text-[10px] bg-white/20 px-1.5 py-0.2 rounded-full font-extrabold text-blue-100">3-Step</span>
+      </button>
+
+      <div class="relative" id="account-dropdown-wrapper">
       <button onclick="toggleAccountDropdown()" id="account-dropdown-btn" class="flex items-center gap-2.5 px-3 py-2 rounded-2xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all bg-white shadow-2xs cursor-pointer group">
         <div id="user-avatar-circle" class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors">
           <span id="user-avatar-text">철</span>
@@ -178,39 +185,12 @@
 
         <div class="my-1 border-t border-slate-100"></div>
 
-        <!-- Quick Language Switcher in Account Dropdown -->
-        <div class="px-3 py-2 space-y-1.5 bg-slate-50/50">
-          <div class="flex items-center justify-between text-[11px] font-bold text-slate-400">
-            <span class="flex items-center gap-1.5">
-              <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-600"></i>
-              <span id="quick-lang-title">언어 설정 · Language</span>
-            </span>
-            <span id="quick-lang-current" class="text-[10px] font-extrabold px-1.5 py-0.2 rounded bg-blue-100 text-[#002C6C]">KO</span>
-          </div>
-          <div class="grid grid-cols-3 gap-1 bg-slate-200/60 p-1 rounded-xl text-xs font-bold">
-            <button type="button" onclick="setLanguage('ko')" id="quick-btn-ko" class="py-1 rounded-lg bg-white text-slate-900 shadow-2xs transition-all cursor-pointer">한국어</button>
-            <button type="button" onclick="setLanguage('en')" id="quick-btn-en" class="py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">English</button>
-            <button type="button" onclick="setLanguage('zh')" id="quick-btn-zh" class="py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">中文</button>
-          </div>
-        </div>
-
-        <div class="my-1 border-t border-slate-100"></div>
-
-        <div class="px-2 py-1">
-          <button type="button" onclick="openSettingsTab('settings')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer group">
-            <span class="flex items-center gap-2">
-              <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 transition-colors"></i>
-              <span id="quick-settings-link">환경설정 · 언어 관리</span>
-            </span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform"></i>
-          </button>
-        </div>
-
-        <div class="px-4 py-1.5 flex items-center justify-between text-[11px] text-slate-500 border-t border-slate-100">
+        <div class="px-4 py-2 flex items-center justify-between text-[11px] text-slate-500">
           <span id="quick-auth-title">한국외대 통합인증</span>
           <span class="inline-flex items-center gap-1 text-emerald-600 font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span id="quick-auth-status">인증됨</span></span>
         </div>
       </div>
+    </div>
     </div>
   </header>
 
@@ -221,8 +201,13 @@
     <!-- Left Navigation Sidebar -->
     <aside class="w-20 md:w-64 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 h-full overflow-y-auto z-30 transition-all duration-200">
       <div class="p-3 md:p-4 space-y-1.5">
-        <div id="sidebar-menu-title" class="hidden md:block px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          학습 메뉴
+        <!-- 🏆 섹션 1: 핵심 지식 선순환 (Core Loop) -->
+        <div class="hidden md:flex items-center justify-between px-3 py-1.5">
+          <span class="text-[11px] font-black text-[#002C6C] uppercase tracking-wider flex items-center gap-1.5" id="sidebar-menu-title">
+            <i data-lucide="repeat" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>지식 선순환 (Core)</span>
+          </span>
+          <span class="text-[9px] bg-blue-100 text-[#002C6C] font-extrabold px-1.5 py-0.5 rounded-md">대회 핵심</span>
         </div>
 
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs">
@@ -230,39 +215,48 @@
           <span class="hidden md:inline" id="nav-dashboard-text">홈 대시보드</span>
         </button>
 
-        <button onclick="switchTab('courses')" id="nav-courses" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
-          <i data-lucide="book-marked" class="w-5 h-5 shrink-0 text-slate-400"></i>
-          <span class="hidden md:inline">강의별 문제 은행</span>
-          <span class="hidden md:inline-block ml-auto text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold text-slate-600">4과목</span>
-        </button>
-
+        <!-- 1단계: 문제 만들기 (출제 스튜디오) -->
         <div id="create-nav-wrapper">
-          <button onclick="switchTab('create')" id="nav-create" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
-            <i data-lucide="pen-tool" class="w-5 h-5 shrink-0 text-slate-400"></i>
-            <span class="hidden md:inline" id="nav-create-text">문제 제작 스튜디오</span>
+          <button onclick="switchTab('create')" id="nav-create" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+            <span class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-black shrink-0">1</span>
+            <span class="hidden md:inline" id="nav-create-text">문제 만들기 (출제)</span>
             <span id="nav-create-badge" class="hidden md:inline-block ml-auto text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded-md font-bold">틀 제공</span>
           </button>
         </div>
 
+        <!-- 2단계: 문제 풀기 (강의별 문제 은행) -->
+        <button onclick="switchTab('courses')" id="nav-courses" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+          <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-800 flex items-center justify-center text-xs font-black shrink-0">2</span>
+          <span class="hidden md:inline" id="nav-courses-text">문제 풀기 (문제함)</span>
+          <span class="hidden md:inline-block ml-auto text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold text-slate-600">4과목</span>
+        </button>
+
+        <!-- 3단계: 교수자 분석실 (전달된 오답 & 피드백) -->
+        <div id="analytics-nav-wrapper">
+          <button onclick="handleAnalyticsNavClick()" id="nav-analytics" aria-label="교수자 문항 분석" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+            <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-800 flex items-center justify-center text-xs font-black shrink-0">3</span>
+            <span class="hidden md:inline" id="nav-analytics-text">교수 분석실 (전달)</span>
+            <span class="hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded-md font-bold" id="nav-analytics-badge">피드백</span>
+          </button>
+        </div>
+
+        <!-- 📚 섹션 2: 학습 관리 & 부가 편의 (More) -->
+        <div class="pt-3 hidden md:block px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100">
+          학습 관리 & 부가 기능
+        </div>
+
         <div id="mypage-nav-wrapper">
-          <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+          <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
             <i data-lucide="notebook-pen" class="w-5 h-5 shrink-0 text-slate-400"></i>
-            <span class="hidden md:inline">마이페이지 · 내 오답</span>
+            <span class="hidden md:inline">내 오답 복습노트</span>
           </button>
         </div>
 
         <div id="scholarships-nav-wrapper">
-          <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
+          <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
             <i data-lucide="award" class="w-5 h-5 shrink-0 text-slate-400"></i>
             <span class="hidden md:inline">교내 장학·비교과</span>
-          </button>
-        </div>
-
-        <div id="analytics-nav-wrapper" class="hidden">
-          <button onclick="switchTab('analytics')" id="nav-analytics" aria-label="교수자 문항 분석" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all">
-            <i data-lucide="line-chart" class="w-5 h-5 shrink-0 text-indigo-500"></i>
-            <span class="hidden md:inline">오답률 & 수업 인사이트</span>
-            <span class="hidden md:inline-block ml-auto text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded-md font-bold">교수 피드백</span>
+            <span class="hidden md:inline-block ml-auto text-[10px] text-slate-400 font-medium">부가</span>
           </button>
         </div>
       </div>
@@ -293,6 +287,115 @@
 
         <!-- ==================== 1. 학생 대시보드 뷰 ==================== -->
         <div id="student-dashboard-view" class="space-y-8">
+
+          <!-- 🏆 [대회 핵심 시연 플로우] 문제 만들기 ➔ 풀기 ➔ 교수자 전달 단일 루프 -->
+          <section class="rounded-3xl border-2 border-blue-500/30 bg-gradient-to-br from-blue-50/90 via-white to-indigo-50/60 p-5 md:p-7 shadow-sm space-y-4 relative overflow-hidden">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div class="space-y-1 max-w-3xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#002C6C] text-white text-xs font-bold shadow-xs">
+                    <i data-lucide="award" class="w-3.5 h-3.5 text-amber-300"></i>
+                    <span>대회 핵심 시연 동선 · Core Value Loop</span>
+                  </span>
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-100/80 px-2.5 py-0.5 rounded-full border border-blue-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                    단일 루프 집중 모드
+                  </span>
+                </div>
+                <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
+                  외대잇다 3-Step 선순환 : <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#002C6C] via-blue-700 to-indigo-600">문제 만들기 ➔ 동료 풀이 ➔ 교수 전달</span>
+                </h2>
+                <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                  학생이 직접 출제하고 동료가 함께 풀며 취약점이 드러나고, 이 오답 데이터가 교수님께 즉각 전달되어 보충 문제로 완결됩니다.
+                </p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="startCoreFlowTour()" class="spring-interactive px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#002C6C] to-blue-700 text-white font-bold text-xs md:text-sm shadow-md flex items-center gap-2 cursor-pointer hover:shadow-lg">
+                  <i data-lucide="play-circle" class="w-4 h-4 text-sky-300"></i>
+                  <span>3단계 연속 시연 가이드</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 3-Step 인터랙티브 카드 그리드 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 relative pt-1">
+              <!-- STEP 1: 문제 만들기 -->
+              <div class="p-4 md:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-300 hover:shadow-sm transition-all flex flex-col justify-between group">
+                <div class="space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-extrabold border border-emerald-200">
+                      <span class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">1</span>
+                      문제 만들기 (학생 출제)
+                    </span>
+                    <span class="text-[11px] text-slate-400 font-semibold">동료 제작 7건</span>
+                  </div>
+                  <h3 class="font-bold text-slate-900 text-base group-hover:text-emerald-700 transition-colors">
+                    배운 개념을 직접 문항으로 제작
+                  </h3>
+                  <p class="text-xs text-slate-500 leading-relaxed">
+                    수업 중 헷갈렸던 핵심 개념(베르니케 실어증 등)을 다국어(한/영/중) 틀과 저작권 안심 템플릿으로 직접 출제합니다.
+                  </p>
+                </div>
+                <div class="pt-4 border-t border-slate-100 mt-3">
+                  <button onclick="switchTab('create')" class="w-full spring-interactive py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i>
+                    <span>1단계: 새 문제 만들기 체험 ➔</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- STEP 2: 문제 풀기 -->
+              <div class="p-4 md:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:border-blue-300 hover:shadow-sm transition-all flex flex-col justify-between group">
+                <div class="space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-extrabold border border-blue-200">
+                      <span class="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px]">2</span>
+                      문제 풀기 & 오답 집계
+                    </span>
+                    <span class="text-[11px] text-rose-500 font-bold bg-rose-50 px-1.5 py-0.5 rounded">오답률 78%</span>
+                  </div>
+                  <h3 class="font-bold text-slate-900 text-base group-hover:text-blue-700 transition-colors">
+                    동료 문항 풀이 & 취약점 발견
+                  </h3>
+                  <p class="text-xs text-slate-500 leading-relaxed">
+                    동료들이 함께 풀며 집단지성으로 학습하고, 78%의 고오답률 킬러 문항이 실시간 데이터로 식별됩니다.
+                  </p>
+                </div>
+                <div class="pt-4 border-t border-slate-100 mt-3">
+                  <button onclick="openSolveModal(2)" class="w-full spring-interactive py-2 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                    <span>2단계: 고난도 2주차 문제 풀기 ➔</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- STEP 3: 교수 전달 & 피드백 -->
+              <div class="p-4 md:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:border-indigo-300 hover:shadow-sm transition-all flex flex-col justify-between group">
+                <div class="space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-extrabold border border-indigo-200">
+                      <span class="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">3</span>
+                      교수 전달 & 피드백
+                    </span>
+                    <span class="text-[11px] text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded">실시간 연동</span>
+                  </div>
+                  <h3 class="font-bold text-slate-900 text-base group-hover:text-indigo-700 transition-colors">
+                    오답률 전달 & 공식 보충 배포
+                  </h3>
+                  <p class="text-xs text-slate-500 leading-relaxed">
+                    학생 풀이 데이터가 교수 분석실로 즉각 전달되어 오답률 급증 개념을 파악하고 원클릭 보충 문제를 전달합니다.
+                  </p>
+                </div>
+                <div class="pt-4 border-t border-slate-100 mt-3">
+                  <button onclick="handleAnalyticsNavClick()" class="w-full spring-interactive py-2 px-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i data-lucide="line-chart" class="w-3.5 h-3.5"></i>
+                    <span>3단계: 교수 분석실 화면 확인 ➔</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <!-- Student Hero Banner -->
           <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#002C6C] via-[#0C3E85] to-[#1453A3] text-white p-6 md:p-10 shadow-lg shadow-blue-950/10">
             <div class="relative z-10 max-w-2xl space-y-3">
@@ -1551,6 +1654,31 @@
         <!-- Result explanation -->
       </div>
 
+      <!-- 💡 교수자 분석실 실시간 데이터 전달 브릿지 배너 -->
+      <div id="modal-prof-bridge" class="hidden p-4 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-blue-50/80 to-indigo-50/90 border-2 border-indigo-200/90 space-y-2.5 spring-pop shadow-xs">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-indigo-950">교수자 분석실로 실시간 전달 완료</span>
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.2 rounded-full border border-emerald-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                실시간 연동됨
+              </span>
+            </div>
+            <p class="text-[11px] text-indigo-700 leading-snug mt-0.5">
+              방금 학생이 제출한 풀이 기록이 <b>김인철 교수님의 강의 분석실</b>로 즉시 집계되어, 오답률 분석 및 보충 문제 출제 데이터로 활용됩니다.
+            </p>
+          </div>
+        </div>
+        <button type="button" onclick="goToProfAnalyticsFromSolve()" class="w-full spring-interactive py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="line-chart" class="w-4 h-4 text-indigo-200"></i>
+          <span>3단계: 교수 분석실로 이동하여 전달된 데이터 확인하기 ➔</span>
+        </button>
+      </div>
+
       <div class="flex items-center justify-end gap-2 pt-2">
         <button onclick="closeSolveModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100">닫기</button>
         <button onclick="checkAnswer()" id="btn-submit-answer" class="spring-interactive px-5 py-2.5 rounded-xl bg-[#002C6C] text-white text-xs font-bold shadow-md">정답 확인</button>
@@ -1568,6 +1696,95 @@
           <button type="submit" class="spring-interactive cursor-pointer rounded-xl bg-[#002C6C] px-4 py-2 text-xs font-bold text-white hover:bg-[#0C3E85]">댓글 등록</button>
         </form>
       </section>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       CORE FLOW TOUR MODAL (대회 3단계 시연 가이드)
+       ======================================================== -->
+  <div id="core-flow-tour-modal" role="dialog" aria-modal="true" aria-labelledby="tour-modal-title" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 space-y-6 shadow-2xl spring-pop border border-slate-100 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#002C6C] text-xs font-bold border border-blue-200">
+            <i data-lucide="award" class="w-3.5 h-3.5 text-blue-700"></i>
+            <span>대회 심사위원 가이드 · Core Value Loop</span>
+          </div>
+          <h3 id="tour-modal-title" class="text-xl md:text-2xl font-black text-slate-900">
+            외대잇다 3단계 핵심 학습 선순환 투어
+          </h3>
+          <p class="text-xs md:text-sm text-slate-600">
+            대회 평가위원을 위해 "문제 만들기 ➔ 동료 풀이 ➔ 교수자 전달" 단일 흐름을 한눈에 체험할 수 있도록 준비했습니다.
+          </p>
+        </div>
+        <button onclick="closeCoreFlowTour()" aria-label="시연 가이드 닫기" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Step 1 Card -->
+        <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 flex items-start gap-3.5">
+          <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white font-black text-sm flex items-center justify-center shrink-0">1</div>
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-emerald-950 text-sm">문제 만들기 (학생 출제 스튜디오)</h4>
+              <span class="text-[11px] text-emerald-700 font-semibold bg-emerald-100 px-2 py-0.5 rounded-full">틀 제공 & 다국어</span>
+            </div>
+            <p class="text-xs text-emerald-900 leading-relaxed">
+              학생이 수업 중 헷갈렸던 핵심 개념을 직접 퀴즈로 만듭니다. 한국어, 영어, 중국어 다국어 틀과 저작권 안심 안내가 함께 제공됩니다.
+            </p>
+            <div class="pt-2">
+              <button onclick="closeCoreFlowTour(); switchTab('create');" class="spring-interactive px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1 shadow-xs cursor-pointer">
+                <span>1단계 출제 화면으로 이동 ➔</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 Card -->
+        <div class="p-4 rounded-2xl bg-blue-50/70 border border-blue-200/80 flex items-start gap-3.5">
+          <div class="w-8 h-8 rounded-xl bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0">2</div>
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-blue-950 text-sm">문제 풀기 & 오답 집계 (동료 학습)</h4>
+              <span class="text-[11px] text-rose-700 font-bold bg-rose-100 px-2 py-0.5 rounded-full">오답률 78% 대표문항</span>
+            </div>
+            <p class="text-xs text-blue-900 leading-relaxed">
+              수강생들이 동료가 만든 문제를 풀며 학습을 점검합니다. '베르니케 실어증 환자의 발화 특성' 문항에서 고오답률이 발생하며 취약점이 드러납니다.
+            </p>
+            <div class="pt-2">
+              <button onclick="closeCoreFlowTour(); openSolveModal(2);" class="spring-interactive px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1 shadow-xs cursor-pointer">
+                <span>2단계 대표 문제 풀어보기 ➔</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 Card -->
+        <div class="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200/80 flex items-start gap-3.5">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white font-black text-sm flex items-center justify-center shrink-0">3</div>
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-indigo-950 text-sm">교수자 전달 & 피드백 (수업 개선)</h4>
+              <span class="text-[11px] text-indigo-700 font-bold bg-indigo-100 px-2 py-0.5 rounded-full">원클릭 공식 보충 배포</span>
+            </div>
+            <p class="text-xs text-indigo-900 leading-relaxed">
+              학생들의 오답 데이터가 김인철 교수님의 분석실로 실시간 전달됩니다. 교수님은 78% 오답률 경보를 확인하고 원클릭으로 공식 보충 문제를 즉시 배포합니다.
+            </p>
+            <div class="pt-2">
+              <button onclick="closeCoreFlowTour(); handleAnalyticsNavClick();" class="spring-interactive px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1 shadow-xs cursor-pointer">
+                <span>3단계 교수 분석실로 이동 ➔</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+        <span class="text-xs text-slate-500 font-medium">💡 부가 기능(장학금 AI 매칭, 졸업 학점 시뮬레이터)은 사이드바 하단에서 언제든 이용할 수 있습니다.</span>
+        <button onclick="closeCoreFlowTour()" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer">닫기</button>
+      </div>
     </div>
   </div>
 
@@ -3692,6 +3909,9 @@
       resBox.className = "hidden";
       resBox.innerHTML = "";
 
+      const profBridge = document.getElementById('modal-prof-bridge');
+      if (profBridge) profBridge.classList.add('hidden');
+
       const btnSubmit = document.getElementById('btn-submit-answer');
       if (btnSubmit) {
         btnSubmit.classList.remove('hidden');
@@ -3762,6 +3982,8 @@
       }
       resBox.querySelector('[data-explanation]').textContent = explanationText;
       document.getElementById('btn-submit-answer').classList.add('hidden');
+      const profBridge = document.getElementById('modal-prof-bridge');
+      if (profBridge) profBridge.classList.remove('hidden');
       if (state.currentTab === 'mypage') renderWrongAnswers();
       renderProblemDiscussion();
       lucide.createIcons();
