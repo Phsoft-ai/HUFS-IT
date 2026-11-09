@@ -2637,9 +2637,9 @@
 
         if (!isProfessor) {
           // Student Mode UI
-          if (userAvatar) userAvatar.textContent = "찬";
+          if (userAvatar) userAvatar.textContent = "철";
           if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
-          if (userName) userName.textContent = "이영찬 학우";
+          if (userName) userName.textContent = "김철수 학생";
           if (userSub) userSub.textContent = "언어인지과학과 · 21학번";
           if (userBadge) {
             userBadge.textContent = "학생";
@@ -2674,9 +2674,9 @@
           showToast(tMsg);
         } else {
           // Professor Mode UI
-          if (userAvatar) userAvatar.textContent = "김";
+          if (userAvatar) userAvatar.textContent = "홍";
           if (userCircle) userCircle.className = "w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-colors";
-          if (userName) userName.textContent = "김인철 교수";
+          if (userName) userName.textContent = "홍길동 교수";
           if (userSub) userSub.textContent = "언어인지과학과 · 학과장";
           if (userBadge) {
             userBadge.textContent = "교수자";
@@ -3219,7 +3219,7 @@
         answerIdx: Number(answer),
         concept: source.concept,
         explanation,
-        author: '김인철 교수',
+        author: '홍길동 교수',
         isOfficial: true,
         solvedCount: 0,
         errorRate: 0,
@@ -4394,7 +4394,7 @@
 
       const courseLines = audit.virtualCourses.map((c, i) => `${i + 1}. [${c.categoryLabel}] ${c.name} (${c.credits}학점, 예상: ${c.grade})`).join('\n');
 
-      const planText = `[외대잇다] 이영찬 학우 졸업 학점 가상 시뮬레이션 계획서
+      const planText = `[외대잇다] 김철수 학생 졸업 학점 가상 시뮬레이션 계획서
 - 학적: 한국외대 언어인지과학과 (21학번) / AI데이터융합전공
 - 이수 트랙: ${trackDef.trackName} (졸업 기준 ${trackDef.total}학점)
 - 기존 취득 학점: 112학점 (누적 평점 3.92)
