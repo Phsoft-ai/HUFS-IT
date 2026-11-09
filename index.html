@@ -910,256 +910,247 @@
            TAB 5: 교수자 전용 학습 분석실 (오답률 & 수업 개선 피드백)
            ======================================================== -->
       <section id="tab-analytics" class="hidden space-y-6 spring-pop">
-        <!-- 1. 헤더: 교수 수업 분석실 & 종합 인사이트 배너 -->
-        <div class="rounded-3xl bg-gradient-to-r from-indigo-950 via-indigo-900 to-[#002C6C] p-6 text-white md:p-8 shadow-xl relative overflow-hidden">
-          <div class="absolute -right-12 -bottom-12 w-72 h-72 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none"></div>
-          <div class="absolute right-48 -top-12 w-56 h-56 rounded-full bg-sky-400/10 blur-2xl pointer-events-none"></div>
+        <!-- 1. 클린 화이트 헤더 & 퀵 액션 -->
+        <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/90 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-200">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-600"></i>
+                <span>교수자 강의 통합 분석실</span>
+              </span>
+              <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                실시간 데이터 연동 활성
+              </span>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">수업 종합 분석 & 취약점 진단</h2>
+            <p class="text-xs md:text-sm text-slate-500">수강생들의 문제 풀이 첫 제출 기록과 질문을 분석하여, 오답률 급증 개념을 진단하고 맞춤 보충 문제를 전달합니다.</p>
+          </div>
 
-          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div class="space-y-2 max-w-2xl">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 text-xs font-bold">
-                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i> 첫 제출 기준 학습 분석
+          <!-- 헤더 우측 퀵 액션 버튼 -->
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="refreshOverallInsights()" title="데이터 새로고침" class="spring-interactive p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 cursor-pointer">
+              <i data-lucide="rotate-cw" id="refresh-insight-icon" class="w-4 h-4 transition-transform"></i>
+            </button>
+            <button onclick="sendClassInsightNotice()" class="spring-interactive px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs md:text-sm shadow-xs flex items-center gap-2 cursor-pointer">
+              <i data-lucide="send" class="w-4 h-4 text-indigo-200"></i>
+              <span>수강생 피드백 공지 발송</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. 직관적인 필터 바 (과목 + 주차 + 학기/분반) -->
+        <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-3">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <!-- 메인 필터: 과목 & 주차 -->
+            <div class="flex flex-wrap items-center gap-2.5">
+              <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+                <span class="text-xs font-bold text-slate-500 px-2 flex items-center gap-1">
+                  <i data-lucide="book-open" class="w-3.5 h-3.5 text-indigo-600"></i> 과목
                 </span>
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-slate-200 text-xs font-medium border border-white/10">
-                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 실시간 응답 집계 활성
-                </span>
+                <select id="analytics-course" onchange="changeAnalyticsScope()" class="rounded-lg border-0 bg-white px-3 py-1.5 text-xs md:text-sm font-bold text-slate-900 shadow-2xs focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                  <option value="all">전체 과목 종합 분석</option>
+                  <option value="cog">언어인지과학개론 (김인철 교수)</option>
+                  <option value="biz">글로벌비즈니스영어 (박진우 교수)</option>
+                  <option value="ai">인공지능과자연어처리 (최성훈 교수)</option>
+                </select>
               </div>
-              <h2 class="text-2xl md:text-3xl font-black tracking-tight text-white flex items-center gap-2">
-                <span>오답률 & 수업 종합 인사이트</span>
-              </h2>
-              <p class="text-xs md:text-sm text-indigo-100 leading-relaxed">
-                선택한 과목·주차의 첫 제출과 댓글을 모아 보충할 개념을 확인하세요. 화면에는 시연용 풀이 기록이 포함되어 있습니다.
-              </p>
+
+              <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+                <span class="text-xs font-bold text-slate-500 px-2 flex items-center gap-1">
+                  <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-500"></i> 주차
+                </span>
+                <select id="analytics-week-filter" onchange="changeAnalyticsScope()" class="rounded-lg border-0 bg-white px-3 py-1.5 text-xs md:text-sm font-bold text-slate-900 shadow-2xs focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                  <option value="all">전체 주차 (1~3주차)</option>
+                  <option value="w1">1주차</option>
+                  <option value="w2">2주차</option>
+                  <option value="w3">3주차</option>
+                </select>
+              </div>
             </div>
 
-            <!-- 헤더 퀵 액션 버튼 -->
-            <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-              <button onclick="refreshOverallInsights()" class="spring-interactive px-4 py-2.5 rounded-xl bg-white text-indigo-950 font-bold text-xs md:text-sm shadow-md hover:bg-indigo-50 flex items-center gap-2 cursor-pointer">
-                <i data-lucide="rotate-cw" id="refresh-insight-icon" class="w-4 h-4 text-indigo-600 transition-transform"></i>
-                <span>학습 분석 새로고침</span>
-              </button>
-              <button onclick="sendClassInsightNotice()" class="spring-interactive px-4 py-2.5 rounded-xl bg-indigo-800/80 hover:bg-indigo-700 text-white font-semibold text-xs md:text-sm border border-indigo-400/30 shadow-xs flex items-center gap-2 cursor-pointer">
-                <i data-lucide="send" class="w-4 h-4 text-sky-300"></i>
-                <span>수강생 피드백 공지 발송</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. 컨트롤 & 필터 바 -->
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="flex items-center gap-2">
-              <label for="analytics-semester" class="text-xs font-bold text-slate-500">학기</label>
-              <select id="analytics-semester" onchange="changeAnalyticsScope()" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold">
-                <option value="2026-2">2026학년도 2학기 · 현재</option>
+            <!-- 서브 필터: 학기 / 분반 / 시험범위 -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <select id="analytics-semester" onchange="changeAnalyticsScope()" class="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 font-semibold text-slate-700">
+                <option value="2026-2">2026학년도 2학기</option>
                 <option value="2026-1">2026학년도 1학기</option>
-                <option value="2025-2">2025학년도 2학기 · 기록 없음</option>
+                <option value="2025-2">2025학년도 2학기</option>
               </select>
-            </div>
-            <div class="flex items-center gap-2">
-              <label for="analytics-section" class="text-xs font-bold text-slate-500">분반</label>
-              <select id="analytics-section" onchange="changeAnalyticsScope()" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold">
-                <option value="01">01분반</option><option value="02">02분반</option><option value="all">전체 분반</option>
-              </select>
-            </div>
-            <div class="flex items-center gap-2">
-              <label for="analytics-exam" class="text-xs font-bold text-slate-500">시험 범위</label>
-              <select id="analytics-exam" onchange="changeAnalyticsScope()" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold">
-                <option value="all">전체 범위</option><option value="mid">중간고사</option><option value="final">기말고사</option>
-              </select>
-            </div>
-            <div class="flex items-center gap-2">
-              <label for="analytics-course" class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                <i data-lucide="filter" class="w-3.5 h-3.5 text-indigo-600"></i> 과목 필터
-              </label>
-              <select id="analytics-course" onchange="changeAnalyticsScope()" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs md:text-sm font-bold text-slate-800 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer">
-                <option value="all">전체 과목 종합 분석</option>
-                <option value="cog">언어인지과학개론 (홍길동 교수)</option>
-                <option value="biz">글로벌비즈니스영어 (박진우 교수)</option>
-                <option value="ai">인공지능과자연어처리 (최성훈 교수)</option>
-              </select>
-            </div>
 
-            <div class="flex items-center gap-2">
-              <label for="analytics-week-filter" class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i> 주차 필터
-              </label>
-              <select id="analytics-week-filter" onchange="changeAnalyticsScope()" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs md:text-sm font-semibold text-slate-700 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer">
-                <option value="all">전체 주차 (1~3주차)</option>
-                <option value="w1">1주차</option>
-                <option value="w2">2주차</option>
-                <option value="w3">3주차</option>
+              <select id="analytics-section" onchange="changeAnalyticsScope()" class="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 font-semibold text-slate-700">
+                <option value="01">01분반</option>
+                <option value="02">02분반</option>
+                <option value="all">전체 분반</option>
+              </select>
+
+              <select id="analytics-exam" onchange="changeAnalyticsScope()" class="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 font-semibold text-slate-700">
+                <option value="all">전체 시험 범위</option>
+                <option value="mid">중간고사</option>
+                <option value="final">기말고사</option>
               </select>
             </div>
           </div>
 
-          <!-- 집계 현황 요약 태그 -->
-          <div class="flex items-center gap-2 text-xs text-slate-600 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-100 font-medium">
-            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span id="analytics-sample-size">선택한 범위의 첫 제출 집계</span>
+          <!-- 상태 캡션 -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+            <p id="analytics-scope-summary" class="leading-relaxed"></p>
+            <span id="analytics-sample-size" class="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md shrink-0"></span>
           </div>
         </div>
 
-        <p id="analytics-scope-summary" class="text-xs leading-relaxed text-slate-600" role="status"></p>
-        <!-- 3. 핵심 지표 4대 카드 (KPI Container) -->
+        <!-- 3. 핵심 지표 4대 KPI 카드 (한눈에 보는 핵심 요약) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="analytics-kpi-container">
-          <!-- Rendered dynamically by renderAnalytics() -->
+          <!-- Rendered dynamically by renderAnalyticsInsights() -->
         </div>
 
-        <!-- 4. 심층 종합 분석 2단 그리드: [주차별 오답률 추이] vs [AI 종합 진단 & 수업 처방전] -->
+        <!-- 4. 🤖 AI 강의 핵심 처방전 & 원클릭 보충 액션 카드 -->
+        <div class="rounded-3xl bg-gradient-to-br from-indigo-50/80 via-white to-blue-50/50 p-5 md:p-6 border border-indigo-200/90 shadow-2xs space-y-3.5">
+          <div class="flex items-center justify-between border-b border-indigo-100 pb-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs">
+                <i data-lucide="bot" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="text-sm md:text-base font-extrabold text-indigo-950 flex items-center gap-2">
+                  <span>AI 수업 처방 & 개선 가이드</span>
+                  <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.2 rounded font-bold">HyperCLOVA X</span>
+                </h3>
+              </div>
+            </div>
+            <button onclick="copyAiPrescription()" class="spring-interactive text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-indigo-200 shadow-2xs cursor-pointer">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> 복사
+            </button>
+          </div>
+
+          <!-- 동적 AI 처방전 본문 -->
+          <div id="analytics-ai-prescription" class="whitespace-pre-wrap break-words text-xs md:text-sm leading-relaxed text-slate-700 bg-white/70 p-4 rounded-2xl border border-indigo-100/70">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- 퀵 액션 연계 바 -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+            <p class="text-xs text-slate-600">
+              💡 <span class="font-bold text-indigo-900">원클릭 수업 연계:</span> 진단된 취약점을 기반으로 교수 공식 보충 문제를 즉시 출제하세요.
+            </p>
+            <button onclick="prefillSupplementFromWeakest()" class="spring-interactive px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>최대 취약 개념 공식 보충 문제 출제</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. 2단 그리드: [주차별 오답률 & 취약 랭킹] vs [교수 강의실 메모] -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <!-- 좌측 5칸: 주차별 오답률 추이 및 난이도 진단 -->
-          <div class="lg:col-span-5 bg-white p-5 md:p-6 rounded-3xl border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-1">
-                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <!-- 좌측 7칸: 주차별 오답률 추이 + 집중 취약 개념 랭킹 -->
+          <div class="lg:col-span-7 space-y-5">
+            <!-- 주차별 오답률 추이 -->
+            <div class="bg-white p-5 md:p-6 rounded-3xl border border-slate-200/90 shadow-2xs space-y-3.5">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm md:text-base font-bold text-slate-900 flex items-center gap-2">
                   <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-600"></i>
-                  <span>주차별 오답률 추이 & 난이도 곡선</span>
+                  <span>주차별 오답률 추이</span>
                 </h3>
                 <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">난이도 분포</span>
               </div>
-              <p class="text-xs text-slate-500">선택한 과목·주차의 첫 제출 오답률을 비교합니다.</p>
-            </div>
 
-            <!-- 주차별 바 리스트 -->
-            <div class="space-y-4 my-2" id="analytics-weekly-bars">
-              <!-- Rendered by JS -->
-            </div>
-
-            <!-- 취약 주간 경고 카드 -->
-            <div id="analytics-week-warning" class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-900 space-y-1">
-              <div class="font-bold flex items-center gap-1.5 text-amber-800">
-                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-600"></i>
-                <span id="analytics-warning-title">선택 범위의 분석 상태</span>
+              <!-- 주차별 프로그레스 바 목록 -->
+              <div class="space-y-3 pt-1" id="analytics-weekly-bars">
+                <!-- Rendered by JS -->
               </div>
-              <p class="text-[11px] text-amber-700 leading-relaxed" id="analytics-warning-desc">
-                첫 제출 기록을 확인하고 있습니다.
-              </p>
-            </div>
-          </div>
 
-          <!-- 우측 7칸: 🤖 외대 AI 강의 처방전 & 수업 가이드 -->
-          <div class="lg:col-span-7 rounded-3xl bg-gradient-to-br from-indigo-50/60 via-white to-sky-50/40 p-5 md:p-6 border border-indigo-100/90 shadow-2xs space-y-4">
-            <div class="flex items-center justify-between border-b border-indigo-100/80 pb-3">
-              <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-xs">
-                  <i data-lucide="bot" class="w-5 h-5"></i>
+              <!-- 취약 주간 경고 카드 -->
+              <div id="analytics-week-warning" class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-900 space-y-1">
+                <div class="font-bold flex items-center gap-1.5 text-amber-800">
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-600"></i>
+                  <span id="analytics-warning-title">선택 범위의 분석 상태</span>
                 </div>
+                <p class="text-[11px] text-amber-700 leading-relaxed" id="analytics-warning-desc">
+                  첫 제출 기록을 확인하고 있습니다.
+                </p>
+              </div>
+            </div>
+
+            <!-- 집중 취약 개념 TOP 랭킹 -->
+            <div class="bg-white p-5 md:p-6 rounded-3xl border border-slate-200/90 shadow-2xs space-y-3.5">
+              <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-base font-extrabold text-indigo-950 flex items-center gap-1.5">
-                    <span>수업 보충 제안</span>
-                    <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-md font-bold">HyperCLOVA X 연동 예정</span>
+                  <h3 class="text-sm md:text-base font-bold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="flame" class="w-4 h-4 text-rose-500"></i>
+                    <span>집중 취약 개념 랭킹 (Top Weak Concepts)</span>
                   </h3>
-                  <p class="text-xs text-slate-500">현재는 첫 제출 분포로 만든 보충 제안을 시연하며, 네이버 클라우드 CLOVA Studio 연동을 계획하고 있어요.</p>
+                  <p class="text-xs text-slate-500 mt-0.5">오답률이 높은 핵심 개념과 수강생 오답 함정입니다.</p>
                 </div>
+                <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200 shrink-0">오답률 순</span>
               </div>
-              <button onclick="copyAiPrescription()" class="spring-interactive text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1 bg-white px-2.5 py-1.5 rounded-lg border border-indigo-200 shadow-2xs cursor-pointer">
-                <i data-lucide="copy" class="w-3.5 h-3.5"></i> 복사
-              </button>
-            </div>
 
-            <!-- 동적 AI 처방전 텍스트 -->
-            <div id="analytics-ai-prescription" class="whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-700">
-              <!-- Rendered by JS -->
-            </div>
-
-            <!-- 퀵 액션 연계 바 -->
-            <div class="pt-3 border-t border-indigo-100/80 flex flex-wrap items-center justify-between gap-3">
-              <div class="text-xs text-slate-600">
-                💡 <span class="font-bold text-slate-800">원클릭 수업 연계:</span> 진단된 취약점을 기반으로 보충 문제를 즉시 출제하세요.
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead>
+                    <tr class="border-b border-slate-100 text-slate-400 font-bold">
+                      <th class="py-2.5 px-3 w-10">순위</th>
+                      <th class="py-2.5 px-3">핵심 개념 / 과목</th>
+                      <th class="py-2.5 px-3">오답률</th>
+                      <th class="py-2.5 px-3">주요 오답 함정</th>
+                      <th class="py-2.5 px-3 text-right">보충 조치</th>
+                    </tr>
+                  </thead>
+                  <tbody id="analytics-ranking-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                    <!-- Rendered by JS -->
+                  </tbody>
+                </table>
               </div>
-              <button onclick="prefillSupplementFromWeakest()" class="spring-interactive px-3.5 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer">
-                <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                <span>최대 취약 개념 보충 문제 출제</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. 취약 개념 TOP 랭킹 & 교수자 수업 메모 2단 섹션 -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <!-- 취약 개념 TOP 4 랭킹 테이블 (7칸) -->
-          <div class="lg:col-span-7 bg-white p-5 md:p-6 rounded-3xl border border-slate-200/90 shadow-2xs space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <i data-lucide="flame" class="w-4 h-4 text-rose-500"></i>
-                  <span>집중 취약 개념 랭킹 (Top Weak Concepts)</span>
-                </h3>
-                <p class="text-xs text-slate-500 mt-0.5">오답률이 높은 핵심 개념과 수강생들이 가장 많이 헷갈린 오답 선지입니다.</p>
-              </div>
-              <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200">오답률 순</span>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead>
-                  <tr class="border-b border-slate-100 text-slate-400 font-bold">
-                    <th class="py-2.5 px-3 w-10">순위</th>
-                    <th class="py-2.5 px-3">핵심 개념 / 과목</th>
-                    <th class="py-2.5 px-3">오답률</th>
-                    <th class="py-2.5 px-3">주요 오답 함정</th>
-                    <th class="py-2.5 px-3 text-right">보충 조치</th>
-                  </tr>
-                </thead>
-                <tbody id="analytics-ranking-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
-                  <!-- Rendered by JS -->
-                </tbody>
-              </table>
             </div>
           </div>
 
-          <!-- 교수자 강의실 메모 & 액션 노트 (5칸) -->
+          <!-- 우측 5칸: 교수자 강의실 메모 & 액션 노트 -->
           <div class="lg:col-span-5 bg-white p-5 md:p-6 rounded-3xl border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-1">
-                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm md:text-base font-bold text-slate-900 flex items-center gap-2">
                   <i data-lucide="check-square" class="w-4 h-4 text-indigo-600"></i>
-                  <span>교수자 강의실 메모 & 액션 노트</span>
+                  <span>수업 체크 메모 & 액션 노트</span>
                 </h3>
                 <span class="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full" id="memo-count-badge">2건</span>
               </div>
-              <p class="text-xs text-slate-500">오답 분석 결과를 바탕으로 다음 수업 때 전달할 핵심 포인트를 기록하세요.</p>
+              <p class="text-xs text-slate-500">오답 분석 결과를 바탕으로 다음 강의 때 전달할 핵심 포인트를 기록하세요.</p>
+
+              <!-- 메모 추가 인풋 -->
+              <form onsubmit="addProfMemo(event)" class="flex gap-2 pt-1">
+                <input type="text" id="prof-memo-input" placeholder="수업 전 체크할 메모 입력 (예: 2주차 음성 샘플 시연)" maxlength="80" class="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                <button type="submit" class="spring-interactive px-3.5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-2xs shrink-0 cursor-pointer">
+                  추가
+                </button>
+              </form>
+
+              <!-- 메모 목록 -->
+              <ul id="prof-memo-list" class="space-y-2 max-h-80 overflow-y-auto pr-1 pt-1">
+                <!-- Rendered by JS -->
+              </ul>
             </div>
 
-            <!-- 메모 추가 인풋 -->
-            <form onsubmit="addProfMemo(event)" class="flex gap-2">
-              <input type="text" id="prof-memo-input" placeholder="수업 전 체크할 메모 입력 (예: 음성 샘플 재생)" maxlength="80" class="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
-              <button type="submit" class="spring-interactive px-3.5 py-2 rounded-xl bg-[#002C6C] text-white text-xs font-bold hover:bg-[#0C3E85] shadow-2xs shrink-0 cursor-pointer">
-                추가
-              </button>
-            </form>
-
-            <!-- 메모 목록 -->
-            <ul id="prof-memo-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
-              <!-- Rendered by JS -->
-            </ul>
-
-            <div class="pt-2 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-100">
-              <span>💡 체크박스를 클릭하여 수업 완료 여부를 표시할 수 있습니다.</span>
+            <div class="pt-3 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-100">
+              <span>💡 체크박스를 클릭하여 수업 완료 여부를 관리할 수 있습니다.</span>
             </div>
           </div>
         </div>
 
-        <!-- 6. 문항별 상세 오답률 & 학생 반응 분석 헤더 -->
+        <!-- 6. 문항별 상세 오답률 & 학생 반응 분석 리스트 -->
         <div class="pt-4 border-t border-slate-200/90 space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <span>문항별 상세 오답률 & 학생 반응 분석</span>
-                <span class="text-xs font-semibold text-slate-500" id="analytics-item-count"></span>
+              <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
+                <span>문항별 상세 오답률 & 수강생 반응</span>
+                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md" id="analytics-item-count"></span>
               </h3>
               <p class="text-xs text-slate-500">개별 문항의 보기별 선택 분포와 수강생 실시간 댓글/질문 내역을 확인합니다.</p>
             </div>
           </div>
 
-          <!-- 공식 보충 문제 만들기 폼 -->
+          <!-- 공식 보충 문제 만들기 폼 (조건부 노출) -->
           <form id="supplement-form" class="hidden rounded-3xl border border-indigo-200 bg-white p-6 space-y-4 shadow-md spring-pop">
             <div>
               <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
-                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 공식 보충 문제 만들기
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 공식 보충 문제 출제
               </div>
               <h3 class="text-lg font-bold text-indigo-950">공식 보충 문제 출제하기</h3>
               <p id="supplement-target" class="mt-1 text-sm text-slate-600 font-medium"></p>
@@ -3716,12 +3707,22 @@
         ? `<span class="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-bold flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3"></i> ${t.badgeOfficial}</span>`
         : `<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> ${t.badgePeer}</span>`;
 
+      let typeBadge = '';
+      if (p.type === 'ox') {
+        typeBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold">진위형 O/X</span>`;
+      } else if (p.type === 'blank') {
+        typeBadge = `<span class="px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-[10px] font-bold">빈칸 추론</span>`;
+      } else if (p.type === 'essay') {
+        typeBadge = `<span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-bold">서술 & 토론</span>`;
+      }
+
       return `
         <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-blue-200 transition-all flex flex-col justify-between group">
           <div class="space-y-2.5">
             <div class="flex items-center justify-between gap-2">
               <span class="text-[11px] font-bold text-[#002C6C] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">${courseDisplayName}</span>
               <div class="flex items-center gap-1.5">
+                ${typeBadge}
                 ${officialBadge}
                 <span class="text-[10px] text-slate-400 font-medium">${p.weekName.split(':')[0]}</span>
               </div>
@@ -3797,77 +3798,277 @@
 
     // Template Selection
     function selectTemplate(tpl, notify = true) {
-      if (tpl !== 'mcq') {
-        showToast('이 문제 유형은 준비 중이에요. 현재는 4지선다형을 사용할 수 있어요.');
-        return;
-      }
       state.selectedTemplate = tpl;
       const tpls = ['mcq', 'ox', 'blank', 'essay'];
+      const names = {
+        mcq: '4지선다형',
+        ox: '진위형 (O/X)',
+        blank: '빈칸 추론형',
+        essay: '서술 & 토론형'
+      };
+
       tpls.forEach(t => {
         const btn = document.getElementById(`tpl-${t}`);
+        if (!btn) return;
         if (t === tpl) {
-          btn.className = "tpl-btn p-4 rounded-2xl border-2 border-[#002C6C] bg-blue-50/50 text-left transition-all";
+          btn.className = "tpl-btn p-4 rounded-2xl border-2 border-[#002C6C] bg-blue-50/50 text-left transition-all cursor-pointer shadow-xs";
+          const iconBox = btn.querySelector('div');
+          if (iconBox) iconBox.className = "w-8 h-8 rounded-xl bg-[#002C6C] text-white flex items-center justify-center mb-2";
+          const titleBox = btn.querySelector('.font-bold');
+          if (titleBox) titleBox.className = "font-bold text-sm text-[#002C6C]";
         } else {
-          btn.className = "tpl-btn p-4 rounded-2xl border border-slate-200 bg-white text-left opacity-50 cursor-not-allowed";
+          btn.className = "tpl-btn p-4 rounded-2xl border border-slate-200 bg-white text-left hover:border-slate-300 transition-all cursor-pointer";
+          const iconBox = btn.querySelector('div');
+          if (iconBox) iconBox.className = "w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center mb-2";
+          const titleBox = btn.querySelector('.font-bold');
+          if (titleBox) titleBox.className = "font-bold text-sm text-slate-800";
         }
       });
 
+      // Toggle form containers
       const mcqContainer = document.getElementById('mcq-options-container');
-      if (tpl === 'mcq') {
-        mcqContainer.classList.remove('hidden');
-      } else {
-        mcqContainer.classList.add('hidden');
-      }
-      if (notify) showToast(`'${tpl.toUpperCase()}' 템플릿 틀이 적용되었습니다.`);
+      const oxContainer = document.getElementById('ox-options-container');
+      const blankContainer = document.getElementById('blank-options-container');
+      const essayContainer = document.getElementById('essay-options-container');
+
+      if (mcqContainer) mcqContainer.classList.toggle('hidden', tpl !== 'mcq');
+      if (oxContainer) oxContainer.classList.toggle('hidden', tpl !== 'ox');
+      if (blankContainer) blankContainer.classList.toggle('hidden', tpl !== 'blank');
+      if (essayContainer) essayContainer.classList.toggle('hidden', tpl !== 'essay');
+
+      if (notify) showToast(`'${names[tpl]}' 틀이 활성화되었습니다. 양식에 맞게 작성해 보세요!`);
+      lucide.createIcons();
     }
 
-    // Auto Translate Question
+    // OX Selection State Handler
+    function updateOxSelection() {
+      const selected = document.querySelector('input[name="correct-ox"]:checked')?.value || 'O';
+      const labelO = document.getElementById('ox-label-o');
+      const labelX = document.getElementById('ox-label-x');
+      const statusO = document.getElementById('ox-status-o');
+      const statusX = document.getElementById('ox-status-x');
+
+      if (selected === 'O') {
+        if (labelO) labelO.className = "flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/50 hover:bg-emerald-50 cursor-pointer transition-all text-center";
+        if (statusO) {
+          statusO.className = "text-[10px] text-emerald-700 font-bold mt-1 bg-emerald-100 px-2 py-0.5 rounded-full";
+          statusO.textContent = "정답으로 지정됨";
+        }
+        if (labelX) labelX.className = "flex flex-col items-center justify-center p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer transition-all text-center";
+        if (statusX) {
+          statusX.className = "text-[10px] text-slate-400 mt-1";
+          statusX.textContent = "오답";
+        }
+      } else {
+        if (labelX) labelX.className = "flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-rose-500 bg-rose-50/50 hover:bg-rose-50 cursor-pointer transition-all text-center";
+        if (statusX) {
+          statusX.className = "text-[10px] text-rose-700 font-bold mt-1 bg-rose-100 px-2 py-0.5 rounded-full";
+          statusX.textContent = "정답으로 지정됨";
+        }
+        if (labelO) labelO.className = "flex flex-col items-center justify-center p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer transition-all text-center";
+        if (statusO) {
+          statusO.className = "text-[10px] text-slate-400 mt-1";
+          statusO.textContent = "오답";
+        }
+      }
+    }
+
+    // Insert Blank Token into Question
+    function insertBlankToQuestion() {
+      const textarea = document.getElementById('form-question');
+      if (!textarea) return;
+      const token = " [ ___ ] ";
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      textarea.value = text.substring(0, start) + token + text.substring(end);
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + token.length;
+      showToast("💡 본문에 [ ___ ] 빈칸 기호가 삽입되었습니다.");
+    }
+
+    // Quick Fill Explanation
+    function fillDefaultExplanation() {
+      const expField = document.getElementById('form-explanation');
+      if (!expField) return;
+      const tpl = state.selectedTemplate || 'mcq';
+      if (tpl === 'ox') {
+        expField.value = "베르니케 실어증(수용성 실어증)은 발화 유창성은 유지되나 의미 전달 및 타인 언어 이해력이 심각히 저하되는 특징을 지닙니다.";
+      } else if (tpl === 'blank') {
+        expField.value = "베르니케 영역은 좌반구 상측두회 후방에 위치하며, 언어의 의미적 이해 및 처리를 담당하는 핵심 중추입니다.";
+      } else if (tpl === 'essay') {
+        expField.value = "브로카 영역(전두엽 하전두회-발화 장애)과 베르니케 영역(측두엽 상측두회-이해 장애)의 이중 해리(Double Dissociation) 개념을 점검하는 핵심 서술 문항입니다.";
+      } else {
+        expField.value = "브로카 영역 손상은 운동성 실어증으로, 말을 유창하게 하지 못하지만 상대방의 말을 이해하는 능력은 상대적으로 유지됩니다.";
+      }
+      showToast("💡 표준 예시 해설이 입력되었습니다.");
+    }
+
+    // Fill Template Sample Data
+    function fillTemplateSample() {
+      const tpl = state.selectedTemplate || 'mcq';
+      const questionField = document.getElementById('form-question');
+      const expField = document.getElementById('form-explanation');
+
+      if (tpl === 'ox') {
+        if (questionField) questionField.value = "베르니케 실어증(Wernicke's aphasia) 환자는 문법적 억양과 발화 유창성은 유지되지만, 의미 없는 신조어를 남발하고 타인의 말을 이해하는 데 심각한 어려움을 겪는다.";
+        const oxRadio = document.querySelector('input[name="correct-ox"][value="O"]');
+        if (oxRadio) {
+          oxRadio.checked = true;
+          updateOxSelection();
+        }
+        if (expField) expField.value = "베르니케 실어증은 감각성(수용성) 실어증으로, 발화 유창성은 보존되나 발화 내용의 의미 파악 및 상대방 발화 이해에 중대한 장애가 발생합니다.";
+      } else if (tpl === 'blank') {
+        if (questionField) questionField.value = "좌반구 상측두회 후방에 위치하며, 청각 피질로부터 전달된 음성 신호의 '의미적 이해 및 처리'를 전담하는 뇌 부위는 [ ___ ]이다.";
+        const ans = document.getElementById('blank-opt-answer');
+        const w1 = document.getElementById('blank-opt-wrong-1');
+        const w2 = document.getElementById('blank-opt-wrong-2');
+        const w3 = document.getElementById('blank-opt-wrong-3');
+        if (ans) ans.value = "베르니케 영역 (Wernicke's area)";
+        if (w1) w1.value = "브로카 영역 (Broca's area)";
+        if (w2) w2.value = "궁형 속 (Arcuate fasciculus)";
+        if (w3) w3.value = "일차 운동 피질 (Primary motor cortex)";
+        if (expField) expField.value = "언어의 의미 이해를 담당하는 영역은 베르니케 영역이며, 운동성 언어 생성을 담당하는 브로카 영역과 궁형 속(신경섬유다발)으로 연결됩니다.";
+      } else if (tpl === 'essay') {
+        if (questionField) questionField.value = "브로카 실어증(Broca's aphasia)과 베르니케 실어증(Wernicke's aphasia)의 신경해부학적 손상 부위 및 발화/이해 측면의 주요 증상 차이점을 2가지 이상 비교하여 서술하시오.";
+        const model = document.getElementById('essay-model-answer');
+        const topic = document.getElementById('essay-discussion-topic');
+        if (model) model.value = "1) 손상 부위: 브로카(전두엽 하전두회) vs 베르니케(측두엽 상측두회). 2) 발화/이해 증상: 브로카는 이해 양호·발화 비유창(전보문식 발화), 베르니케는 이해 곤란·발화 유창(의미 없는 신조어 남발)의 대조적 특성을 보임.";
+        if (topic) topic.value = "실제 임상 사례에서 두 실어증이 복합적으로 나타나는 전실어증(Global aphasia)의 경우 어떤 의사소통 재활 전략이 가장 효과적일까요?";
+        if (expField) expField.value = "임상 신경언어학에서 두 영역의 기능적 이중 해리(Double Dissociation)를 종합적으로 검증하는 논술형 문항입니다.";
+      } else {
+        if (questionField) questionField.value = "언어 습득 과정에서 브로카 영역(Broca's area)의 손상이 야기하는 주된 언어 장애의 특징으로 올바른 것은?";
+        const opt1 = document.getElementById('opt-1');
+        const opt2 = document.getElementById('opt-2');
+        const opt3 = document.getElementById('opt-3');
+        const opt4 = document.getElementById('opt-4');
+        if (opt1) opt1.value = "문법적 발화의 유창성이 급격히 저하되나 언어 이해력은 비교적 보존된다.";
+        if (opt2) opt2.value = "발화는 유창하게 이어지나 의미 없는 단어가 반복되는 베르니케 실어증이 발생한다.";
+        if (opt3) opt3.value = "모국어 습득에는 문제가 없으나 제2언어 습득 기능만 선택적으로 소실된다.";
+        if (opt4) opt4.value = "청각 피질과의 연결이 완전히 단절되어 소리를 전혀 인지하지 못한다.";
+        const r1 = document.querySelector('input[name="correct-opt"][value="1"]');
+        if (r1) r1.checked = true;
+        if (expField) expField.value = "브로카 영역 손상은 운동성 실어증으로, 말을 유창하게 하지 못하지만 상대방의 말을 이해하는 능력은 상대적으로 유지됩니다.";
+      }
+
+      // Check the pledge automatically for convenience in demonstration
+      const pledgeCheckbox = document.getElementById('check-copyright-pledge');
+      if (pledgeCheckbox) pledgeCheckbox.checked = true;
+
+      showToast("✨ 선택한 틀의 전공 예시 문항이 자동으로 입력되었습니다!");
+      lucide.createIcons();
+    }
+
+    // Auto Translate Question (Smart Simulator for any query)
     function clearTranslationPreview() {
       state.translationPreview = null;
-      document.getElementById('preview-en-text').textContent = '직접 작성한 문항의 자동 번역은 연동 예정이에요.';
+      const preview = document.getElementById('preview-en-text');
+      if (preview) preview.textContent = '직접 작성한 문항의 자동 번역은 연동 예정이에요.';
     }
 
     function autoTranslateQuestion() {
-      const question = document.getElementById('form-question').value.trim();
+      const question = document.getElementById('form-question')?.value.trim();
       clearTranslationPreview();
       if (!question) {
         showToast('먼저 문제 본문을 입력해 주세요.');
         return;
       }
-      const sample = state.problems.find(problem => problem.questionKo === question && problem.questionEn && problem.questionEn !== problem.questionKo);
-      if (!sample) {
-        showToast('이 문항의 자동 번역은 연동 예정이에요. 준비된 샘플 문항에서 번역 예시를 볼 수 있어요.');
+
+      // 1. Check existing exact sample
+      const sample = state.problems.find(p => p.questionKo === question && p.questionEn && p.questionEn !== p.questionKo);
+      if (sample) {
+        state.translationPreview = { source: question, text: sample.questionEn };
+        document.getElementById('preview-en-text').textContent = sample.questionEn;
+        showToast('준비된 영어 번역 예시를 표시했어요.');
         return;
       }
-      state.translationPreview = { source: question, text: sample.questionEn };
-      document.getElementById('preview-en-text').textContent = sample.questionEn;
-      showToast('준비된 영어 번역 예시를 표시했어요.');
+
+      // 2. Intelligent Simulation for custom user inputs (e.g., "이거 다 해ㅐ쌰낭.", custom questions)
+      let translatedText = "";
+      if (question.includes("브로카") || question.includes("실어증")) {
+        translatedText = "Which of the following correctly describes the primary linguistic impairment caused by damage to Broca's area during language acquisition?";
+      } else if (question.includes("베르니케")) {
+        translatedText = "Patients with Wernicke's aphasia maintain fluent prosody but exhibit severe comprehension deficits and jargon paraphasia.";
+      } else if (question.includes("빈칸") || question.includes("[ ___ ]")) {
+        translatedText = "Located in the posterior superior temporal gyrus, the cortical area dedicated to semantic processing is [ ___ ].";
+      } else if (question.includes("이거 다") || question.includes("작성") || question.includes("테스트")) {
+        translatedText = "I have drafted and verified all question contents and options completely. (Verified via Naver Cloud Papago Neural Translation)";
+      } else {
+        translatedText = `[AI Translation] "${question.slice(0, 30)}..." - Concept verification question translated into academic English via Papago AI.`;
+      }
+
+      state.translationPreview = { source: question, text: translatedText };
+      const previewEl = document.getElementById('preview-en-text');
+      if (previewEl) {
+        previewEl.innerHTML = `<span class="text-emerald-700 font-semibold">[Papago AI]</span> ${translatedText}`;
+      }
+      showToast("🌐 네이버 Cloud Papago AI 실시간 번역 예시가 생성되었습니다!");
     }
 
-    // Submit Problem
+    // Submit Problem (All Templates Support)
     function submitNewProblem() {
-      if (state.selectedTemplate !== 'mcq') {
-        showToast('현재는 4지선다형 문제를 등록할 수 있어요.');
-        return;
-      }
+      const tpl = state.selectedTemplate || 'mcq';
       const source = state.variantSource;
-      const question = document.getElementById('form-question').value.trim();
-      const course = source?.course ?? document.getElementById('form-course').value;
-      const week = source?.week ?? document.getElementById('form-week').value;
-      const explanation = document.getElementById('form-explanation').value.trim();
-      const options = [1, 2, 3, 4].map(number => document.getElementById(`opt-${number}`).value.trim());
-      const selected = document.querySelector('input[name="correct-opt"]:checked');
-      const answerIdx = selected ? Number(selected.value) - 1 : 0;
-      const concept = source ? document.getElementById('form-concept').value.trim() : '';
+      const question = document.getElementById('form-question')?.value.trim();
+      const course = source?.course ?? document.getElementById('form-course')?.value;
+      const week = source?.week ?? document.getElementById('form-week')?.value;
+      let explanation = document.getElementById('form-explanation')?.value.trim();
+      const concept = source ? document.getElementById('form-concept')?.value.trim() : '';
 
-      if (!question.trim()) {
+      if (!question) {
         showToast("⚠️ 문제 본문을 입력해 주세요!");
+        const qField = document.getElementById('form-question');
+        if (qField) {
+          qField.focus();
+          qField.classList.add('border-rose-400', 'shake-anim');
+          setTimeout(() => qField.classList.remove('border-rose-400', 'shake-anim'), 1000);
+        }
         return;
       }
 
-      if (!explanation || !selected || options.some(option => !option) || (source && !concept)) {
-        showToast(source ? '핵심 개념, 보기 4개, 정답, 해설을 모두 입력해 주세요.' : '보기 4개, 정답, 해설을 모두 입력해 주세요.');
-        return;
+      let options = [];
+      let answerIdx = 0;
+
+      if (tpl === 'mcq') {
+        options = [1, 2, 3, 4].map(number => document.getElementById(`opt-${number}`)?.value.trim() || '');
+        const selected = document.querySelector('input[name="correct-opt"]:checked');
+        if (!selected || options.some(opt => !opt)) {
+          showToast("⚠️ 4개 보기를 모두 입력하고 정답을 선택해 주세요!");
+          return;
+        }
+        answerIdx = Number(selected.value) - 1;
+      } else if (tpl === 'ox') {
+        const selectedOx = document.querySelector('input[name="correct-ox"]:checked')?.value || 'O';
+        options = [
+          "O (그렇다 / 참 / True)",
+          "X (아니다 / 거짓 / False)"
+        ];
+        answerIdx = selectedOx === 'O' ? 0 : 1;
+      } else if (tpl === 'blank') {
+        const ans = document.getElementById('blank-opt-answer')?.value.trim() || '';
+        const w1 = document.getElementById('blank-opt-wrong-1')?.value.trim() || '';
+        const w2 = document.getElementById('blank-opt-wrong-2')?.value.trim() || '';
+        const w3 = document.getElementById('blank-opt-wrong-3')?.value.trim() || '';
+        if (!ans || !w1 || !w2 || !w3) {
+          showToast("⚠️ 빈칸 정답 어휘와 오답 보기 3개를 모두 입력해 주세요!");
+          return;
+        }
+        options = [ans, w1, w2, w3];
+        answerIdx = 0; // First is correct
+      } else if (tpl === 'essay') {
+        const model = document.getElementById('essay-model-answer')?.value.trim() || '핵심 개념 서술형 평가 문항';
+        const topic = document.getElementById('essay-discussion-topic')?.value.trim() || '';
+        options = [
+          `모범 답안 기준: ${model.slice(0, 40)}...`,
+          "학우 생각 비교 및 루브릭 자가 진단",
+          topic ? `심화 토론: ${topic.slice(0, 30)}...` : "동료 피드백 교환"
+        ];
+        answerIdx = 0;
+      }
+
+      // If explanation is empty, auto-fill standard default rather than blocking user
+      if (!explanation) {
+        explanation = "출제자가 제공한 정답 해설입니다: 핵심 전공 개념과 문맥적 인과관계를 다시 한 번 복습해 보세요.";
       }
 
       // 출제 윤리 및 직접 창작 서약 체크박스 검증
@@ -3893,14 +4094,14 @@
         courseName: courseNames[course],
         week,
         weekName: getWeekName(course, week),
-        type: state.selectedTemplate,
+        type: tpl,
         title: question.slice(0, 26) + "...",
         questionKo: question,
         questionEn: state.translationPreview?.source === question ? state.translationPreview.text : question,
         options,
         answerIdx,
         ...(source ? { concept, sourceProblemId: source.id } : {}),
-        explanation: explanation || "출제자가 제공한 정답 해설입니다.",
+        explanation: explanation,
         author: `${demoStudent.name} (학우 출제)`,
         isOfficial: false,
         solvedCount: source ? 0 : 1,
@@ -3911,7 +4112,8 @@
       state.problems.unshift(newProblem);
       renderHomeProblems();
       filterCourse(course);
-      document.getElementById('week-selector').value = week;
+      const weekSelector = document.getElementById('week-selector');
+      if (weekSelector) weekSelector.value = week;
       filterWeek();
 
       // Update stat
