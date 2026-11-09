@@ -202,98 +202,80 @@
   <div class="flex-1 flex overflow-hidden min-h-0 w-full">
     <!-- Left Navigation Sidebar -->
     <aside class="w-20 md:w-64 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 h-full overflow-y-auto z-30 transition-all duration-200">
-      <div class="p-3 md:p-4 space-y-2">
-        <div id="sidebar-menu-title" class="hidden md:block px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          외대잇다 네비게이션
-        </div>
-
+      <div class="p-3 md:p-4 space-y-1">
         <!-- 홈 대시보드 -->
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-50 text-[#002C6C] shadow-2xs cursor-pointer">
-          <i data-lucide="home" class="w-5 h-5 shrink-0 text-[#0C3E85]"></i>
+          <i data-lucide="home" class="w-4 h-4 shrink-0 text-[#0C3E85]"></i>
           <span class="hidden md:inline" id="nav-dashboard-text">홈 대시보드</span>
         </button>
 
-        <!-- [CORE LOOP : 지식 선순환] 강조 섹션 -->
-        <div id="core-loop-sidebar-wrapper" class="p-2 md:p-2.5 rounded-2xl bg-gradient-to-b from-blue-50/90 via-indigo-50/50 to-blue-50/20 border border-blue-200/90 shadow-2xs space-y-1">
-          <!-- 그룹 타이틀 & 배지 -->
-          <div class="hidden md:flex items-center justify-between px-2 py-1 mb-1">
-            <span class="text-[11px] font-extrabold text-[#002C6C] tracking-wide flex items-center gap-1.5">
-              <i data-lucide="repeat" class="w-3.5 h-3.5 text-blue-600"></i>
-              <span>CORE LOOP : 지식 선순환</span>
-            </span>
-            <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-md bg-blue-600 text-white shadow-2xs">
-              대회 핵심
-            </span>
-          </div>
-
-          <!-- 1. 문제 만들기 (출제 스튜디오) -->
-          <div id="create-nav-wrapper">
-            <button onclick="switchTab('create')" id="nav-create" class="nav-item w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-white/90 hover:text-blue-900 transition-all cursor-pointer">
-              <span class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-black text-[11px]">1</span>
-              <div class="hidden md:flex flex-col text-left leading-tight min-w-0">
-                <span class="font-bold text-xs text-slate-900 truncate" id="nav-create-text">문제 만들기</span>
-                <span class="text-[10px] text-slate-500 font-medium truncate" id="nav-create-sub">출제 스튜디오</span>
-              </div>
-              <span id="nav-create-badge" class="hidden md:inline-block ml-auto text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded font-bold shrink-0">틀 제공</span>
-            </button>
-          </div>
-
-          <!-- 2. 문제 풀기 (강의별 문제함 & 오답 복습) -->
-          <button onclick="switchTab('courses')" id="nav-courses" class="nav-item w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-white/90 hover:text-blue-900 transition-all cursor-pointer">
-            <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-800 flex items-center justify-center shrink-0 font-black text-[11px]">2</span>
-            <div class="hidden md:flex flex-col text-left leading-tight min-w-0">
-              <span class="font-bold text-xs text-slate-900 truncate" id="nav-courses-text">문제 풀기</span>
-              <span class="text-[10px] text-slate-500 font-medium truncate" id="nav-courses-sub">강의별 문제함 & 오답 복습</span>
-            </div>
-            <span class="hidden md:inline-block ml-auto text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-bold shrink-0">4과목</span>
-          </button>
-
-          <!-- 3. 교수자 분석실 (전달된 오답률 & 보충 피드백) (학생 모드에서도 바로 엿볼 수 있게 노출) -->
-          <div id="analytics-nav-wrapper">
-            <button onclick="openProfAnalyticsPeek()" id="nav-analytics" class="nav-item w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-white/90 hover:text-indigo-900 transition-all cursor-pointer">
-              <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-800 flex items-center justify-center shrink-0 font-black text-[11px]">3</span>
-              <div class="hidden md:flex flex-col text-left leading-tight min-w-0">
-                <span class="font-bold text-xs text-slate-900 truncate" id="nav-analytics-text">교수자 분석실</span>
-                <span class="text-[10px] text-indigo-600 font-semibold truncate" id="nav-analytics-sub">오답률 & 보충 피드백</span>
-              </div>
-              <span id="nav-analytics-badge" class="hidden md:inline-block ml-auto text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold shrink-0">3단계 엿보기</span>
-            </button>
-          </div>
+        <!-- 지식 선순환 (Core Loop) 섹션 -->
+        <div class="pt-4 pb-1 px-3 flex items-center justify-between">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5" id="sidebar-menu-title">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+            지식 선순환 (Core)
+          </span>
+          <span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200/60 px-1.5 py-0.5 rounded">
+            대회 핵심
+          </span>
         </div>
 
-        <!-- [CAMPUS LIFE : 부가 서비스] 하단으로 분리 및 톤다운 -->
-        <div class="pt-2 space-y-1">
-          <div class="hidden md:block px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            CAMPUS LIFE : 부가 서비스
-          </div>
+        <!-- 1. 문제 만들기 -->
+        <div id="create-nav-wrapper">
+          <button onclick="switchTab('create')" id="nav-create" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+            <i data-lucide="pen-tool" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            <span class="hidden md:inline" id="nav-create-text">문제 만들기</span>
+            <span id="nav-create-badge" class="hidden md:inline-block ml-auto text-[10px] font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">1단계</span>
+          </button>
+        </div>
 
-          <!-- 내 오답 복습노트 -->
-          <div id="mypage-nav-wrapper">
-            <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all cursor-pointer">
-              <i data-lucide="notebook-pen" class="w-4 h-4 shrink-0 text-slate-400"></i>
-              <span class="hidden md:inline text-xs font-semibold text-slate-700">내 오답 복습노트</span>
-            </button>
-          </div>
+        <!-- 2. 강의별 문제 풀기 -->
+        <button onclick="switchTab('courses')" id="nav-courses" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+          <i data-lucide="book-marked" class="w-4 h-4 shrink-0 text-slate-400"></i>
+          <span class="hidden md:inline" id="nav-courses-text">강의별 문제 풀기</span>
+          <span id="nav-courses-badge" class="hidden md:inline-block ml-auto text-[10px] font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">2단계</span>
+        </button>
 
-          <!-- 비교과·장학 지원 -->
-          <div id="scholarships-nav-wrapper">
-            <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all cursor-pointer">
-              <i data-lucide="award" class="w-4 h-4 shrink-0 text-slate-400"></i>
-              <span class="hidden md:inline text-xs font-semibold text-slate-700">비교과·장학 지원</span>
-            </button>
-          </div>
+        <!-- 3. 교수자 분석실 (학생 모드에서도 바로 엿볼 수 있게 노출) -->
+        <div id="analytics-nav-wrapper">
+          <button onclick="openProfAnalyticsPeek()" id="nav-analytics" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+            <i data-lucide="line-chart" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            <span class="hidden md:inline" id="nav-analytics-text">교수자 분석실</span>
+            <span id="nav-analytics-badge" class="hidden md:inline-block ml-auto text-[10px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-200/60 px-1.5 py-0.5 rounded">3단계</span>
+          </button>
+        </div>
 
-          <!-- 졸업 학점 시뮬레이터 -->
-          <div id="settings-nav-wrapper">
-            <button onclick="openGradAudit()" id="nav-settings" aria-label="졸업 학점 시뮬레이터" title="졸업 학점 시뮬레이터" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all cursor-pointer">
-              <i data-lucide="graduation-cap" class="w-4 h-4 shrink-0 text-slate-400"></i>
-              <div class="hidden md:flex flex-col text-left leading-tight min-w-0">
-                <span class="font-bold text-xs text-slate-800 truncate" id="nav-settings-title">졸업 학점 시뮬레이터</span>
-                <span class="text-[10px] text-blue-600 font-semibold truncate" id="nav-settings-sub">학점 감사 & 가상 설계</span>
-              </div>
-              <span id="nav-settings-badge" class="hidden md:inline-flex ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="시뮬레이션 가능"></span>
-            </button>
-          </div>
+        <!-- 섹션 구분선 -->
+        <div class="my-2 border-t border-slate-100"></div>
+
+        <!-- 캠퍼스 라이프 (Campus Life) 섹션 -->
+        <div class="pt-1 pb-1 px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+          캠퍼스 라이프
+        </div>
+
+        <!-- 내 오답 복습노트 -->
+        <div id="mypage-nav-wrapper">
+          <button onclick="openWrongAnswers()" id="nav-mypage" aria-label="마이페이지 내 오답" title="마이페이지 · 내 오답" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+            <i data-lucide="notebook-pen" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            <span class="hidden md:inline" id="nav-mypage-text">내 오답 복습노트</span>
+          </button>
+        </div>
+
+        <!-- 비교과·장학 지원 -->
+        <div id="scholarships-nav-wrapper">
+          <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+            <i data-lucide="award" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            <span class="hidden md:inline" id="nav-scholarships-text">비교과 · 장학 지원</span>
+          </button>
+        </div>
+
+        <!-- 졸업 학점 시뮬레이터 -->
+        <div id="settings-nav-wrapper">
+          <button onclick="openGradAudit()" id="nav-settings" aria-label="졸업 학점 시뮬레이터" title="졸업 학점 시뮬레이터" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+            <i data-lucide="graduation-cap" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            <span class="hidden md:inline" id="nav-settings-title">졸업 학점 시뮬레이터</span>
+            <span id="nav-settings-badge" class="hidden md:inline-block ml-auto text-[10px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded">시뮬레이터</span>
+          </button>
         </div>
       </div>
 
@@ -2806,25 +2788,34 @@
         if (sbInitial) sbInitial.textContent = "철";
         if (sbCircle) sbCircle.className = "w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform";
 
-        if (sidebarTitle) sidebarTitle.textContent = "외대잇다 네비게이션";
+        if (sidebarTitle) sidebarTitle.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> 지식 선순환 (Core)';
         if (navDashboardText) navDashboardText.textContent = "홈 대시보드";
         if (navCreateText) navCreateText.textContent = "문제 만들기";
         if (navCreateSub) navCreateSub.textContent = "출제 스튜디오";
         if (navCreateBadge) {
-          navCreateBadge.textContent = "틀 제공";
-          navCreateBadge.className = "hidden md:inline-block ml-auto text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded font-bold shrink-0";
+          navCreateBadge.textContent = "1단계";
+          navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded";
         }
-        if (navCoursesText) navCoursesText.textContent = "문제 풀기";
+        if (navCoursesText) navCoursesText.textContent = "강의별 문제 풀기";
         if (navCoursesSub) navCoursesSub.textContent = "강의별 문제함 & 오답 복습";
+        const navCoursesBadge = document.getElementById('nav-courses-badge');
+        if (navCoursesBadge) {
+          navCoursesBadge.textContent = "2단계";
+          navCoursesBadge.className = "hidden md:inline-block ml-auto text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded";
+        }
         if (navAnalyticsText) navAnalyticsText.textContent = "교수자 분석실";
         if (navAnalyticsSub) navAnalyticsSub.textContent = "전달된 오답률 & 보충 피드백";
         if (navAnalyticsBadge) {
-          navAnalyticsBadge.textContent = "3단계 엿보기";
-          navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold shrink-0";
+          navAnalyticsBadge.textContent = "3단계";
+          navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[10px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-200/60 px-1.5 py-0.5 rounded";
         }
         if (navSettingsTitle) navSettingsTitle.textContent = "졸업 학점 시뮬레이터";
         if (navSettingsSub) navSettingsSub.textContent = "학점 감사 & 가상 설계";
-        if (navSettingsBadge) navSettingsBadge.classList.remove('hidden');
+        if (navSettingsBadge) {
+          navSettingsBadge.textContent = "시뮬레이터";
+          navSettingsBadge.className = "hidden md:inline-block ml-auto text-[10px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded";
+          navSettingsBadge.classList.remove('hidden');
+        }
 
         if (mypageWrapper) mypageWrapper.classList.remove('hidden');
         if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
@@ -2865,25 +2856,34 @@
         if (sbInitial) sbInitial.textContent = "김";
         if (sbCircle) sbCircle.className = "w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform";
 
-        if (sidebarTitle) sidebarTitle.textContent = "교수 수업 관리";
+        if (sidebarTitle) sidebarTitle.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> 수업 관리 (Core)';
         if (navDashboardText) navDashboardText.textContent = "수업 종합 대시보드";
         if (navCreateText) navCreateText.textContent = "공식 문항 출제";
         if (navCreateSub) navCreateSub.textContent = "교수 공식 보충 문항";
         if (navCreateBadge) {
-          navCreateBadge.textContent = "교수 공식";
-          navCreateBadge.className = "hidden md:inline-block ml-auto text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold shrink-0";
+          navCreateBadge.textContent = "공식 출제";
+          navCreateBadge.className = "hidden md:inline-block ml-auto text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200/60 px-1.5 py-0.5 rounded";
         }
         if (navCoursesText) navCoursesText.textContent = "강의별 문항 관리";
         if (navCoursesSub) navCoursesSub.textContent = "학생 출제 및 공식 문제";
+        const navCoursesBadge = document.getElementById('nav-courses-badge');
+        if (navCoursesBadge) {
+          navCoursesBadge.textContent = "문항 관리";
+          navCoursesBadge.className = "hidden md:inline-block ml-auto text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded";
+        }
         if (navAnalyticsText) navAnalyticsText.textContent = "수업 종합 분석실";
         if (navAnalyticsSub) navAnalyticsSub.textContent = "오답률 & 수업 인사이트";
         if (navAnalyticsBadge) {
-          navAnalyticsBadge.textContent = "실시간 분석";
-          navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold shrink-0";
+          navAnalyticsBadge.textContent = "종합 분석";
+          navAnalyticsBadge.className = "hidden md:inline-block ml-auto text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200/60 px-1.5 py-0.5 rounded";
         }
-        if (navSettingsTitle) navSettingsTitle.textContent = "졸업 학점 시뮬레이터";
+        if (navSettingsTitle) navSettingsTitle.textContent = "졸업 학점 지도";
         if (navSettingsSub) navSettingsSub.textContent = "학생 학점 지도 & 감사";
-        if (navSettingsBadge) navSettingsBadge.classList.remove('hidden');
+        if (navSettingsBadge) {
+          navSettingsBadge.textContent = "학사 지도";
+          navSettingsBadge.className = "hidden md:inline-block ml-auto text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded";
+          navSettingsBadge.classList.remove('hidden');
+        }
 
         if (mypageWrapper) mypageWrapper.classList.remove('hidden');
         if (scholarshipsWrapper) scholarshipsWrapper.classList.remove('hidden');
@@ -2939,14 +2939,24 @@
           if (t === tabId) {
             sec.classList.remove('hidden');
             if (nav) {
-              nav.classList.add('bg-blue-100/90', 'text-[#002C6C]', 'font-bold', 'shadow-2xs');
-              nav.classList.remove('text-slate-600', 'text-slate-500');
+              nav.classList.add('bg-blue-50', 'text-[#002C6C]', 'font-semibold', 'shadow-2xs');
+              nav.classList.remove('text-slate-600', 'hover:bg-slate-50', 'hover:text-slate-900');
+              const icon = nav.querySelector('i');
+              if (icon) {
+                icon.classList.remove('text-slate-400');
+                icon.classList.add('text-[#0C3E85]');
+              }
             }
           } else {
             sec.classList.add('hidden');
             if (nav) {
-              nav.classList.remove('bg-blue-100/90', 'text-[#002C6C]', 'font-bold', 'shadow-2xs');
-              nav.classList.add('text-slate-600');
+              nav.classList.remove('bg-blue-50', 'text-[#002C6C]', 'font-semibold', 'shadow-2xs');
+              nav.classList.add('text-slate-600', 'hover:bg-slate-50', 'hover:text-slate-900');
+              const icon = nav.querySelector('i');
+              if (icon) {
+                icon.classList.remove('text-[#0C3E85]');
+                icon.classList.add('text-slate-400');
+              }
             }
           }
         }
