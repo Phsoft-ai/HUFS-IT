@@ -4064,6 +4064,52 @@
       state.activeModalProblem = null;
     }
 
+    function goToProfAnalyticsFromSolve() {
+      const p = state.activeModalProblem;
+      closeSolveModal();
+      selectAccount('professor');
+      switchTab('analytics');
+      showToast("👨‍🏫 김인철 교수님 분석실로 전환되었습니다. 방금 학생이 제출한 풀이 데이터와 수업 인사이트를 확인하세요!");
+      if (p) {
+        setTimeout(() => {
+          const courseSelect = document.getElementById('analytics-course');
+          const weekSelect = document.getElementById('analytics-week-filter');
+          if (courseSelect) courseSelect.value = p.course || 'all';
+          if (weekSelect) weekSelect.value = p.week || 'all';
+          renderAnalytics();
+          const targetEl = document.getElementById(`analytics-item-${p.id}`);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetEl.classList.add('ring-4', 'ring-indigo-500', 'bg-indigo-50/50');
+            setTimeout(() => {
+              targetEl.classList.remove('ring-4', 'ring-indigo-500', 'bg-indigo-50/50');
+            }, 3000);
+          }
+        }, 250);
+      }
+    }
+
+    function startCoreFlowTour() {
+      const modal = document.getElementById('core-flow-tour-modal');
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeCoreFlowTour() {
+      const modal = document.getElementById('core-flow-tour-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function handleAnalyticsNavClick() {
+      if (state.currentRole !== 'professor') {
+        selectAccount('professor');
+        switchTab('analytics');
+        showToast("👨‍🏫 김인철 교수님 계정으로 자동 전환되었습니다! 실시간 오답률과 수업 피드백을 확인하세요.");
+      } else {
+        switchTab('analytics');
+      }
+    }
+
     // ========================================================
     // GRADUATION AUDIT & VIRTUAL SIMULATOR SYSTEM
     // ========================================================
