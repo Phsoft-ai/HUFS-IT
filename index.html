@@ -3347,20 +3347,66 @@
       const worst = data.ranked.find(item => item.wrong > 0);
       const average = data.total ? Math.round(100 * data.wrong / data.total) : null;
       const participants = new Set(data.stats.flatMap(item => item.responses.map(response => `${response.offeringId}:${response.studentId}`))).size;
-      document.getElementById('analytics-sample-size').textContent = `${semesterLabels[data.scope.semester]} · 첫 제출 ${data.total}건 · 시연 데이터`;
-      const cards = [
-        ['평균 오답률', average === null ? '응답 없음' : `${average}%`, `첫 제출 ${data.total}건 중 오답 ${data.wrong}건`],
-        ['최대 취약 개념', worst ? worst.problem.concept || worst.problem.title : '분석할 오답 없음', worst ? `${worst.wrong}/${worst.total}명 · 오답률 ${worst.errorRate}%` : '선택한 범위의 풀이를 확인하세요'],
-        ['수강생 수', `${participants}명`, '강의 개설별 학생 수 (과목 간 중복 가능)'],
-        ['학생 댓글', `${data.comments.length}건`, '선택한 학기·분반·과목·범위의 의견']
-      ];
-      document.getElementById('analytics-kpi-container').innerHTML = cards.map(([label, value, detail]) => `
-        <div class="p-5 rounded-3xl bg-white border border-slate-200 shadow-2xs space-y-2">
-          <h3 class="text-xs font-bold text-slate-500">${label}</h3>
-          <p class="text-xl font-extrabold text-slate-900 break-words">${escapeProblemText(value)}</p>
-          <p class="text-xs text-slate-500">${escapeProblemText(detail)}</p>
-        </div>
-      `).join('');
+      document.getElementById('analytics-sample-size').textContent = `${semesterLabels[data.scope.semester]} · 첫 제출 ${data.total}건 집계 중`;
+
+      const kpiContainer = document.getElementById('analytics-kpi-container');
+      if (kpiContainer) {
+        kpiContainer.innerHTML = `
+          <!-- 1. 최대 취약 개념 (즉각 보충 권장) -->
+          <div class="p-5 rounded-3xl bg-gradient-to-br from-rose-50/70 via-white to-rose-50/30 border border-rose-200/80 shadow-2xs space-y-2 relative overflow-hidden">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-rose-700 flex items-center gap-1">
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-600"></i> 최대 취약 개념
+              </span>
+              ${worst ? `<span class="text-[10px] font-extrabold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">오답률 ${worst.errorRate}%</span>` : ''}
+            </div>
+            <p class="text-lg md:text-xl font-black text-slate-900 break-words leading-tight">
+              ${escapeProblemText(worst ? (worst.problem.concept || worst.problem.title) : '취약 개념 없음')}
+            </p>
+            <p class="text-xs text-rose-600/90 font-medium">
+              ${escapeProblemText(worst ? `${worst.wrong}/${worst.total}명 오답 · 보충 해설 권장` : '선택한 범위의 풀이가 양호합니다')}
+            </p>
+          </div>
+
+          <!-- 2. 평균 오답률 -->
+          <div class="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold flex items-center gap-1 text-slate-600">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5 text-indigo-600"></i> 전체 평균 오답률
+              </span>
+              <span class="text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">난이도 지표</span>
+            </div>
+            <p class="text-2xl font-black text-slate-900">
+              ${average === null ? '응답 없음' : `${average}%`}
+            </p>
+            <p class="text-xs text-slate-500">첫 제출 ${data.total}건 중 오답 ${data.wrong}건 집계</p>
+          </div>
+
+          <!-- 3. 풀이 수강생 수 -->
+          <div class="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold flex items-center gap-1 text-slate-600">
+                <i data-lucide="users" class="w-3.5 h-3.5 text-emerald-600"></i> 풀이 참여 수강생
+              </span>
+              <span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">참여율</span>
+            </div>
+            <p class="text-2xl font-black text-slate-900">${participants}명</p>
+            <p class="text-xs text-slate-500">과목별 실응답 참여 학생 수</p>
+          </div>
+
+          <!-- 4. 학생 피드백 & 질문 -->
+          <div class="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold flex items-center gap-1 text-slate-600">
+                <i data-lucide="message-square" class="w-3.5 h-3.5 text-blue-600"></i> 수강생 의견 & 질문
+              </span>
+              <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">토론 연동</span>
+            </div>
+            <p class="text-2xl font-black text-slate-900">${data.comments.length}건</p>
+            <p class="text-xs text-slate-500">헷갈린 선지 이유 및 질문 내역</p>
+          </div>
+        `;
+      }
 
       const weeks = (week === 'all' ? courseWeeks : [week]).filter(value => data.scope.exam === 'all' || courseOfferings.some(offering => offering.semester === data.scope.semester && (course === 'all' || offering.course === course) && (data.scope.section === 'all' || offering.section === data.scope.section) && offering.examWeeks[data.scope.exam]?.includes(value)));
       document.getElementById('analytics-weekly-bars').innerHTML = weeks.map(value => {
@@ -3379,14 +3425,30 @@
         : data.total ? '현재 선택 범위의 첫 제출에서 오답이 없습니다.' : '아직 제출된 응답이 없습니다.';
       document.getElementById('analytics-ai-prescription').textContent = getPrescription(data);
       document.getElementById('analytics-ranking-tbody').innerHTML = data.ranked.length ? data.ranked.map((item, index) => `
-        <tr class="border-b border-slate-100">
-          <td class="p-3 font-bold">${index + 1}</td>
-          <td class="p-3"><p class="font-bold text-slate-900">${escapeProblemText(item.problem.concept || item.problem.title)}</p><p class="text-xs text-slate-500">${escapeProblemText(item.problem.courseName)} · ${escapeProblemText(item.problem.weekName)}</p></td>
-          <td class="p-3 font-bold">${item.errorRate}%<span class="block text-xs font-normal">${item.wrong}/${item.total}명</span></td>
-          <td class="p-3 text-xs text-slate-600">${escapeProblemText(getTrapSummary(item))}</td>
-          <td class="p-3"><button onclick="openSupplementForm(${item.problem.id})" class="spring-interactive cursor-pointer rounded-lg bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-700">보충 출제</button></td>
+        <tr class="hover:bg-slate-50/70 transition-colors">
+          <td class="py-3 px-3">
+            <span class="w-5 h-5 rounded-md flex items-center justify-center text-xs font-black ${index === 0 ? 'bg-rose-500 text-white shadow-2xs' : (index === 1 ? 'bg-amber-500 text-white shadow-2xs' : 'bg-slate-200 text-slate-700')}">
+              ${index + 1}
+            </span>
+          </td>
+          <td class="py-3 px-3">
+            <p class="font-bold text-slate-900 text-xs">${escapeProblemText(item.problem.concept || item.problem.title)}</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">${escapeProblemText(item.problem.courseName)} · ${escapeProblemText(item.problem.weekName)}</p>
+          </td>
+          <td class="py-3 px-3 font-extrabold ${item.errorRate >= 60 ? 'text-rose-600' : 'text-slate-800'}">
+            <span>${item.errorRate}%</span>
+            <span class="block text-[10px] text-slate-400 font-normal">${item.wrong}/${item.total}명</span>
+          </td>
+          <td class="py-3 px-3 text-[11px] text-slate-600 leading-snug max-w-xs">
+            ${escapeProblemText(getTrapSummary(item))}
+          </td>
+          <td class="py-3 px-3 text-right">
+            <button onclick="openSupplementForm(${item.problem.id})" class="spring-interactive cursor-pointer rounded-lg bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1.5 text-xs font-bold text-indigo-700 border border-indigo-200/80 shadow-2xs">
+              보충 출제
+            </button>
+          </td>
         </tr>
-      `).join('') : '<tr><td colspan="5" class="p-5 text-sm text-slate-500">분석할 응답이 없습니다.</td></tr>';
+      `).join('') : '<tr><td colspan="5" class="p-5 text-sm text-slate-500 text-center">분석할 응답이 없습니다.</td></tr>';
       renderProfMemos();
     }
 
