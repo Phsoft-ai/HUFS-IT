@@ -438,6 +438,32 @@
           <p class="text-xs text-slate-500">전체 과목·전체 주차 · 시연 데이터 포함 · 학생별 첫 제출 기준</p>
           <p class="text-xs font-semibold text-indigo-700">2026학년도 2학기 · 전체 분반 · 현재 학기 시연 데이터</p>
           <div id="professor-home-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+
+          <!-- 학생 신고 및 문항 오류 제보 현황 (집단지성 신뢰도 관리) -->
+          <section class="space-y-3" aria-labelledby="professor-home-reports-title">
+            <div class="flex items-center justify-between">
+              <h2 id="professor-home-reports-title" class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="shield-alert" class="w-5 h-5 text-rose-600"></i>
+                <span>학생 신고 및 문항 오류 제보</span>
+                <span id="professor-reports-badge" class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-xs font-extrabold">1건</span>
+              </h2>
+              <span class="text-xs text-slate-500">집단지성 기반 신뢰성 검증 · 오류·중복·저작권 관리</span>
+            </div>
+            <div id="professor-home-reports" class="grid gap-4 lg:grid-cols-2"></div>
+          </section>
+
+          <!-- 나도 궁금해요 관심/혼란 문항 -->
+          <section class="space-y-3" aria-labelledby="professor-home-curious-title">
+            <div class="flex items-center justify-between">
+              <h2 id="professor-home-curious-title" class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="help-circle" class="w-5 h-5 text-amber-500"></i>
+                <span>수강생 관심·혼란 집중 문항 ('나도 궁금해요' TOP)</span>
+              </h2>
+              <span class="text-xs text-slate-500">강의 중 중점 설명 및 교수 공식 피드백 권장</span>
+            </div>
+            <div id="professor-home-curious" class="grid gap-4 lg:grid-cols-2"></div>
+          </section>
+
           <section class="space-y-3" aria-labelledby="professor-home-alert-title">
             <h2 id="professor-home-alert-title" class="text-lg font-bold text-slate-900">오답률 70% 이상 보충 권장 문항</h2>
             <div id="professor-home-alerts" class="grid gap-4 lg:grid-cols-2"></div>
@@ -1607,15 +1633,29 @@
        MODAL: 문제 풀기 & 토론 모달
        ======================================================== -->
   <div id="solve-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 space-y-6 shadow-2xl spring-pop border border-slate-100">
+    <div class="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 space-y-5 shadow-2xl spring-pop border border-slate-100">
       <div class="flex items-start justify-between">
         <div>
           <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200" id="modal-course-badge">언어인지과학개론</span>
           <h3 class="text-lg font-bold text-slate-900 mt-1" id="modal-title">문제 풀이</h3>
         </div>
-        <button onclick="closeSolveModal()" aria-label="문제 풀이 닫기" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <div class="flex items-center gap-1.5">
+          <button type="button" onclick="openReportModalFromCurrent()" id="btn-modal-header-report" class="spring-interactive px-2.5 py-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer" title="문항 오류나 중복, 저작권 침해를 신고합니다">
+            <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+            <span id="modal-report-btn-text">신고</span>
+          </button>
+          <button onclick="closeSolveModal()" aria-label="문제 풀이 닫기" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 신고 접수 문항 알림 배너 (조건부 노출) -->
+      <div id="modal-reported-banner" class="hidden p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-center gap-2">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0"></i>
+        <div class="leading-relaxed">
+          <span class="font-bold">[검토 중인 문항]</span> 학우의 오류 제보 또는 신고가 접수되어 교수자 및 커뮤니티에서 검토 중입니다.
+        </div>
       </div>
 
       <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-semibold text-slate-800 leading-relaxed" id="modal-question-body">
@@ -1630,9 +1670,39 @@
         <!-- Result explanation -->
       </div>
 
-      <div class="flex items-center justify-end gap-2 pt-2">
-        <button onclick="closeSolveModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100">닫기</button>
-        <button onclick="checkAnswer()" id="btn-submit-answer" class="spring-interactive px-5 py-2.5 rounded-xl bg-[#002C6C] text-white text-xs font-bold shadow-md">정답 확인</button>
+      <!-- 문제 평가 및 반응 바 (좋아요, 싫어요, 나도 궁금해요, 신고) -->
+      <div id="modal-reaction-bar" class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <!-- 좋아요 (추천) -->
+          <button type="button" id="btn-react-like" onclick="handleProblemReaction('like')" class="spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+            <i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i>
+            <span id="modal-like-text">좋아요</span>
+            <span id="modal-like-count" class="text-[11px] font-extrabold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded-md">0</span>
+          </button>
+          <!-- 싫어요 (비추천) -->
+          <button type="button" id="btn-react-dislike" onclick="handleProblemReaction('dislike')" class="spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 hover:border-slate-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+            <i data-lucide="thumbs-down" class="w-3.5 h-3.5"></i>
+            <span id="modal-dislike-text">싫어요</span>
+            <span id="modal-dislike-count" class="text-[11px] font-extrabold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded-md">0</span>
+          </button>
+          <!-- 나도 궁금해요 -->
+          <button type="button" id="btn-react-curious" onclick="handleProblemReaction('curious')" class="spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-amber-200 bg-amber-50/70 text-amber-900 hover:bg-amber-100 text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer" title="이해하기 어렵거나 질문이 필요할 때 눌러 교수님께 전달하세요">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-amber-600"></i>
+            <span id="modal-curious-text">나도 궁금해요</span>
+            <span id="modal-curious-count" class="text-[11px] font-extrabold text-amber-800 bg-white px-1.5 py-0.5 rounded-md border border-amber-200">0</span>
+          </button>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="openReportModalFromCurrent()" class="text-xs text-slate-400 hover:text-rose-600 font-semibold flex items-center gap-1 cursor-pointer transition-colors">
+            <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+            <span>오류/문제 신고</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-1">
+        <button onclick="closeSolveModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer">닫기</button>
+        <button onclick="checkAnswer()" id="btn-submit-answer" class="spring-interactive px-5 py-2.5 rounded-xl bg-[#002C6C] text-white text-xs font-bold shadow-md cursor-pointer">정답 확인</button>
       </div>
 
       <p id="modal-attempt-summary" aria-live="polite" class="rounded-xl bg-blue-50 px-4 py-3 text-xs font-semibold text-[#002C6C]"></p>
@@ -1647,6 +1717,94 @@
           <button type="submit" class="spring-interactive cursor-pointer rounded-xl bg-[#002C6C] px-4 py-2 text-xs font-bold text-white hover:bg-[#0C3E85]">댓글 등록</button>
         </form>
       </section>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL: 문제 신고 및 오류 제보 모달
+       ======================================================== -->
+  <div id="report-modal" role="dialog" aria-modal="true" aria-labelledby="report-modal-title" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 space-y-5 shadow-2xl spring-pop border border-slate-100">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100">
+            <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900" id="report-modal-title">문제 오류 제보 및 신고</h3>
+            <p class="text-xs text-slate-500 mt-0.5">집단지성으로 더 신뢰할 수 있는 문제 은행을 만듭니다.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeReportModal()" aria-label="신고 창 닫기" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- 신고 대상 문항 요약 정보 -->
+      <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+        <div class="flex items-center gap-2">
+          <span id="report-target-course" class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-bold text-[10px]">과목명</span>
+          <span id="report-target-week" class="text-slate-500 text-[10px] font-medium">주차 정보</span>
+        </div>
+        <p id="report-target-title" class="font-bold text-slate-800 text-xs line-clamp-1">문제 제목이 표시됩니다.</p>
+      </div>
+
+      <!-- 신고 사유 선택 -->
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-slate-700">신고 사유를 선택해 주세요 <span class="text-rose-500">*</span></label>
+        <div class="space-y-1.5" id="report-reason-options">
+          <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+            <input type="radio" name="report-reason" value="error" checked class="mt-0.5 text-blue-600">
+            <div class="text-xs">
+              <span class="font-bold text-slate-800">문항 오류 / 정답 및 해설 오류</span>
+              <p class="text-[11px] text-slate-500 mt-0.5">문제에 오탈자가 있거나 정답·해설이 학문적으로 잘못되었습니다.</p>
+            </div>
+          </label>
+          <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+            <input type="radio" name="report-reason" value="duplicate" class="mt-0.5 text-blue-600">
+            <div class="text-xs">
+              <span class="font-bold text-slate-800">중복 문항</span>
+              <p class="text-[11px] text-slate-500 mt-0.5">이미 등록된 다른 학우 또는 교수님의 문제와 내용이 거의 같습니다.</p>
+            </div>
+          </label>
+          <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+            <input type="radio" name="report-reason" value="copyright" class="mt-0.5 text-blue-600">
+            <div class="text-xs">
+              <span class="font-bold text-slate-800">강의 저작권 침해 우려</span>
+              <p class="text-[11px] text-slate-500 mt-0.5">교수님의 강의 슬라이드, 비공개 시험 문제를 무단 복제하여 게시했습니다.</p>
+            </div>
+          </label>
+          <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+            <input type="radio" name="report-reason" value="inappropriate" class="mt-0.5 text-blue-600">
+            <div class="text-xs">
+              <span class="font-bold text-slate-800">부적절한 내용 / 비방 / 장난</span>
+              <p class="text-[11px] text-slate-500 mt-0.5">학습과 관련 없는 장난성 문제이거나 타인을 비방하는 표현이 포함되었습니다.</p>
+            </div>
+          </label>
+          <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+            <input type="radio" name="report-reason" value="other" class="mt-0.5 text-blue-600">
+            <div class="text-xs">
+              <span class="font-bold text-slate-800">기타</span>
+              <p class="text-[11px] text-slate-500 mt-0.5">기타 수정 및 개선이 필요한 사항입니다.</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- 상세 내용 작성 -->
+      <div class="space-y-1.5">
+        <label for="report-detail-input" class="block text-xs font-bold text-slate-700">상세 내용 (선택)</label>
+        <textarea id="report-detail-input" rows="3" maxlength="300" placeholder="구체적인 오류 위치나 신고 사유를 적어주시면 빠른 검토 및 정정에 큰 도움이 됩니다." class="w-full rounded-xl border border-slate-200 p-3 text-xs focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+      </div>
+
+      <!-- 버튼 -->
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" onclick="closeReportModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer">취소</button>
+        <button type="button" onclick="submitProblemReport()" class="spring-interactive px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+          <span>신고 접수하기</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1745,8 +1903,19 @@
         badgeOfficial: "교수 공식",
         badgePeer: "학우 출제",
         btnSolve: "풀어보기",
+        btnLike: "좋아요",
+        btnDislike: "싫어요",
+        btnCurious: "나도 궁금해요",
+        btnReport: "신고",
+        badgeReported: "신고 검토중",
         labelSolved: "명 풀이",
         labelErrorRate: "오답률",
+        toastLikeSuccess: "👍 이 문제를 추천했습니다!",
+        toastLikeCancel: "추천을 취소했습니다.",
+        toastDislikeSuccess: "👎 비추천 의견이 전달되었습니다. (문항 품질 개선에 반영됩니다)",
+        toastDislikeCancel: "비추천을 취소했습니다.",
+        toastCuriousSuccess: "🤔 교수님과 학우들에게 '나도 궁금해요' 신호가 전달되었습니다!",
+        toastCuriousCancel: "'궁금해요' 표시를 취소했습니다.",
 
         toastStudentSwitched: "👨‍🎓 학생 모드로 전환되었습니다. 내 학습 현황과 동료 문제를 확인하세요!",
         toastProfSwitched: "👨‍🏫 교수자 모드로 전환되었습니다. 학생 오답률 통계와 수업 인사이트를 확인하세요!",
@@ -1833,8 +2002,19 @@
         badgeOfficial: "Official",
         badgePeer: "Peer Made",
         btnSolve: "Solve Now",
+        btnLike: "Like",
+        btnDislike: "Dislike",
+        btnCurious: "Curious too",
+        btnReport: "Report",
+        badgeReported: "Under Review",
         labelSolved: " solved",
         labelErrorRate: "Error",
+        toastLikeSuccess: "👍 Liked this question!",
+        toastLikeCancel: "Removed like.",
+        toastDislikeSuccess: "👎 Dislike feedback submitted for quality improvement.",
+        toastDislikeCancel: "Removed dislike.",
+        toastCuriousSuccess: "🤔 Sent 'I'm curious too' signal to professor & peers!",
+        toastCuriousCancel: "Removed curiosity signal.",
 
         toastStudentSwitched: "👨‍🎓 Switched to Student Mode. Check your learning status and peer questions!",
         toastProfSwitched: "👨‍🏫 Switched to Faculty Mode. Review error rate statistics and classroom insights!",
@@ -1921,8 +2101,19 @@
         badgeOfficial: "教授官方",
         badgePeer: "同窗出题",
         btnSolve: "开始做题",
+        btnLike: "点赞",
+        btnDislike: "踩",
+        btnCurious: "我也好奇",
+        btnReport: "举报",
+        badgeReported: "正在复核",
         labelSolved: "人已做",
         labelErrorRate: "错题率",
+        toastLikeSuccess: "👍 已推荐本题目！",
+        toastLikeCancel: "已取消推荐。",
+        toastDislikeSuccess: "👎 已提交不推荐反馈（用于题目质量改进）。",
+        toastDislikeCancel: "已取消不推荐。",
+        toastCuriousSuccess: "🤔 已向教师及学友反馈“我也好奇”信号！",
+        toastCuriousCancel: "已取消好奇标记。",
 
         toastStudentSwitched: "👨‍🎓 已切换为学生模式。可查看个人学习进度与同窗习题！",
         toastProfSwitched: "👨‍🏫 已切换为教师模式。可查看错题率统计与课堂学情洞察！",
@@ -2251,6 +2442,23 @@
       selectedAnswerIdx: null,
       answerSubmitted: false,
       attempts: [],
+      reports: [
+        {
+          id: 101,
+          problemId: 2,
+          course: 'cog',
+          courseName: '언어인지과학개론',
+          problemTitle: "베르니케 실어증 환자의 발화 특성",
+          reason: 'error',
+          reasonText: '문항 오류 / 정답 및 해설 오류',
+          detail: '2번 선지의 착어(paraphasia) 설명과 1번 선지 증상 설명이 수업 교재(84p) 및 강의 슬라이드와 상이하여 정답 판정 확인이 필요합니다.',
+          reporter: '이채원 (23학번)',
+          timestamp: '11.09',
+          status: 'pending' // 'pending' | 'resolved' | 'dismissed'
+        }
+      ],
+      reportedCommentIds: [],
+      reportTargetProblemId: null,
       problemComments: [
         {
           id: 1,
@@ -2346,7 +2554,14 @@
           isOfficial: false,
           solvedCount: 42,
           errorRate: 28, // 오답률
-          likes: 19
+          likes: 19,
+          dislikes: 1,
+          curiousCount: 5,
+          userReaction: null,
+          userCurious: false,
+          isReported: false,
+          userReported: false,
+          reports: []
         },
         {
           id: 2,
@@ -2388,7 +2603,24 @@
           isOfficial: true,
           solvedCount: 98,
           errorRate: 74,
-          likes: 45
+          likes: 45,
+          dislikes: 4,
+          curiousCount: 14,
+          userReaction: null,
+          userCurious: false,
+          isReported: true,
+          userReported: false,
+          reports: [
+            {
+              id: 101,
+              reason: 'error',
+              reasonText: '문항 오류 / 정답 및 해설 오류',
+              detail: '2번 선지의 착어(paraphasia) 설명과 1번 선지 증상 설명이 수업 교재(84p) 및 강의 슬라이드와 상이하여 정답 판정 확인이 필요합니다.',
+              reporter: '이채원 (23학번)',
+              timestamp: '11.09',
+              status: 'pending'
+            }
+          ]
         },
         {
           id: 3,
@@ -2430,7 +2662,14 @@
           isOfficial: false,
           solvedCount: 56,
           errorRate: 35,
-          likes: 22
+          likes: 22,
+          dislikes: 2,
+          curiousCount: 4,
+          userReaction: null,
+          userCurious: false,
+          isReported: false,
+          userReported: false,
+          reports: []
         },
         {
           id: 4,
@@ -2472,7 +2711,14 @@
           isOfficial: false,
           solvedCount: 68,
           errorRate: 42,
-          likes: 31
+          likes: 31,
+          dislikes: 0,
+          curiousCount: 9,
+          userReaction: null,
+          userCurious: false,
+          isReported: false,
+          userReported: false,
+          reports: []
         }
       ],
 
@@ -3105,15 +3351,107 @@
     function renderProfessorDashboard() {
       const data = getAnalyticsData();
       const highError = data.ranked.filter(item => item.errorRate >= 70);
+      const pendingReports = (state.reports || []).filter(r => r.status === 'pending');
       const cards = [
         ['문제 등록 과목', `${new Set(data.problems.map(problem => problem.course)).size}개`],
         ['첫 제출 응답', `${data.total}건`],
-        ['집중 보충 권장', `${highError.length}문항`],
-        ['교수 공식 문제', `${data.problems.filter(problem => problem.isOfficial).length}문항`]
+        ['신고·오류 제보', `${pendingReports.length}건`],
+        ['집중 보충 권장', `${highError.length}문항`]
       ];
       document.getElementById('professor-home-stats').innerHTML = cards.map(([label, value]) => `
         <div class="rounded-2xl border border-slate-200 bg-white p-5"><p class="text-xs font-semibold text-slate-500">${label}</p><p class="mt-2 text-2xl font-extrabold text-slate-900">${value}</p></div>
       `).join('');
+
+      // 학생 신고 및 문항 오류 제보 렌더링
+      const reportsContainer = document.getElementById('professor-home-reports');
+      const reportsBadge = document.getElementById('professor-reports-badge');
+      if (reportsBadge) reportsBadge.textContent = `${pendingReports.length}건`;
+
+      if (reportsContainer) {
+        if (pendingReports.length === 0) {
+          reportsContainer.innerHTML = `
+            <div class="col-span-2 p-5 rounded-2xl bg-white border border-slate-200 text-xs text-slate-500 flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+              <span>현재 대기 중인 학생 신고나 오류 제보가 없습니다. 모든 등록 문항이 정상 서비스 중입니다.</span>
+            </div>
+          `;
+        } else {
+          reportsContainer.innerHTML = pendingReports.map(r => `
+            <article class="rounded-2xl border border-rose-200 bg-white p-5 space-y-3 shadow-2xs">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs font-bold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 flex items-center gap-1">
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> ${escapeProblemText(r.reasonText)}
+                </span>
+                <span class="text-[11px] text-slate-400 font-medium">${escapeProblemText(r.reporter)} · ${escapeProblemText(r.timestamp)}</span>
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-indigo-700">${escapeProblemText(r.courseName)}</p>
+                <h3 class="font-bold text-sm text-slate-900 mt-0.5">${escapeProblemText(r.problemTitle)}</h3>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs text-slate-700">
+                <p class="text-[11px] font-bold text-slate-500 mb-0.5">학생 제보 상세 내용</p>
+                <p class="leading-relaxed">"${escapeProblemText(r.detail)}"</p>
+              </div>
+              <div class="flex items-center justify-end gap-2 pt-1">
+                <button type="button" onclick="openSolveModal(${r.problemId})" class="spring-interactive px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
+                  문항 검토
+                </button>
+                <button type="button" onclick="dismissReport(${r.id})" class="spring-interactive px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-500 hover:bg-slate-50 cursor-pointer">
+                  반려
+                </button>
+                <button type="button" onclick="resolveReport(${r.id})" class="spring-interactive px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  <span>검토 완료 (정상 처리)</span>
+                </button>
+              </div>
+            </article>
+          `).join('');
+        }
+      }
+
+      // 수강생 관심·혼란 집중 문항 ('나도 궁금해요' TOP)
+      const curiousContainer = document.getElementById('professor-home-curious');
+      if (curiousContainer) {
+        const curiousProblems = [...state.problems]
+          .filter(p => (p.curiousCount || 0) > 0)
+          .sort((a, b) => (b.curiousCount || 0) - (a.curiousCount || 0))
+          .slice(0, 2);
+
+        if (curiousProblems.length === 0) {
+          curiousContainer.innerHTML = `
+            <div class="col-span-2 p-5 rounded-2xl bg-white border border-slate-200 text-xs text-slate-500">
+              아직 '나도 궁금해요' 반응이 누적된 문항이 없습니다.
+            </div>
+          `;
+        } else {
+          curiousContainer.innerHTML = curiousProblems.map(p => `
+            <article class="rounded-2xl border border-amber-200 bg-white p-5 space-y-3 shadow-2xs">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 flex items-center gap-1">
+                  <i data-lucide="help-circle" class="w-3.5 h-3.5 text-amber-600"></i> "나도 궁금해요" ${p.curiousCount || 0}명 누적
+                </span>
+                <span class="text-xs font-semibold text-slate-400">${p.weekName ? p.weekName.split(':')[0] : ''}</span>
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-indigo-700">${escapeProblemText(p.courseName)}</p>
+                <h3 class="font-bold text-sm text-slate-900 mt-0.5">${escapeProblemText(p.title)}</h3>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                학생들이 선지 구분이나 핵심 개념 이해에 혼란을 겪고 있습니다. 교수자의 짧은 학습 팁이나 강의 중 보충 설명을 권장합니다.
+              </p>
+              <div class="flex items-center justify-end gap-2 pt-1">
+                <button type="button" onclick="openSolveModal(${p.id})" class="spring-interactive px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
+                  문항 확인
+                </button>
+                <button type="button" onclick="openProfessorAnalysis(${p.id})" class="spring-interactive px-3.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold cursor-pointer">
+                  분석 & 보충 출제
+                </button>
+              </div>
+            </article>
+          `).join('');
+        }
+      }
+
       document.getElementById('professor-home-alerts').innerHTML = highError.length ? highError.map(item => `
         <article class="rounded-2xl border border-rose-200 bg-white p-5 space-y-3">
           <p class="text-xs font-semibold text-indigo-700">${escapeProblemText(item.problem.courseName)} · ${escapeProblemText(item.problem.weekName)}</p>
@@ -3123,6 +3461,7 @@
           <button onclick="openProfessorAnalysis(${item.problem.id})" class="spring-interactive cursor-pointer rounded-lg bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-700">분석 확인 · 보충 출제</button>
         </article>
       `).join('') : '<p class="text-sm text-slate-500">오답률 70% 이상인 문항이 없습니다.</p>';
+
       document.getElementById('professor-home-questions').innerHTML = data.comments.slice(-5).reverse().map(comment => {
         const problem = state.problems.find(item => item.id === comment.problemId);
         return `<article class="space-y-1 rounded-xl bg-slate-50 p-3">
@@ -3131,6 +3470,8 @@
           <button onclick="openSolveModal(${problem.id})" class="cursor-pointer text-xs font-bold text-indigo-700 underline">문항 검토</button>
         </article>`;
       }).join('') || '<p class="text-sm text-slate-500">등록된 질문이나 의견이 없습니다.</p>';
+
+      lucide.createIcons();
     }
 
     function openProfessorAnalysis(problemId) {
@@ -3412,7 +3753,14 @@
         isOfficial: true,
         solvedCount: 0,
         errorRate: 0,
-        likes: 0
+        likes: 0,
+        dislikes: 0,
+        curiousCount: 0,
+        userReaction: null,
+        userCurious: false,
+        isReported: false,
+        userReported: false,
+        reports: []
       });
       closeSupplementForm();
       renderHomeProblems();
@@ -3587,15 +3935,24 @@
         typeBadge = `<span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-bold">서술 & 토론</span>`;
       }
 
+      const reportedBadge = p.isReported
+        ? `<span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold flex items-center gap-1" title="신고 접수 검토 중"><i data-lucide="shield-alert" class="w-3 h-3 text-rose-600"></i> ${t.badgeReported}</span>`
+        : '';
+
+      const likeActiveCls = p.userReaction === 'like' ? 'text-blue-600 font-bold bg-blue-50 px-1.5 py-0.5 rounded-md' : 'text-slate-500';
+      const curiousActiveCls = p.userCurious ? 'text-amber-600 font-bold bg-amber-50 px-1.5 py-0.5 rounded-md' : 'text-slate-400';
+      const dislikeActiveCls = p.userReaction === 'dislike' ? 'text-slate-700 font-bold bg-slate-100 px-1.5 py-0.5 rounded-md' : 'text-slate-400';
+
       return `
-        <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-blue-200 transition-all flex flex-col justify-between group">
+        <div class="p-5 rounded-2xl bg-white border ${p.isReported ? 'border-rose-200/90' : 'border-slate-200/80'} shadow-2xs hover:shadow-md hover:border-blue-200 transition-all flex flex-col justify-between group">
           <div class="space-y-2.5">
             <div class="flex items-center justify-between gap-2">
               <span class="text-[11px] font-bold text-[#002C6C] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">${courseDisplayName}</span>
-              <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                ${reportedBadge}
                 ${typeBadge}
                 ${officialBadge}
-                <span class="text-[10px] text-slate-400 font-medium">${p.weekName.split(':')[0]}</span>
+                <span class="text-[10px] text-slate-400 font-medium">${p.weekName ? p.weekName.split(':')[0] : ''}</span>
               </div>
             </div>
 
@@ -3604,15 +3961,23 @@
             ${p.sourceProblemId ? `<span class="inline-block rounded-full bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-700">${isZh ? '变式题目' : (isEn ? 'Variant Problem' : '변형 문제')}</span>` : ''}
           </div>
 
-          <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between">
-            <div class="flex items-center gap-3 text-[11px] text-slate-400">
-              <span class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-slate-400"></i> ${p.solvedCount}${t.labelSolved}</span>
-              <span class="flex items-center gap-1 text-rose-500 font-semibold"><i data-lucide="percent" class="w-3.5 h-3.5"></i> ${t.labelErrorRate} ${p.errorRate}%</span>
+          <div class="pt-4 mt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2.5 text-[11px] flex-wrap">
+              <span class="flex items-center gap-1 text-slate-400"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> ${p.solvedCount}${t.labelSolved}</span>
+              <span class="flex items-center gap-1 text-rose-500 font-semibold"><i data-lucide="percent" class="w-3.5 h-3.5"></i> ${p.errorRate}%</span>
+              <span class="flex items-center gap-1 ${likeActiveCls}" title="추천 수"><i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i> ${p.likes || 0}</span>
+              ${(p.dislikes || 0) > 0 ? `<span class="flex items-center gap-1 ${dislikeActiveCls}" title="비추천 수"><i data-lucide="thumbs-down" class="w-3.5 h-3.5"></i> ${p.dislikes}</span>` : ''}
+              ${(p.curiousCount || 0) > 0 ? `<span class="flex items-center gap-1 ${curiousActiveCls}" title="나도 궁금해요"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i> ${p.curiousCount}</span>` : ''}
             </div>
-            <button onclick="openSolveModal(${p.id})" class="spring-interactive px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-[#002C6C] shadow-2xs flex items-center gap-1 cursor-pointer">
-              <span>${t.btnSolve}</span>
-              <i data-lucide="arrow-right" class="w-3 h-3"></i>
-            </button>
+            <div class="flex items-center justify-end gap-1.5 shrink-0">
+              <button type="button" onclick="event.stopPropagation(); openReportModal(${p.id})" title="${t.btnReport || '신고'}" class="p-1.5 rounded-lg text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer">
+                <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="openSolveModal(${p.id})" class="spring-interactive px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-[#002C6C] shadow-2xs flex items-center gap-1 cursor-pointer">
+                <span>${t.btnSolve}</span>
+                <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -3977,7 +4342,14 @@
         isOfficial: false,
         solvedCount: source ? 0 : 1,
         errorRate: 0,
-        likes: source ? 0 : 1
+        likes: source ? 0 : 1,
+        dislikes: 0,
+        curiousCount: 0,
+        userReaction: null,
+        userCurious: false,
+        isReported: false,
+        userReported: false,
+        reports: []
       };
 
       state.problems.unshift(newProblem);
@@ -4117,9 +4489,275 @@
         btnSubmit.classList.remove('hidden');
         btnSubmit.textContent = isZh ? "提交答案" : (isEn ? "Submit Answer" : "답안 제출하기");
       }
+
+      // 반응 및 신고 UI 상태 갱신
+      updateModalReactionUI();
+
       document.getElementById('solve-modal').classList.remove('hidden');
       renderProblemDiscussion();
       lucide.createIcons();
+    }
+
+    // Modal Reaction UI State Updater
+    function updateModalReactionUI() {
+      const p = state.activeModalProblem;
+      if (!p) return;
+
+      const t = I18N[state.currentLang] || I18N.ko;
+
+      // 1. 신고 배너 및 헤더 신고 버튼
+      const banner = document.getElementById('modal-reported-banner');
+      if (banner) {
+        banner.classList.toggle('hidden', !p.isReported);
+      }
+      const headerReportBtn = document.getElementById('btn-modal-header-report');
+      const reportBtnText = document.getElementById('modal-report-btn-text');
+      if (headerReportBtn && reportBtnText) {
+        if (p.userReported) {
+          headerReportBtn.className = "spring-interactive px-2.5 py-1.5 rounded-xl border border-rose-300 bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-1 cursor-default";
+          reportBtnText.textContent = "신고 완료";
+        } else {
+          headerReportBtn.className = "spring-interactive px-2.5 py-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer";
+          reportBtnText.textContent = t.btnReport || "신고";
+        }
+      }
+
+      // 2. 좋아요 (추천)
+      const btnLike = document.getElementById('btn-react-like');
+      const likeCount = document.getElementById('modal-like-count');
+      const likeText = document.getElementById('modal-like-text');
+      if (btnLike && likeCount && likeText) {
+        likeText.textContent = t.btnLike || "좋아요";
+        likeCount.textContent = p.likes || 0;
+        if (p.userReaction === 'like') {
+          btnLike.className = "spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-blue-600 bg-blue-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer";
+          likeCount.className = "text-[11px] font-extrabold text-blue-800 bg-white px-1.5 py-0.5 rounded-md";
+        } else {
+          btnLike.className = "spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer";
+          likeCount.className = "text-[11px] font-extrabold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded-md";
+        }
+      }
+
+      // 3. 싫어요 (비추천)
+      const btnDislike = document.getElementById('btn-react-dislike');
+      const dislikeCount = document.getElementById('modal-dislike-count');
+      const dislikeText = document.getElementById('modal-dislike-text');
+      if (btnDislike && dislikeCount && dislikeText) {
+        dislikeText.textContent = t.btnDislike || "싫어요";
+        dislikeCount.textContent = p.dislikes || 0;
+        if (p.userReaction === 'dislike') {
+          btnDislike.className = "spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer";
+          dislikeCount.className = "text-[11px] font-extrabold text-slate-900 bg-white px-1.5 py-0.5 rounded-md";
+        } else {
+          btnDislike.className = "spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 hover:border-slate-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer";
+          dislikeCount.className = "text-[11px] font-extrabold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded-md";
+        }
+      }
+
+      // 4. 나도 궁금해요
+      const btnCurious = document.getElementById('btn-react-curious');
+      const curiousCount = document.getElementById('modal-curious-count');
+      const curiousText = document.getElementById('modal-curious-text');
+      if (btnCurious && curiousCount && curiousText) {
+        curiousText.textContent = t.btnCurious || "나도 궁금해요";
+        curiousCount.textContent = p.curiousCount || 0;
+        if (p.userCurious) {
+          btnCurious.className = "spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-amber-500 bg-amber-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer";
+          curiousCount.className = "text-[11px] font-extrabold text-amber-900 bg-white px-1.5 py-0.5 rounded-md";
+        } else {
+          btnCurious.className = "spring-interactive flex-1 sm:flex-initial px-3 py-1.5 rounded-xl border border-amber-200 bg-amber-50/70 text-amber-900 hover:bg-amber-100 text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer";
+          curiousCount.className = "text-[11px] font-extrabold text-amber-800 bg-white px-1.5 py-0.5 rounded-md border border-amber-200";
+        }
+      }
+
+      lucide.createIcons();
+    }
+
+    // Reaction Click Handler (Like, Dislike, Curious)
+    function handleProblemReaction(type) {
+      const p = state.activeModalProblem;
+      if (!p) return;
+
+      const t = I18N[state.currentLang] || I18N.ko;
+
+      if (type === 'like') {
+        if (p.userReaction === 'like') {
+          p.userReaction = null;
+          p.likes = Math.max(0, (p.likes || 1) - 1);
+          showToast(t.toastLikeCancel || "추천을 취소했습니다.");
+        } else {
+          if (p.userReaction === 'dislike') {
+            p.dislikes = Math.max(0, (p.dislikes || 1) - 1);
+          }
+          p.userReaction = 'like';
+          p.likes = (p.likes || 0) + 1;
+          showToast(t.toastLikeSuccess || "👍 이 문제를 추천했습니다!");
+        }
+      } else if (type === 'dislike') {
+        if (p.userReaction === 'dislike') {
+          p.userReaction = null;
+          p.dislikes = Math.max(0, (p.dislikes || 1) - 1);
+          showToast(t.toastDislikeCancel || "비추천을 취소했습니다.");
+        } else {
+          if (p.userReaction === 'like') {
+            p.likes = Math.max(0, (p.likes || 1) - 1);
+          }
+          p.userReaction = 'dislike';
+          p.dislikes = (p.dislikes || 0) + 1;
+          showToast(t.toastDislikeSuccess || "👎 비추천 의견이 전달되었습니다. (문항 품질 개선에 반영됩니다)");
+        }
+      } else if (type === 'curious') {
+        if (p.userCurious) {
+          p.userCurious = false;
+          p.curiousCount = Math.max(0, (p.curiousCount || 1) - 1);
+          showToast(t.toastCuriousCancel || "'궁금해요' 표시를 취소했습니다.");
+        } else {
+          p.userCurious = true;
+          p.curiousCount = (p.curiousCount || 0) + 1;
+          showToast(t.toastCuriousSuccess || "🤔 교수님과 학우들에게 '나도 궁금해요' 신호가 전달되었습니다!");
+        }
+      }
+
+      updateModalReactionUI();
+      renderHomeProblems();
+      renderCourseProblems();
+      if (state.currentRole === 'professor') {
+        renderProfessorDashboard();
+      }
+    }
+
+    // Problem Report Modal Logic
+    function openReportModal(problemId) {
+      const p = state.problems.find(x => x.id === problemId);
+      if (!p) return;
+      state.reportTargetProblemId = problemId;
+
+      const courseEl = document.getElementById('report-target-course');
+      const weekEl = document.getElementById('report-target-week');
+      const titleEl = document.getElementById('report-target-title');
+
+      if (courseEl) courseEl.textContent = getCourseName(p.course, state.currentLang);
+      if (weekEl) weekEl.textContent = p.weekName ? p.weekName.split(':')[0] : '';
+      if (titleEl) titleEl.textContent = p.title || p.questionKo?.slice(0, 30);
+
+      // Reset options
+      const defaultRadio = document.querySelector('input[name="report-reason"][value="error"]');
+      if (defaultRadio) defaultRadio.checked = true;
+      const detailInput = document.getElementById('report-detail-input');
+      if (detailInput) detailInput.value = '';
+
+      const modal = document.getElementById('report-modal');
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function openReportModalFromCurrent() {
+      if (state.activeModalProblem) {
+        openReportModal(state.activeModalProblem.id);
+      }
+    }
+
+    function closeReportModal() {
+      const modal = document.getElementById('report-modal');
+      if (modal) modal.classList.add('hidden');
+      state.reportTargetProblemId = null;
+    }
+
+    function submitProblemReport() {
+      const targetId = state.reportTargetProblemId;
+      const p = state.problems.find(x => x.id === targetId);
+      if (!p) return;
+
+      const selectedReason = document.querySelector('input[name="report-reason"]:checked')?.value || 'other';
+      const detailText = document.getElementById('report-detail-input')?.value.trim() || '';
+
+      const reasonLabels = {
+        error: '문항 오류 / 정답 및 해설 오류',
+        duplicate: '중복 문항',
+        copyright: '강의 저작권 침해 우려',
+        inappropriate: '부적절한 내용 / 비방 / 장난',
+        other: '기타 수정 제보'
+      };
+
+      const newReport = {
+        id: Date.now(),
+        problemId: p.id,
+        course: p.course,
+        courseName: p.courseName || getCourseName(p.course, 'ko'),
+        problemTitle: p.title || p.questionKo?.slice(0, 30),
+        reason: selectedReason,
+        reasonText: reasonLabels[selectedReason] || '기타',
+        detail: detailText || '상세 사유 미입력',
+        reporter: `${demoStudent.name} (학생)`,
+        timestamp: new Date().toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }),
+        status: 'pending'
+      };
+
+      if (!state.reports) state.reports = [];
+      state.reports.unshift(newReport);
+
+      p.isReported = true;
+      p.userReported = true;
+      if (!p.reports) p.reports = [];
+      p.reports.push(newReport);
+
+      closeReportModal();
+      updateModalReactionUI();
+      renderHomeProblems();
+      renderCourseProblems();
+      if (state.currentRole === 'professor') {
+        renderProfessorDashboard();
+      }
+
+      showToast("🚨 문제 신고가 접수되었습니다. 교수자 및 커뮤니티 검토 후 처리됩니다.");
+    }
+
+    // Comment Report Handler
+    function reportComment(commentId) {
+      if (!state.reportedCommentIds) state.reportedCommentIds = [];
+      if (state.reportedCommentIds.includes(commentId)) {
+        showToast("이미 신고 접수된 댓글입니다.");
+        return;
+      }
+      state.reportedCommentIds.push(commentId);
+      showToast("🚨 해당 댓글이 부적절한 글로 신고되었습니다. 검토 후 조치됩니다.");
+      renderProblemDiscussion();
+    }
+
+    // Professor Report Management (Resolve or Dismiss)
+    function resolveReport(reportId) {
+      const report = (state.reports || []).find(r => r.id === reportId);
+      if (report) {
+        report.status = 'resolved';
+        const p = state.problems.find(x => x.id === report.problemId);
+        // If no more pending reports for this problem, clear isReported
+        const hasOtherPending = (state.reports || []).some(r => r.problemId === report.problemId && r.status === 'pending');
+        if (p && !hasOtherPending) {
+          p.isReported = false;
+        }
+        showToast("✅ 해당 문항의 신고 검토가 정상 완료 처리되었습니다.");
+        renderProfessorDashboard();
+        renderCourseProblems();
+        renderHomeProblems();
+        updateModalReactionUI();
+      }
+    }
+
+    function dismissReport(reportId) {
+      const report = (state.reports || []).find(r => r.id === reportId);
+      if (report) {
+        report.status = 'dismissed';
+        const p = state.problems.find(x => x.id === report.problemId);
+        const hasOtherPending = (state.reports || []).some(r => r.problemId === report.problemId && r.status === 'pending');
+        if (p && !hasOtherPending) {
+          p.isReported = false;
+        }
+        showToast("해당 신고가 검토 후 반려 처리되었습니다.");
+        renderProfessorDashboard();
+        renderCourseProblems();
+        renderHomeProblems();
+        updateModalReactionUI();
+      }
     }
 
     function selectOption(idx) {
@@ -4219,19 +4857,40 @@
       }
       for (const comment of comments) {
         const row = document.createElement('li');
-        row.className = 'rounded-xl border border-slate-200 px-3 py-2';
-        const author = document.createElement('p');
-        author.className = 'text-xs font-bold text-slate-700';
-        author.textContent = comment.author;
+        row.className = 'rounded-2xl border border-slate-200 p-3.5 bg-slate-50/60 space-y-1.5';
+
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between text-xs';
+
+        const author = document.createElement('span');
+        author.className = 'font-bold text-slate-800 flex items-center gap-1.5';
+        author.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-[#002C6C]"></span><span>${escapeProblemText(comment.author)}</span>`;
+
+        const reportBtn = document.createElement('button');
+        reportBtn.type = 'button';
+        const isCommentReported = state.reportedCommentIds && state.reportedCommentIds.includes(comment.id);
+        if (isCommentReported) {
+          reportBtn.className = 'text-[11px] text-rose-600 font-bold flex items-center gap-1 cursor-default bg-rose-50 px-2 py-0.5 rounded-md';
+          reportBtn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> 신고 접수됨';
+        } else {
+          reportBtn.className = 'text-[11px] text-slate-400 hover:text-rose-600 font-medium flex items-center gap-1 cursor-pointer transition-colors';
+          reportBtn.innerHTML = '<i data-lucide="flag" class="w-3 h-3"></i> 댓글 신고';
+          reportBtn.onclick = () => reportComment(comment.id);
+        }
+
+        header.append(author, reportBtn);
+
         const body = document.createElement('p');
-        body.className = 'mt-1 whitespace-pre-wrap break-words text-sm text-slate-700';
+        body.className = 'whitespace-pre-wrap break-words text-xs text-slate-700 leading-relaxed';
         body.textContent = comment.body;
-        row.append(author, body);
+
+        row.append(header, body);
         list.appendChild(row);
       }
 
       document.getElementById('modal-comment-form').classList.toggle('hidden', !isStudent || attempts.length === 0);
       document.getElementById('modal-comments-prompt').classList.toggle('hidden', !isStudent || attempts.length > 0);
+      lucide.createIcons();
     }
 
     function postProblemComment(event) {
